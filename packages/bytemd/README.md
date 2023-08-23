@@ -1,24 +1,132 @@
-# Utils
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.0.
+# ByteMD wrapper for Angular
 
-## Code scaffolding
+[![npm](https://img.shields.io/npm/v/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm](https://img.shields.io/npm/dm/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm downloads](https://img.shields.io/npm/dt/@dotglitch/dotglitch-ngx.svg)](https://npmjs.org/@dotglitch/dotglitch-ngx)
+[![GitHub stars](https://img.shields.io/github/stars/knackstedt/dotglitch-ngx.svg?label=GitHub%20Stars&style=flat)](https://github.com/knackstedt/dotglitch-ngx)
 
-Run `ng generate component component-name --project utils` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project utils`.
-> Note: Don't forget to add `--project utils` or else it will be added to the default project in your `angular.json` file. 
 
-## Build
+This is a [ByteMD](https://github.com/bytedance/bytemd) wrapper library for Angular.
 
-Run `ng build utils` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Publishing
+| :warning:        This library is still in alpha stages, some things may not work correctly.   |
+|-----------------------------------------|
+| If you find any bugs, please open a [PR](https://github.com/knackstedt/dotglitch-ngx/issues). |
 
-After building your library with `ng build utils`, go to the dist folder `cd dist/utils` and run `npm publish`.
+## Installation
+You can install the library with [npm](https://npmjs.com).
 
-## Running unit tests
+### Angular 15+
+```sh
+    # Install ngx-bytemd and dependencies
+    npm i ngx-bytemd svelte @bytemd/plugin-frontmatter @bytemd/plugin-gfm @bytemd/plugin-highlight @bytemd/plugin-medium-zoom @bytemd/plugin-mermaid  --save
+```
+    
+## Getting started
 
-Run `ng test utils` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Use NgxByteMD in your project:
 
-## Further help
+```typescript
+import { Component } from '@angular/core';
+import { ByteMDComponent } from 'ngx-bytemd';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+@Component({
+    selector: 'app-test-component',
+    template: `<ngx-bytemd></ngx-bytemd>`
+    imports: [
+        ByteMDComponent
+    ],
+    standalone: true
+})
+export class TestComponent {
+    markdownText = `
+---
+# frontmatter: https://jekyllrb.com/docs/front-matter/
+layout: post
+title: Blogging Like a Hacker
+---
+
+## Markdown Basic Syntax
+
+I just love **bold text**. Italicized text is the _cat's meow_. At the command prompt, type `nano`.
+
+My favorite markdown editor is [ByteMD](https://github.com/bytedance/bytemd).
+
+1. First item
+2. Second item
+3. Third item
+
+> Dorothy followed her through many of the beautiful rooms in her castle.
+
+\`\`\`js
+import gfm from '@bytemd/plugin-gfm'
+import { Editor, Viewer } from 'bytemd'
+
+const plugins = [
+  gfm(),
+  // Add more plugins here
+]
+
+const editor = new Editor({
+  target: document.body, // DOM to render
+  props: {
+    value: '',
+    plugins,
+  },
+})
+
+editor.on('change', (e) => {
+  editor.$set({ value: e.detail.value })
+})
+\`\`\`
+
+## GFM Extended Syntax
+
+Automatic URL Linking: https://github.com/bytedance/bytemd
+
+~~The world is flat.~~ We now know that the world is round.
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
+
+## Footnotes
+
+Here's a simple footnote,[^1] and here's a longer one.[^bignote]
+
+[^1]: This is the first footnote.
+[^bignote]: Here's one with multiple paragraphs and code.
+
+    Indent paragraphs to include them in the footnote.
+
+    \`{ my code }\`
+
+    Add as many paragraphs as you like.
+
+## Gemoji
+
+Thumbs up: :+1:, thumbs down: :-1:.
+
+Families: :family_man_man_boy_boy:
+
+Long flags: :wales:, :scotland:, :england:.
+
+## Mermaid Diagrams
+
+\`\`\`mermaid
+graph TD;
+  A-->B;
+  A-->C;
+  B-->D;
+  C-->D;
+\`\`\`
+    `
+}
+```
+
