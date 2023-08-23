@@ -1,24 +1,47 @@
-# Utils
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.0.
+<a href="https://dotglitch.dev/#/ContextMenuLibrary">
+  <h1 align="center">ngx-common</h1>
+</a>
 
-## Code scaffolding
+<p align="center">
+  `@dotglitch/ngx-common` provides a series of common-use components, directives, and services for Angular applications.
+</p>
 
-Run `ng generate component component-name --project utils` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project utils`.
-> Note: Don't forget to add `--project utils` or else it will be added to the default project in your `angular.json` file. 
+[![npm](https://img.shields.io/npm/v/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm](https://img.shields.io/npm/dm/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm downloads](https://img.shields.io/npm/dt/@dotglitch/dotglitch-ngx.svg)](https://npmjs.org/@dotglitch/dotglitch-ngx)
+[![GitHub stars](https://img.shields.io/github/stars/knackstedt/dotglitch-ngx.svg?label=GitHub%20Stars&style=flat)](https://github.com/knackstedt/dotglitch-ngx)
 
-## Build
 
-Run `ng build utils` to build the project. The build artifacts will be stored in the `dist/` directory.
+Quickstart 
+=====
 
-## Publishing
+<!-- [Demo](https://dotglitch.dev/#/ContextMenuLibrary) -->
 
-After building your library with `ng build utils`, go to the dist folder `cd dist/utils` and run `npm publish`.
+## Install
 
-## Running unit tests
+```bash
+$ npm install @dotglitch/ngx-common
+```
 
-Run `ng test utils` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Featured
+ - [Lazy Loader](./src/components/lazy-loader/README.md)
+- Directives
+ - [App Menu & Context Menu](./src/directives/menu.md)
+ - [Tooltip](./src/directives/tooltip.md)
+<!-- - Components -->
+- Services
+ - [Fetch](./src/services/fetch.md)
+ - [Dependency](./src/services/dependency.md)
+ - [Keyboard](./src/services/keyboard.md)
+ - [Dialog](./src/services/dialog.md)
+- Pipes
+ - [HTML-Bypass](./src/pipes/html-bypass.md)
+ - [Resource-Bypass](./src/pipes/resource-bypass.md)
+ - [Script-Bypass](./src/pipes/script-bypass.md)
+ - [Style-Bypass](./src/pipes/style-bypass.md)
+ - [URL-Bypass](./src/pipes/url-bypass.md)
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+<!-- Roadmap
+=====
+  - [ ] Enable sharing menus and combining menu chunks -->
