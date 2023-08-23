@@ -1,24 +1,51 @@
-# Utils
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.0.
+# Reactflow wrapper for Angular
 
-## Code scaffolding
+[![npm](https://img.shields.io/npm/v/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm](https://img.shields.io/npm/dm/@dotglitch/dotglitch-ngx.svg)](https://www.npmjs.com/package/@dotglitch/dotglitch-ngx)
+[![npm downloads](https://img.shields.io/npm/dt/@dotglitch/dotglitch-ngx.svg)](https://npmjs.org/@dotglitch/dotglitch-ngx)
+[![GitHub stars](https://img.shields.io/github/stars/knackstedt/dotglitch-ngx.svg?label=GitHub%20Stars&style=flat)](https://github.com/knackstedt/dotglitch-ngx)
 
-Run `ng generate component component-name --project utils` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project utils`.
-> Note: Don't forget to add `--project utils` or else it will be added to the default project in your `angular.json` file. 
 
-## Build
+This is a [Reactflow](https://github.com/wbkd/react-flow) wrapper library for Angular.
 
-Run `ng build utils` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Publishing
+| :warning:        This library is still in alpha stages, some things may not work correctly.   |
+|-----------------------------------------|
+| If you find any bugs, please open a [PR](https://github.com/knackstedt/dotglitch-ngx/issues). |
 
-After building your library with `ng build utils`, go to the dist folder `cd dist/utils` and run `npm publish`.
+## Installation
+You can install the library with [npm](https://npmjs.com).
 
-## Running unit tests
+### Angular 15+
+```sh
+    # Install ngx-reactflow and dependencies
+    npm i ngx-reactflow reactflow react-dom react --save
 
-Run `ng test utils` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    # Install type definitions
+    npm i -D @types/react@18 @types/react-dom@18
+```
+    
+## Getting started
 
-## Further help
+Use NgxReactflow in your project:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```typescript
+import { Component } from '@angular/core';
+import { ReactflowComponent } from 'ngx-reactflow';
+import { Node, Edge } from 'reactflow';
+
+@Component({
+    selector: 'app-test-component',
+    template: `<ngx-reactflow></ngx-reactflow>`
+    imports: [
+        ReactflowComponent
+    ],
+    standalone: true
+})
+export class TestComponent {
+    nodes: Node<any, string | undefined>[] = [];
+    edges: Edge<any>[] = [];
+}
+```
+
