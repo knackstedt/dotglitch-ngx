@@ -1,7 +1,106 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-  }
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "packages",
+    "projects": {
+        "common": {
+            "projectType": "library",
+            "root": "packages/common",
+            "sourceRoot": "packages/common/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "project": "packages/common/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "packages/common/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "packages/common/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "tsConfig": "packages/common/tsconfig.spec.json",
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ]
+                    }
+                }
+            }
+        },
+        "reactflow": {
+            "projectType": "library",
+            "root": "packages/reactflow",
+            "sourceRoot": "packages/reactflow/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "project": "packages/reactflow/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "packages/reactflow/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "packages/reactflow/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "tsConfig": "packages/reactflow/tsconfig.spec.json",
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ]
+                    }
+                }
+            }
+        },
+        "bytemd": {
+            "projectType": "library",
+            "root": "packages/bytemd",
+            "sourceRoot": "packages/bytemd/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "project": "packages/bytemd/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "packages/bytemd/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "packages/bytemd/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "tsConfig": "packages/bytemd/tsconfig.spec.json",
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }

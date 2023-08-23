@@ -1,0 +1,23 @@
+import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgxLazyLoaderConfig } from './types';
+import { LazyLoaderComponent } from './lazy-loader.component';
+import { LazyLoaderService, NGX_LAZY_LOADER_CONFIG } from './lazy-loader.service';
+
+@NgModule({
+    imports: [LazyLoaderComponent],
+    exports: [LazyLoaderComponent]
+})
+export class LazyLoaderModule {
+    public static forRoot(config: NgxLazyLoaderConfig): ModuleWithProviders<LazyLoaderModule> {
+        return ({
+            ngModule: LazyLoaderModule,
+            providers: [
+                LazyLoaderService,
+                {
+                    provide: NGX_LAZY_LOADER_CONFIG,
+                    useValue: config
+                }
+            ]
+        });
+    }
+}

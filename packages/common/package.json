@@ -1,0 +1,40 @@
+{
+  "name": "@dotglitch/ngx-common",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/knackstedt/dotglitch-ngx"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "andrewk@vivaldi.net",
+    "name": "Andrew G. Knackstedt"
+  },
+  "description": "Angular context menu that works with templates",
+  "keywords": [
+    "angular",
+    "ngx",
+    "typescript",
+    "ivy",
+    "ng2",
+    "ng",
+    "angular-service"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=15.0.0",
+    "@angular/core": ">=15.0.0",
+    "@angular/cdk": ">=15.0.0",
+    "@angular/material": ">=15.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "reactflow": ">=11.0.0"
+  },
+  "peerDependenciesMeta": {
+    "winston": {
+        "optional": true
+    }
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
