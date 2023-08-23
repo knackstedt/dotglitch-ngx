@@ -232,8 +232,8 @@ export class MenuComponent implements OnInit {
 
         const dialogRef = this.dialog.open(component, {
             position: cords,
-            panelClass: ["ngx-ctx-menu", "ngx-app-menu"].concat(this.config?.customClass || []),
-            backdropClass: "ngx-ctx-menu-backdrop",
+            panelClass: ["ngx-menu", "ngx-app-menu"].concat(this.config?.customClass || []),
+            backdropClass: "ngx-menu-backdrop",
             hasBackdrop: !hideBackdrop,
             data: {
                 data: this.data,
@@ -294,7 +294,7 @@ export class MenuComponent implements OnInit {
 
         const { width, height, x, y } = el.getBoundingClientRect();
 
-        const target = document.querySelector(".ngx-ctx-menu,.ngx-app-menu") as HTMLElement;
+        const target = document.querySelector(".ngx-menu") as HTMLElement;
         if (!target) return;
 
         // Move back into view if we're clipping outside of the bottom

@@ -1,6 +1,6 @@
 ::ng-deep {
-    .cdk-overlay-container .ngx-ctx-menu {
-        --mdc-dialog-container-color: var(--ngx-ctx-menu-background-color, #2f2f2f);
+    .cdk-overlay-container .ngx-menu {
+        --mdc-dialog-container-color: var(--ngx-menu-background-color, #2f2f2f);
 
         .mdc-dialog__container {
             transform-origin: top left;
@@ -14,7 +14,7 @@
     //     opacity: 0;
     // }
 
-    .cdk-overlay-pane.ngx-ctx-menu {
+    .cdk-overlay-pane.ngx-menu {
         // .mat-dialog-container {
         //     padding: 0;
         // }
@@ -39,18 +39,18 @@ table {
 }
 
 tr {
-    color: var(--ngx-ctx-menu-text-color, #ccc);
+    color: var(--ngx-menu-text-color, #ccc);
     font-size: 14px;
     cursor: pointer;
     transition: background-color 75ms ease,
                 color 75ms ease;
 
     &:not(.disabled):hover {
-        background-color: var(--ngx-ctx-menu-hover-background-color, #94ebeb);
-        color: var(--ngx-ctx-menu-hover-text-color, #000);
+        background-color: var(--ngx-menu-hover-background-color, #94ebeb);
+        color: var(--ngx-menu-hover-text-color, #000);
 
         a {
-            color: var(--ngx-ctx-menu-hover-text-color, #000);
+            color: var(--ngx-menu-hover-text-color, #000);
         }
     }
 
@@ -59,7 +59,7 @@ tr {
     }
 
     &.disabled .label {
-        color: var(--ngx-ctx-menu-disabled-text-color, #919191);
+        color: var(--ngx-menu-disabled-text-color, #919191);
     }
     .center {
         text-align: center;
@@ -81,14 +81,14 @@ tr {
 }
 .hr {
     height: 1px;
-    // background: var(--ngx-ctx-menu-separator-color, #2a2a2a);
+    // background: var(--ngx-menu-separator-color, #2a2a2a);
     text-align: center;
     position: relative;
 
     &::before,
     &::after {
         content: "";
-        background: var(--ngx-ctx-menu-separator-color, #2a2a2a);
+        background: var(--ngx-menu-separator-color, #2a2a2a);
         display: block;
         position: absolute;
         top: 0;
@@ -106,7 +106,7 @@ tr {
 }
 
 hr {
-    background: var(--ngx-ctx-menu-separator-color, #2a2a2a);
+    background: var(--ngx-menu-separator-color, #2a2a2a);
     border: 0;
     height: 1px;
     margin: 0;
@@ -122,14 +122,14 @@ hr {
 }
 
 .shortcut {
-    color: var(--ngx-ctx-menu-shortcut-text-color, #848484);
+    color: var(--ngx-menu-shortcut-text-color, #848484);
     text-align: end;
     padding-right: 10px;
     padding-left: 12px;
 }
 
 .label {
-    height: var(--ngx-ctx-menu-item-height, 30px);
+    height: var(--ngx-menu-item-height, 30px);
 }
 
 td {
