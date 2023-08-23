@@ -2,8 +2,8 @@
   "name": "@dotglitch/ngx-common",
   "version": "1.0.1",
   "repository": {
-    "url": "https://github.com/knackstedt/dotglitch-ngx"
-  },
+    "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/common"
+},
   "license": "MIT",
   "author": {
     "email": "andrewk@vivaldi.net",
