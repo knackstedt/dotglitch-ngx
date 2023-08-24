@@ -25,11 +25,6 @@
     "bytemd": ">=1.21.0",
     "svelte": ">=4.0.0"
   },
-  "peerDependenciesMeta": {
-    "winston": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "tslib": "^2.3.0"
   },

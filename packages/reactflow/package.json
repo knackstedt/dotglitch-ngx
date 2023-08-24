@@ -26,11 +26,6 @@
     "react-dom": ">=18.0.0",
     "reactflow": ">=11.0.0"
   },
-  "peerDependenciesMeta": {
-    "winston": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "tslib": "^2.3.0"
   },
