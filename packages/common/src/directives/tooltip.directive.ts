@@ -1,8 +1,8 @@
 import { Directive, Input, HostListener, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { getPosition } from './utils';
-import { PopupOptions } from '../types/popup';
-import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
+import {  } from '../types/popup';import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
+import { TooltipOptions } from '../types/tooltip';
 
 @Directive({
     selector: '[ngxTooltip],[ngx-tooltip]',
@@ -22,7 +22,7 @@ export class TooltipDirective {
      * Configuration for opening the app menu
      */
     @Input("ngxTooltipConfig")
-    @Input("ngx-tooltip-config") config: PopupOptions = {};
+    @Input("ngx-tooltip-config") config: TooltipOptions = {};
 
     /**
      * Arbitrary data to pass into the template
@@ -30,16 +30,34 @@ export class TooltipDirective {
     @Input("ngxTooltipContext")
     @Input("ngx-tooltip-context") data: any = {};
 
+
+    private dialogInstance: MatDialogRef<any>;
+    private isCursorOverTarget = false;
+    private isFreezeOnKeyCodeBound = false;
+
     constructor(
         private dialog: MatDialog,
         private viewContainer: ViewContainerRef
     ) {
+        if (this.config.freezeOnKeyCode !== null) {
+            this.isFreezeOnKeyCodeBound = true;
+            document.body.addEventListener("keydown", this.onKeyDownEvt);
+        }
     }
 
-    ngOnInit() {
+    ngOnDestroy() {
+        if (this.isFreezeOnKeyCodeBound) {
+            document.body.removeEventListener("keydown", this.onKeyDownEvt);
+        }
     }
 
-    private dialogInstance: MatDialogRef<any>;
+    onKeyDown(evt) {
+        // TODO: fade message 'tooltip is locked open'
+        if (evt.code == ("F2")) {
+            this.dialogInstance.componentInstance.isLockedOpen = true;
+        }
+    }
+    private onKeyDownEvt = this.onKeyDown.bind(this);
 
     // Needs to be public so we can manually open the dialog
     @HostListener('pointerenter', ['$event'])
@@ -48,8 +66,23 @@ export class TooltipDirective {
         if (!(this.template instanceof TemplateRef))
             return;
 
-        const el = this.viewContainer.element.nativeElement;
-        this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
+        this.isCursorOverTarget = true;
+
+        setTimeout(async () => {
+            // If the cursor moved away in the time
+            if (!this.isCursorOverTarget)
+                return;
+
+            if (!this.dialogInstance) {
+                const el = this.viewContainer.element.nativeElement;
+                this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
+            }
+        }, this.config.delay ?? 250);
+    }
+
+    @HostListener('pointerleave', ['$event'])
+    public async onPointerLeave(evt: PointerEvent) {
+        this.isCursorOverTarget = false;
     }
 }
 
@@ -59,7 +92,7 @@ export const openTooltip = async (
     template: TemplateRef<any> | Type<any>,
     data: any,
     el: HTMLElement,
-    config?: PopupOptions
+    config?: TooltipOptions
 ) => {
 
     const rect = await calcTooltipBounds(template, data);

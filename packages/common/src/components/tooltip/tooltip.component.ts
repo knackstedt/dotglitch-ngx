@@ -61,9 +61,10 @@ export class TooltipComponent {
     @Input() selfCords;
     @Input() template: TemplateRef<any> | Type<any>;
 
-    isTemplate: boolean;
-    hasBootstrapped = false;
-    pointerIsOnVoid = false;
+    public isTemplate: boolean;
+    public hasBootstrapped = false;
+    public pointerIsOnVoid = false;
+    public isLockedOpen = false;
 
     coverRectCords = {
         top: 0,
@@ -110,7 +111,7 @@ export class TooltipComponent {
             this.hasBootstrapped = true;
             if (this.pointerIsOnVoid)
                 this.dialogRef.close();
-        }, 10);
+        }, 200);
     }
 
     /**
@@ -124,7 +125,11 @@ export class TooltipComponent {
 
     @HostListener("pointerleave")
     private onPointerLeave() {
-
         this.dialogRef?.close();
+    }
+
+    closeOnVoid() {
+        console.log("fuck you")
+        this.dialogRef.close();
     }
 }

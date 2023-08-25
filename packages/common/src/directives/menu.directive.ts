@@ -5,7 +5,7 @@ import { MenuItem, MenuOptions } from '../types/menu';
 import { MenuComponent, calcMenuItemBounds } from '../components/menu/menu.component';
 
 @Directive({
-    selector: '[ngx-ctxmenu],[ngx-menu]',
+    selector: '[ngx-contextmenu],[ngx-menu],[ngxContextmenu],[ngxMenu]',
     providers: [
         MatDialog
     ],
@@ -16,17 +16,26 @@ export class MenuDirective {
     /**
      * The data representing the item the menu was opened for.
      */
+    @Input("ngxMenuContext")
     @Input("ngx-menu-context") data: any;
 
     /**
      * The items that will be bound to the context menu.
      */
-    @Input("ngx-ctxmenu") ctxMenuItems: MenuItem[];
+    @Input("ngxContextmenu")
+    @Input("ngx-contextmenu") ctxMenuItems: MenuItem[];
+
+    /**
+     * The items that will be bound to the menu that pops
+     * up when the user clicks the element.
+     */
+    @Input("ngxMenu")
     @Input("ngx-menu") menuItems: MenuItem[];
 
     /**
      * Configuration for opening the app menu
      */
+    @Input("ngxMenuConfig")
     @Input("ngx-menu-config") config: MenuOptions = {};
 
     constructor(
@@ -85,8 +94,14 @@ export class MenuDirective {
     }
 }
 
-// Helper to open the context menu without using the directive.
-export const openMenu = async (dialog: MatDialog, menuItems: MenuItem[], data: any, evt: PointerEvent, config: MenuOptions = {}) => {
+// Helper to open the menu without using the directive.
+export const openMenu = async (
+    dialog: MatDialog,
+    menuItems: MenuItem[],
+    data: any,
+    evt: PointerEvent,
+    config: MenuOptions = {}
+) => {
     evt.preventDefault();
     evt.stopPropagation();
 

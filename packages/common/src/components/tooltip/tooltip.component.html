@@ -10,7 +10,7 @@
 ></div>
 
 <div class="void"
-    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && dialogRef.close()"
+    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
     (pointerleave)="pointerIsOnVoid = false"
     (pointerdown)="hasBootstrapped && dialogRef.close()"
 ></div>
