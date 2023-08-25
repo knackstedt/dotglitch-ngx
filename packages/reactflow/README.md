@@ -37,7 +37,7 @@ import { Node, Edge } from 'reactflow';
 
 @Component({
     selector: 'app-test-component',
-    template: `<ngx-reactflow></ngx-reactflow>`
+    template: `<ngx-reactflow></ngx-reactflow>`,
     imports: [
         ReactflowComponent
     ],
