@@ -11,15 +11,16 @@
         "build:common": "ng build common",
         "build:reactflow": "ng build reactflow",
         "build:bytemd": "ng build bytemd",
+        "build:monaco-editor": "ng build tabulator",
+        "build:tabulator": "ng build monaco-editor",
         "dev": "ng build common --watch --configuration development",
         "dev:common": "ng build common --watch --configuration development",
         "dev:reactflow": "ng build reactflow --watch --configuration development",
         "dev:bytemd": "ng build bytemd --watch --configuration development",
+        "dev:monaco-editor": "ng build monaco-editor --watch --configuration development",
+        "dev:tabulator": "ng build tabulator --watch --configuration development",
         "test": "ng test"
     },
-    "files": [
-        "dist/ngx-ctx-menu"
-    ],
     "private": true,
     "dependencies": {
         "@angular/animations": "^15.1.0",
@@ -42,6 +43,7 @@
         "reactflow": "^11.8.3",
         "rxjs": "~7.8.0",
         "svelte": "^4.2.0",
+        "tabulator-tables": "^5.5.1",
         "tslib": "^2.3.0",
         "zone.js": "~0.12.0"
     },
