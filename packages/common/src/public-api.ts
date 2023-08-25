@@ -3,6 +3,12 @@
  */
 
 /**
+ ** Types
+ */
+export * from './types/menu';
+export * from './types/popup';
+
+/**
  ** Directives
  */
 export * from './directives/tooltip.directive';
