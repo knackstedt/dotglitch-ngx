@@ -57,7 +57,6 @@ export class MenuDirective {
         }
 
         if (!this.config?.trigger) {
-            el.onclick = this.openMenu.bind(this);
             el.addEventListener('click', this.openMenu.bind(this));
         }
         else {
@@ -82,7 +81,7 @@ export class MenuDirective {
 
         el.classList.add("ngx-menu-open");
 
-        return openMenu(this.dialog, this.menuItems, this.data, evt, this.config)
+        return openMenu(this.dialog, this.menuItems, this.data, evt, this.config, el)
             .then((...res) => {
                 el.classList.remove("ngx-menu-open");
                 return res;
@@ -100,12 +99,13 @@ export const openMenu = async (
     menuItems: MenuItem[],
     data: any,
     evt: PointerEvent,
-    config: MenuOptions = {}
+    config: MenuOptions = {},
+    el?: HTMLElement
 ) => {
     evt.preventDefault();
     evt.stopPropagation();
 
-    const cords = getPosition(evt, config, await calcMenuItemBounds(menuItems, data));
+    const cords = getPosition(el || evt, config, await calcMenuItemBounds(menuItems, data));
     const specificId = crypto.randomUUID();
 
     if (!config.alignment) config.alignment = "start";
