@@ -152,13 +152,13 @@ export class MenuComponent implements OnInit {
         });
 
         // Show the icon column if there are any items with an icon
-        this.showIconColumn = !!this.items.find(i =>
+        this.showIconColumn = !!this.items?.find(i =>
                 typeof i == "object" &&
                 typeof i['icon'] == "string" &&
                 i['icon'].length > 2
             );
 
-        this.showShortcutColumn = !!this.items.find(i =>
+        this.showShortcutColumn = !!this.items?.find(i =>
                 typeof i == "object" &&
                 typeof i['shortcut'] == "string" &&
                 i['shortcut'].length > 2
