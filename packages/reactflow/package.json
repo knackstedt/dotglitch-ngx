@@ -1,6 +1,6 @@
 {
   "name": "ngx-reactflow",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": {
     "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/reactflow"
   },
