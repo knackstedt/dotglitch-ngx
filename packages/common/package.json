@@ -1,7 +1,7 @@
 {
   "name": "@dotglitch/ngx-common",
   "private": false,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "repository": {
     "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/common"
   },
