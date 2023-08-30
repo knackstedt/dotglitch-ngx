@@ -52,7 +52,7 @@ export class MenuDirective {
             el.onclick = this.openMenu.bind(this);
             el.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                this.openMenu(e as any);
+                this.openMenu(e as any, this.ctxMenuItems);
             });
         }
 
@@ -66,7 +66,7 @@ export class MenuDirective {
                 if (t == "contextmenu") {
                     el.addEventListener(t, (e) => {
                         e.preventDefault();
-                        this.openMenu(e as any);
+                        this.openMenu(e as any, this.ctxMenuItems);
                     });
                 }
                 else {
@@ -76,12 +76,14 @@ export class MenuDirective {
         }
     }
 
-    async openMenu(evt: PointerEvent) {
+    async openMenu(evt: PointerEvent, items = this.menuItems) {
         const el = this.viewContainer.element.nativeElement as HTMLElement;
 
         el.classList.add("ngx-menu-open");
 
-        return openMenu(this.dialog, this.menuItems, this.data, evt, this.config, el)
+        const isCtxEvent = evt.button == 2;
+
+        return openMenu(this.dialog, items, this.data, evt, this.config, isCtxEvent ? null : el)
             .then((...res) => {
                 el.classList.remove("ngx-menu-open");
                 return res;
@@ -102,13 +104,17 @@ export const openMenu = async (
     config: MenuOptions = {},
     el?: HTMLElement
 ) => {
+    // console.log({ dialog, menuItems, data, evt, config, el });
+
     evt.preventDefault();
     evt.stopPropagation();
 
+    // Apply defaults.
+    if (!config.alignment)
+        config.alignment = "start";
+
     const cords = getPosition(el || evt, config, await calcMenuItemBounds(menuItems, data));
     const specificId = crypto.randomUUID();
-
-    if (!config.alignment) config.alignment = "start";
 
     return new Promise(res => {
         dialog.open(MenuComponent, {
