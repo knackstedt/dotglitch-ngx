@@ -66,6 +66,16 @@ export class TooltipDirective {
         if (!(this.template instanceof TemplateRef))
             return;
 
+        // If the click trigger is set, we will immediately open the tooltip.
+        // This will bypass all other triggers.
+        if (this.config.triggers.includes("click")) {
+            if (!this.dialogInstance) {
+                const el = this.viewContainer.element.nativeElement;
+                this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
+            }
+            return;
+        }
+
         this.isCursorOverTarget = true;
 
         setTimeout(async () => {

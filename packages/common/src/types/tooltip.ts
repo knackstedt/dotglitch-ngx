@@ -5,13 +5,20 @@ export type TooltipOptions = Partial<PopupOptions & {
      * Duration in ms for how long the mouse
      * needs to be over the element before the
      * tooltip will be visible
-     * Default `250`
+     *  - Default `250`
+     *  - Only applies when trigger is `hover`.
      */
     delay: number,
 
     /**
      * A key the user can press to keep a tooltip visible.
-     * Default `F2`
+     *  - Default `F2`
      */
     freezeOnKeyCode: string,
+
+    /**
+     * What user interaction event should make the tooltip appear.
+     *  - Default `hover`
+     */
+    triggers: ("click" | "hover")[]
 }>;
