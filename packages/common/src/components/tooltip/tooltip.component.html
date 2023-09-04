@@ -27,7 +27,7 @@
     >
         <ng-container
             [ngTemplateOutlet]="$any(template)"
-            [ngTemplateOutletContext]="{ '$implicit': data }"
+            [ngTemplateOutletContext]="{ '$implicit': data, dialog: dialogRef }"
         ></ng-container>
     </ng-container>
 </div>
