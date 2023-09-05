@@ -71,6 +71,8 @@ export class TooltipDirective {
         if (this.config.triggers.includes("click")) {
             if (!this.dialogInstance) {
                 const el = this.viewContainer.element.nativeElement;
+                const data = this.data;
+                data.isLockedOpen = true;
                 this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
             }
             return;

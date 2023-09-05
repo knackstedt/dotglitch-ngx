@@ -85,6 +85,7 @@ export class TooltipComponent {
         this.template = this.template || this._data?.template;
         this.ownerCords = this.ownerCords || this._data?.ownerCords;
         this.selfCords = this.selfCords || this._data?.selfCords;
+        this.isLockedOpen = this._data?.isLockedOpen;
     }
 
     ngOnInit() {
@@ -109,7 +110,7 @@ export class TooltipComponent {
         // TODO: resolve the event hook with the .void element
         setTimeout(() => {
             this.hasBootstrapped = true;
-            if (this.pointerIsOnVoid)
+            if (this.pointerIsOnVoid && !this.isLockedOpen)
                 this.dialogRef.close();
         }, 200);
     }
@@ -119,17 +120,14 @@ export class TooltipComponent {
      */
     @HostListener("window:resize")
     @HostListener("window:blur")
-    private onClose() {
-        this.dialogRef?.close();
-    }
-
     @HostListener("pointerleave")
-    private onPointerLeave() {
-        this.dialogRef?.close();
+    private onClose() {
+        if (!this.isLockedOpen)
+            this.dialogRef?.close();
     }
 
-    closeOnVoid() {
-        console.log("fuck you")
-        this.dialogRef.close();
+    closeOnVoid(force = false) {
+        if (!this.isLockedOpen || force)
+            this.dialogRef.close();
     }
 }
