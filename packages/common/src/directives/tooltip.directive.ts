@@ -104,7 +104,8 @@ export const openTooltip = async (
     template: TemplateRef<any> | Type<any>,
     data: any,
     el: HTMLElement,
-    config?: TooltipOptions
+    config?: TooltipOptions,
+    focusTrap = false
 ) => {
 
     const rect = await calcTooltipBounds(template, data);
@@ -114,6 +115,8 @@ export const openTooltip = async (
 
     return new Promise(res => {
         dialog.open(TooltipComponent, {
+            autoFocus: focusTrap,
+            restoreFocus: focusTrap,
             data: {
                 data: data,
                 template: template,
