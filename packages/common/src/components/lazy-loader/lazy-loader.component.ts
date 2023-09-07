@@ -257,7 +257,7 @@ export class LazyLoaderComponent implements AfterViewInit {
 
 
             // Check if there is some corruption on the bundle.
-            if (!bundle || typeof bundle != 'object' || bundle['__esModule'] as any !== true || bundle.toString() != "[object Module]") {
+            if (!bundle || typeof bundle != 'object') {
                 this.err(`Failed to load component/module for '${this._id}'! Parsed resource is invalid.`);
                 return this.loadError();
             }
