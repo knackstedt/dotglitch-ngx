@@ -30,6 +30,7 @@ export * from './services/dependency.service';
 export * from './services/dialog.service';
 export * from './services/fetch.service';
 export * from './services/keyboard.service';
+export * from './services/file.service';
 // export * from './services/serviceworker.service';
 
 /**
