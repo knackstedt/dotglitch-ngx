@@ -68,7 +68,7 @@ export class TooltipDirective {
 
         // If the click trigger is set, we will immediately open the tooltip.
         // This will bypass all other triggers.
-        if (this.config.triggers.includes("click")) {
+        if (this.config?.triggers?.includes("click")) {
             if (!this.dialogInstance) {
                 const el = this.viewContainer.element.nativeElement;
                 const data = this.data;
