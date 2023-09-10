@@ -6,7 +6,7 @@ export type KeyCommand = {
      * The non-modifier key(s) that must be pressed for the event to fire.
      */
     key: string | string[],
-    label: string,
+    label?: string,
 
     ctrl?: boolean,
     alt?: boolean,
@@ -35,7 +35,7 @@ export class KeyboardService {
         shift?: boolean,
         super?: boolean,
         interrupt?: boolean,
-        label: string,
+        label?: string,
         keys: string[],
         sub: Subject<KeyboardEvent>
     }[] = [];
