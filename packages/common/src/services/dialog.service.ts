@@ -7,11 +7,6 @@ const { log, warn, err } = Logger("DialogService", "#607d8b");
 
 export type DialogOptions = Partial<Omit<MatDialogConfig<any>, 'data'> & {
     /**
-     *
-     */
-    group: string,
-
-    /**
      * List of properties to be provided to @Input() injectors
      */
     inputs: { [key: string]: any },
@@ -39,10 +34,18 @@ export class DialogService {
     ) {
     }
 
-    open(name: string, opts: DialogOptions = {}): Promise<any> {
+    open(name: string)
+    open(name: string, opts: DialogOptions)
+    open(name: string, group: string)
+    open(name: string, group: string, opts: DialogOptions)
+    open(name: string, groupOrOptions?: any, opts: DialogOptions = {}): Promise<any> {
+        const group = typeof groupOrOptions == "string" ? groupOrOptions : 'default';
+        if (typeof groupOrOptions == 'object')
+            opts = groupOrOptions;
+
         return new Promise((resolve, reject) => {
 
-            const registration = this.lazyLoader.resolveRegistrationEntry(name, opts.group || "default");
+            const registration = this.lazyLoader.resolveRegistrationEntry(name, group);
             if (!registration)
                 return reject(new Error("Cannot open dialog for " + name + ". Could not find in registry."));
 
@@ -57,7 +60,7 @@ export class DialogService {
                     id: name,
                     inputs: opts.inputs || {},
                     outputs: opts.outputs || {},
-                    group: opts.group
+                    group: group
                 },
                 panelClass: [
                     "dialog-" + name,
