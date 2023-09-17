@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Logger } from '../utils';
-import { LazyLoaderService } from '../public-api';
+import { LazyLoaderComponent } from '../components/lazy-loader/lazy-loader.component';
+import { LazyLoaderService } from '../components/lazy-loader/lazy-loader.service';
 
 const { log, warn, err } = Logger("DialogService", "#607d8b");
 
@@ -68,8 +69,7 @@ export class DialogService {
                 ]
             };
 
-            // TODO:
-            let dialog = this.dialog.open(undefined, args);
+            let dialog = this.dialog.open(LazyLoaderComponent, args);
 
             dialog['idx'] = name;
             this.dialogs.push(dialog);
