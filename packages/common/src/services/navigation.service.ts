@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Logger, getUrlData, updateUrl } from '../utils';
+import { Logger } from '../utils';
 import { LazyLoaderService } from '../public-api';
 
 const { log, warn, err } = Logger("NavigationService", "#ff9800");
