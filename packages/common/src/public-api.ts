@@ -31,6 +31,7 @@ export * from './services/dialog.service';
 export * from './services/fetch.service';
 export * from './services/keyboard.service';
 export * from './services/file.service';
+export * from './services/theme.service';
 // export * from './services/serviceworker.service';
 
 /**
