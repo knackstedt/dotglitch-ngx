@@ -234,7 +234,7 @@ export class MenuComponent implements OnInit {
             position: cords,
             panelClass: ["ngx-menu", "ngx-app-menu"].concat(this.config?.customClass || []),
             backdropClass: "ngx-menu-backdrop",
-            hasBackdrop: !hideBackdrop,
+            hasBackdrop: false,
             data: {
                 data: this.data,
                 parentCords: this.viewContainer?.element?.nativeElement?.getBoundingClientRect(),
