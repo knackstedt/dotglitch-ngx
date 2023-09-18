@@ -8,12 +8,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ComponentPortal, PortalModule } from '@angular/cdk/portal';
 import { firstValueFrom } from 'rxjs';
 import { MenuItem, MenuOptions } from '../../types/menu';
+import { TooltipDirective } from '../../directives/tooltip.directive';
 
 export const calcMenuItemBounds = async (menuItems: MenuItem[], dataObj: any) => {
     const data = {
         data: dataObj,
         items: menuItems,
         config: {},
+        selfCords: { left: "0px", top: "0px" },
+        ownerCords: { x: 0, y: 0, width: 0, height: 0 },
         id: null
     }
 
@@ -77,7 +80,6 @@ class TemplateWrapper {
         this.data = _data.data;
         this.template = _data.template;
 
-        // TODO: This is probably invalid
         this.templateType = this.template instanceof TemplateRef ? "template" : "component";
 
         if (this.templateType == "component") {
@@ -95,20 +97,33 @@ class TemplateWrapper {
         NgForOf,
         NgTemplateOutlet,
         MatIconModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        TooltipDirective
     ],
     standalone: true
 })
 export class MenuComponent implements OnInit {
     @Input() public data: any;
-    @Input() public parentCords: DOMRect;
     @Input() public items: MenuItem[];
     @Input() public config: MenuOptions;
     @Input() public id: string;
 
+    @Input() ownerCords: DOMRect;
+    @Input() selfCords;
+
     @Output() closeSignal = new EventEmitter();
 
-    selfCords: DOMRect;
+    public hasBootstrapped = false;
+    public pointerIsOnVoid = false;
+    public isLockedOpen = false;
+
+    coverRectCords = {
+        top: 0,
+        left: 0,
+        height: 0,
+        width: 0
+    }
+
     // Check if there are any slashes or dots -- that will clearly exclude it from being a mat icon
     public readonly matIconRx = /[\/\.]/i;
     showIconColumn = true;
@@ -119,15 +134,17 @@ export class MenuComponent implements OnInit {
         public sanitizer: DomSanitizer,
         @Optional() @Inject(MAT_DIALOG_DATA) private _data: any,
         @Optional() public dialog: MatDialog, // optional only for the purpose of estimating dimensions
-        @Optional() public dialogRef: MatDialogRef<any>,
-        private changeDetector: ChangeDetectorRef
+        @Optional() public dialogRef: MatDialogRef<any>
     ) {
         // Defaults are set before @Input() hooks evaluate
         this.data  = this._data?.data;
-        this.parentCords  = this._data?.parentCords;
+        this.ownerCords = this._data?.ownerCords;
+        this.selfCords = this._data?.selfCords;
         this.items = this._data?.items;
         this.config = this._data?.config;
         this.id = this._data?.id;
+
+        console.log(this.ownerCords)
     }
 
     ngOnInit() {
@@ -164,16 +181,22 @@ export class MenuComponent implements OnInit {
                 i['shortcut'].length > 2
             );
 
-        // setTimeout(() => {
-        //     this.closeOnLeave = true
-        // }, 300);
-    }
+        if (this.ownerCords) {
+            const selfY = parseInt(this.selfCords.top.replace('px', ''));
+            const selfX = parseInt(this.selfCords.left.replace('px', ''));
 
-    ngAfterViewInit() {
-        if (this.parentCords) {
-            this.selfCords = this.viewContainer?.element?.nativeElement?.getBoundingClientRect();
-            this.changeDetector.detectChanges();
+            this.coverRectCords = {
+                top: this.ownerCords.y - selfY - 16,
+                left: this.ownerCords.x - selfX - 16,
+                height: this.ownerCords.height + 32,
+                width: this.ownerCords.width + 32
+            }
+
         }
+
+        setTimeout(() => {
+            this.hasBootstrapped = true;
+        }, 200);
     }
 
     /**
@@ -232,12 +255,13 @@ export class MenuComponent implements OnInit {
 
         const dialogRef = this.dialog.open(component, {
             position: cords,
-            panelClass: ["ngx-menu", "ngx-app-menu"].concat(this.config?.customClass || []),
+            panelClass: ["ngx-menu"].concat(this.config?.customClass || []),
             backdropClass: "ngx-menu-backdrop",
             hasBackdrop: false,
             data: {
                 data: this.data,
-                parentCords: this.viewContainer?.element?.nativeElement?.getBoundingClientRect(),
+                ownerCords: row.getBoundingClientRect(),
+                selfCords: cords,
                 items: item.children,
                 template: item.childTemplate,
                 config: this.config
@@ -247,7 +271,7 @@ export class MenuComponent implements OnInit {
         let _s = dialogRef
             .afterClosed()
                 .subscribe((result) => {
-                    if (result != -1) {
+                    if (result !== null && result != -1) {
                         if (result && typeof item.action == 'function')
                             item.action(result);
 
@@ -310,33 +334,22 @@ export class MenuComponent implements OnInit {
         }
     }
 
-    // private hoveredItems: MatDialogRef<any>[];
-    // async onHover(item, row: HTMLTableRowElement) {
-    //     this.hoveredItems.forEach(i => i.close(-1));
+    closeOnVoid(force = false) {
+        if (!this.isLockedOpen || force)
+            this.dialogRef.close(-1);
+    }
 
-    //     if (typeof item['_selfclose'] == 'number' && (Date.now() - item['_selfclose']) < 3*1000) return;
+    // If the void element gets stuck open, make wheel events pass through.
+    onWheel(evt: WheelEvent) {
+        const el = this.viewContainer.element.nativeElement as HTMLElement;
+        el.style.display = "none";
+        const target = document.elementFromPoint(evt.clientX, evt.clientY);
+        el.style.display = "block";
 
-    //     const hi = await this.onMenuItemClick(item, row, true);
-    //     this.hoveredItems.push(hi);
-
-    //     hi.afterClosed().toPromise().then(e => {
-    //         this.viewContainer.element.nativeElement.focus();
-    //         this.hoveredItems.splice(this.hoveredItems.findIndex(i => i == hi), 1);
-    //     })
-    // }
-
-    // closeOnLeave = false;
-    // async onLeave() {
-    //     if (this.closeOnLeave) {
-    //         if (this.hoveredItems.length > 0) {
-    //             this.hoveredItems.forEach(i => i.close(-1));
-    //             this.hoveredItems.splice(0);
-    //         }
-    //         else {
-    //             this.closeSignal.next(-1);
-
-    //             this.dialogRef.close(-1);
-    //         }
-    //     }
-    // }
+        target.scroll({
+            top: evt.deltaY + target.scrollTop,
+            left: evt.deltaX + target.scrollLeft,
+            behavior: "smooth"
+        })
+    }
 }

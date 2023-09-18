@@ -29,7 +29,7 @@
     z-index: 1;
     position: relative;
     display: block;
-    overflow: hidden auto;
+    // overflow: hidden auto;
 }
 
 table {
@@ -159,3 +159,15 @@ td {
 //     background-color: #f006;
 //     inset: 0;
 // }
+
+.void, .owner-mask {
+    position: absolute;
+}
+
+.void {
+    top: -100vh;
+    right: -100vw;
+    bottom: -100vh;
+    left: -100vw;
+    z-index: -2
+}

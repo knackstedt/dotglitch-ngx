@@ -1,3 +1,21 @@
+<!-- Mouse event blocker for pointer leave -->
+<div
+    *ngIf="coverRectCords"
+    class="owner-mask"
+    [style.top]="coverRectCords.top + 'px'"
+    [style.left]="coverRectCords.left + 'px'"
+    [style.height]="coverRectCords.height + 'px'"
+    [style.width]="coverRectCords.width + 'px'"
+    style="z-index: -1"
+></div>
+
+<div class="void"
+    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
+    (pointerleave)="pointerIsOnVoid = false"
+    (pointerdown)="hasBootstrapped && closeOnVoid(true)"
+    (wheel)="onWheel($event)"
+></div>
+
 <table>
     <tbody>
         <ng-container *ngFor="let item of items">
