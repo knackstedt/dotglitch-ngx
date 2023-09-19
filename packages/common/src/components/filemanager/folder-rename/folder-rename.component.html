@@ -1,6 +1,6 @@
 <mat-form-field style="width: 280px;">
     <mat-label>Name</mat-label>
-    <input matInput type="text" [(ngModel)]="name">
+    <input matInput type="text" [(ngModel)]="name" (keyup)="$event.key == 'Enter' && onSave()">
 </mat-form-field>
 
 <div style="align-self: end;">
