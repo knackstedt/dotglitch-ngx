@@ -80,7 +80,7 @@ export type NgxFileManagerConfiguration = Partial<{
      * User cannot view outside of this path.
      *   (Not to be used as a security measure)
      */
-    chrootPath: string | RegExp,
+    chrootPath: string,
 
     /**
      * Restrict users to only navigate around to subpaths of the specified `path`
@@ -293,16 +293,36 @@ export class FilemanagerComponent implements OnInit {
     calcBreadcrumb(path: string) {
         if (!path) return null;
 
+        path = path.replace("#/", '/');
 
-        const parts = path.replace(this.config.chrootPath || /^\//, '/').replace("#/", '/').split('/');
-        return parts.map((p, i) => {
-            const path = parts.slice(0, i + 1).join('/');
+        // If we're acting like we're in a changed root, we wipe out
+        // breadcrumbs below the root
+        if (this.config.chrootPath) {
+            path = path.replace(this.config.chrootPath, '');
+            const parts = path.split('/');
 
-            return {
-                id: path || '/',
-                label: p || ""
-            };
-        });
+            path = path.replace(/^\//, this.config.chrootPath);
+            return parts.map((p, i) => {
+                const path = parts.slice(0, i + 1).join('/');
+
+                return {
+                    id: (this.config.chrootPath + (path || '/')).replace(/\/+/g, '/'),
+                    label: p || ""
+                };
+            });
+        }
+        else {
+            const parts = path.split('/');
+
+            return parts.map((p, i) => {
+                const path = parts.slice(0, i + 1).join('/');
+
+                return {
+                    id: path || '/',
+                    label: p || ""
+                };
+            });
+        }
     }
 
     onBreadcrumbClick(crumb) {
@@ -339,7 +359,8 @@ export class FilemanagerComponent implements OnInit {
         }
         const target = recurse(currentItems);
 
-        target['_children'] = dirItems;
+        if (target)
+            target['_children'] = dirItems;
 
         tab.sidebarItems = currentItems;
     }

@@ -1,4 +1,4 @@
-<button (click)="crumbClick.next({ id: '/', label: ''})">{{config.rootName || 'Storage'}}</button>
+<button (click)="crumbClick.next({ id: config.chrootPath || '/', label: ''})">{{config.rootName || 'Storage'}}</button>
 <ng-container *ngFor="let crumb of crumbs">
     <button *ngIf="crumb.label.trim()" (click)="crumbClick.next(crumb)">{{crumb.label}}</button>
 </ng-container>

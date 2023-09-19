@@ -104,6 +104,9 @@
         }
     }
 
+    .tabulator .tabulator-row .tabulator-cell:not(:first-of-type) {
+        padding-top: 9px;
+    }
 }
 
 .list {

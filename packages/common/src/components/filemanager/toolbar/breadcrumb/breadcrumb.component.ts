@@ -8,7 +8,7 @@ export type Breadcrumb = {
 }
 
 @Component({
-    selector: 'gtk-breadcrumb',
+    selector: 'app-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
     imports: [

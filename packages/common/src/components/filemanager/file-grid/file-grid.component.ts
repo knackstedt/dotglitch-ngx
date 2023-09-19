@@ -5,12 +5,9 @@ import { MatInputModule } from '@angular/material/input';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
 import { CellComponent, EmptyCallback } from 'tabulator-tables';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-
 import { DirectoryDescriptor, FileDescriptor, FilemanagerComponent, FileViewTab, FSDescriptor, NgxFileManagerConfiguration } from '../filemanager.component';
-
 import { FileSorting } from '../../types';
 import { IconResolver } from '../icon-resolver';
 import { TabulatorComponent } from '../../tabulator/tabulator.component';
@@ -553,14 +550,15 @@ export class FileGridComponent implements OnInit {
     }
 
     onItemClick(file: FSDescriptor) {
+        console.log(file, this);
         if (file.kind == "directory") {
             this.folderDblClick.next(file);
             this.path = file.path + file.name;
         }
-        else if (file.ext == "zip") {
-            this.fileDblClick.next(file);
-            this.path = file.path + file.name;
-        }
+        // else if (file.ext == "zip") {
+        //     this.fileDblClick.next(file);
+        //     this.path = file.path + file.name;
+        // }
         else {
             this.fileDblClick.next(file);
             this.fileSelect.next(file);
@@ -690,7 +688,7 @@ export class FileGridComponent implements OnInit {
         const item = cell.getData() as FSDescriptor;
         return `
             <span style="display: flex; align-items: center">
-                <img style="height: 24px; margin-right: 6px" src="${this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, item['_icon'].path)}"/>
+                <img style="height: 24px; margin-right: 6px" src="${item['_icon'].path}"/>
                 <p style="margin: 0">${this.sanitizer.sanitize(SecurityContext.HTML, item['vanityName'] || item.name)}</p>
             </span>
         `;
