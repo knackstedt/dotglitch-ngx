@@ -1,0 +1,63 @@
+<button
+    *ngIf="fileManager.sidebarOverlay && !drawerMode"
+    mat-icon-button
+    (click)="toggleDrawer()"
+>
+    <mat-icon>list</mat-icon>
+</button>
+
+<ng-container *ngIf="!showBareMinimum">
+    <div class="buttongroup">
+        <gtk-icon-button
+            fontIcon="arrow_back_ios_new"
+            (click)="historyBack(currentTab)"
+            [disabled]="currentTab.history?.length <= 1"
+        />
+        <gtk-icon-button
+            fontIcon="arrow_forward_ios"
+            (click)="historyForward(currentTab)"
+            [disabled]="currentTab.historyIndex >= (currentTab.history?.length-1)"
+        />
+    </div>
+
+    <div style="width: 40px" *ngIf="!drawerMode"></div>
+</ng-container>
+
+
+<gtk-breadcrumb
+    *ngIf="currentTab"
+    style="flex: 1"
+    [crumbs]="currentTab.breadcrumb"
+    (crumbClick)="onBreadcrumbClick.next($event)"
+    [config]="config"
+/>
+
+<ng-container *ngIf="!drawerMode">
+    <!-- <div style="flex: 1"></div> -->
+
+    <gtk-icon-button
+        fontIcon="more_vert"
+        [ngx-menu]="fileOptions"
+        [ngx-menu-config]="{position: 'bottom'}"
+    />
+
+    <div style="width: 8px"></div>
+
+    <!-- <gtk-icon-button
+        fontIcon="search"
+    /> -->
+
+    <div style="width: 100px" *ngIf="fileManager.width > 800"></div>
+
+    <gtk-icon-button
+        [fontIcon]="currentTab.viewMode == 'list' ? 'view_list' : 'grid_view'"
+        (click)="currentTab.viewMode = currentTab.viewMode == 'list' ? 'grid' : 'list'; fileManager.onResize()"
+    />
+
+    <gtk-icon-button
+        fontIcon="sort"
+        [ngx-menu]="sortOptions"
+        [ngx-menu-config]="{position: 'bottom'}"
+    />
+</ng-container>
+

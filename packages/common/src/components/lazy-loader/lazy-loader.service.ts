@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { CompiledComponent, CompiledModule, ComponentRegistration, ComponentResolveStrategy, DynamicRegistrationArgs, NgxLazyLoaderConfig } from './types';
 import { stringToSlug, Logger } from '../../utils';
 

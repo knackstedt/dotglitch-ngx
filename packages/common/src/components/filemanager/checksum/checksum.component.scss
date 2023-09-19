@@ -1,0 +1,35 @@
+:host {
+    min-height: 200px;
+    min-width: 300px;
+    display: block;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+}
+
+.row {
+    display: flex;
+
+    &>div:nth-child(1) {
+        flex: 0 0 100px;
+    }
+    &>div:nth-child(2) {
+        flex: 1;
+    }
+}
+
+.digest {
+    word-break: break-all;
+    background: #222;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.controls {
+    align-self: end;
+    margin: 12px 12px 0 0;
+}

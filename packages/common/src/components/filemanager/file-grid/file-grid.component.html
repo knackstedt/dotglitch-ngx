@@ -1,0 +1,88 @@
+<ng-container *ngIf="showLoader">
+    <mat-progress-bar [class.hide]="hideLoader" mode="query"/>
+</ng-container>
+
+<div
+    style="display: contents"
+    [style.--filemanager-fileicon-backdrop]="'url(' + iconResolver.path + '/pop/generic.svg)'"
+    (dragstart)="userIsDraggingFile = true"
+    (dragend)="userIsDraggingFile = false"
+    (dragover)="draggingOver = true"
+    (dragleave)="draggingOver = false"
+    (ondrop)="onDrop($event)"
+>
+    <!-- <ng-container *ngIf="draggingOver"></ng-container> -->
+    <!-- Grid mode -->
+    <ng-scrollbar
+        *ngIf="viewMode == 'grid'"
+        class="grid {{gridSize}} {{config.imageSize || 'normal'}}"
+        [class.selectionMode]="config.mode == 'focusFiles'"
+        [class.showDropArea]="draggingOver"
+        style="height: 100%; width: 100%"
+        track="vertical"
+        pointerEventsMethod="scrollbar"
+        [ngx-contextmenu]="folderContextMenu"
+    >
+        <div class="resize-observer" #fileViewport></div>
+        <cdk-virtual-scroll-viewport
+            itemSize="134"
+            scrollViewport
+            (click)="selection = []; selectionText = ''"
+        >
+            <div class="row" *cdkVirtualFor="let row of sortedFolders">
+                <div class="file"
+                    *ngFor="let item of row"
+                    [class.selected]="selection.includes(item)"
+                    [class.generic]="item['_icon'].needsBackdrop"
+                    [ngx-contextmenu]="fileContextMenu"
+                    [ngx-menu-context]="item"
+                >
+                    <mat-checkbox
+                        #checkbox
+                        *ngIf="config.mode == 'focusFiles' && item.kind == 'file'"
+                        [checked]="item['_value']"
+                        (change)="onToggle(item, $event)"
+                    />
+                    <div
+                        style="display: contents"
+                        (click)="onSelect(item, $event)"
+                        (dblclick)="onItemClick(item)"
+                        (dragstart)="onDragStart($event, item)"
+                    >
+                        <img [src]="item['_icon'].path"/>
+                        <p>{{item['vanityName'] || item.name}}</p>
+                    </div>
+                </div>
+            </div>
+        </cdk-virtual-scroll-viewport>
+    </ng-scrollbar>
+
+    <!-- List mode -->
+    <div
+        *ngIf="viewMode == 'list'"
+        style="width: 100%; height: 100%"
+        [class.showDropArea]="draggingOver"
+        [ngx-contextmenu]="folderContextMenu"
+    >
+        <app-tabulator
+            [dataSource]="directoryContents"
+            [columns]="[
+                { field: 'name', title: 'Name', formatter: nameCellFormatter },
+                { field: '_size', title: 'Size' },
+                { field: '_ctime', title: 'Created' },
+                { field: '_mtime', title: 'Modified' },
+            ]"
+            [options]="{
+                rowHeight: 32
+            }"
+            (rowClick)="onRowClick($event)"
+            (rowDblClick)="onItemClick($event.data)"
+            (rowContext)="onRowCtx($event)"
+        />
+    </div>
+</div>
+
+<div class="select-hint" *ngIf="selectionText">
+    {{selectionText}}
+</div>
+

@@ -1,0 +1,32 @@
+<mat-accordion displayMode="flat" [multi]="true">
+    <mat-expansion-panel
+        #panel
+        *ngFor="let item of data"
+        expanded="false"
+        togglePosition="before"
+        [class.isleaf]="item['_children']?.length == 0"
+        (afterExpand)="tryLoadChildren(item, panel)"
+    >
+        <mat-expansion-panel-header>
+            <div (click)="$event.stopPropagation(); click.next(item);" style="display: flex; align-items: center;">
+                <ng-container *ngIf="!panel.expanded">
+                    <img style="height: 20px; margin-right: 8px" [src]="iconResolver.resolveIcon(item)?.path"/>
+                </ng-container>
+                <ng-container *ngIf="panel.expanded">
+                    <img style="height: 20px; margin-right: 8px" [src]="iconResolver.resolveIcon(item)?.path.replace('.svg', '-open.svg')"/>
+                </ng-container>
+                {{item.name}}
+            </div>
+        </mat-expansion-panel-header>
+
+        <app-tree-view
+            *ngIf="item['_children']; else loadingTemplate"
+            [data]="item['_children']"
+            (click)="click.next(item)"
+            (loadChildren)="loadChildren.next($event)"
+        />
+        <ng-template #loadingTemplate>
+            <mat-progress-bar color="primary" mode="query"/>
+        </ng-template>
+    </mat-expansion-panel>
+</mat-accordion>

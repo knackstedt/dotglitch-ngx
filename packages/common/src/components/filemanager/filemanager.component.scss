@@ -1,0 +1,93 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .content {
+        display: flex;
+        height: 100%;
+        overflow: hidden;
+    }
+}
+
+:host ::ng-deep {
+    .as-split-gutter {
+        background-color: var(--gutter-color, #121212) !important;
+    }
+    .mat-mdc-tab-header {
+        height: var(--tab-height, 0);
+        transition: height 250ms ease;
+
+        .mdc-tab {
+            height: var(--tab-height, 0);
+            background-color: var(--filemanager-tab-background-color ,#303030);
+        }
+    }
+    .mat-mdc-tab .mdc-tab__content {
+        position: static;
+    }
+    .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label,
+    .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+        color: var(--text-subdued-color);
+    }
+}
+
+.sidebar {
+    border-right: 1px solid transparent;
+    transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1), border-color 200ms ease;
+
+    ul {
+        list-style-type: none;
+        text-align: left;
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        li {
+            display: flex;
+            align-items: center;
+            transition: all 200ms ease;
+            font-size: 14px;
+            padding: 6px;
+            padding-left: 24px;
+
+            mat-icon {
+                margin-right: 8px;
+            }
+            &:hover {
+                background-color: #343434;
+            }
+        }
+        .tooltip {
+            background-color: #101010cc;
+            border: 1px solid #414141;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 200ms ease;
+        }
+    }
+}
+
+.active .sidebar {
+    background-color: #2c2c2c;
+    border-right-color: #1c1c1c;
+
+    li {
+        &:hover {
+            background-color: #343434
+        }
+    }
+}
+
+.close {
+    position: absolute;
+    right: 12px;
+    color: #666;
+    transition: color 250ms ease;
+    &:hover {
+        color: #ccc;
+    }
+}

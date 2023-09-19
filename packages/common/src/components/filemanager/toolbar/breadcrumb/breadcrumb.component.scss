@@ -1,0 +1,44 @@
+:host {
+    border: 1px solid var(--filemanager-breadcrumb-border-color, #171717);
+    border-bottom-color: var(--filemanager-breadcrumb-border-bottom-color, #000);
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    align-self: center;
+    align-items: center;
+    margin: 0;
+    gap: 6px; // approx width of a slash `/`
+    height: 30px;
+    background: var(--filemanager-breadcrumb-background, #444);
+}
+
+button {
+    position: relative;
+    padding: 0px 6px;
+    background-color: #0000;
+    border: none;
+    transition: color 200ms ease;
+    height: 100%;
+    color: var(--filemanager-breadcrumb-color, #bbb);
+    border-radius: 6px;
+
+    &:hover {
+        background-color:  var(--filemanager-breadcrumb-button-hover-background-color, #4a4a4a);
+        color:  var(--filemanager-breadcrumb-button-hover-color, #fff);
+    }
+
+    &::after {
+        content: "/";
+        position: absolute;
+        left: calc(100% + 1px);
+        z-index: 999;
+    }
+
+    &:last-of-type {
+        font-weight: bold;
+
+        &::after {
+            content: '';
+        }
+    }
+}

@@ -1,0 +1,89 @@
+<app-toolbar
+    [currentTab]="currentTab"
+    [(showHiddenFiles)]="showHiddenFiles"
+    [(showSidebar)]="showSidebar"
+    [config]="config"
+    [showBareMinimum]="width < 500 && config.showBreadcrumb != false"
+    (onBreadcrumbClick)="onBreadcrumbClick($event)"
+/>
+
+<mat-drawer-container>
+    <mat-drawer #drawer mode="over">
+        <app-toolbar
+            *ngIf="width < 500 && config.showBreadcrumb != false"
+            [currentTab]="currentTab"
+            [(showHiddenFiles)]="showHiddenFiles"
+            [(showSidebar)]="showSidebar"
+            [config]="config"
+            [drawerMode]="true"
+            (onBreadcrumbClick)="onBreadcrumbClick($event)"
+        />
+        <app-tree-view
+            [data]="currentTab.sidebarItems"
+            (loadChildren)="onTreeViewLoadChildren($event)"
+            (click)="onTreeViewSelect($event)"
+        />
+    </mat-drawer>
+    <mat-drawer-content>
+        <as-split direction="horizontal" [gutterSize]="sidebarOverlay ? 0 : 2" [unit]="'pixel'" (dragEnd)="onResizeEnd()">
+            <as-split-area
+                style="background-color: var(--filemanager-sidebar-background-color, #2c2c2c)"
+                [size]="215"
+                [minSize]="215"
+                [maxSize]="width/4"
+                [visible]="!sidebarOverlay && config.showTreeview != false"
+            >
+                <div class="sidebar"
+                    *ngIf="!sidebarOverlay && config.showTreeview != false"
+                    (click)="currentTab.selection = []"
+                >
+                    <app-tree-view
+                        [data]="currentTab.sidebarItems"
+                        (loadChildren)="onTreeViewLoadChildren($event)"
+                        (click)="onTreeViewSelect($event)"
+                    />
+                </div>
+            </as-split-area>
+            <as-split-area style="background-color: var(--filemanager-background-color, #272727);">
+                <div class="content"
+                    [style.--tab-height]="tabs.length > 1 ? '36px' : '0'"
+                >
+                    <mat-tab-group #tabGroup (selectedTabChange)="currentTab = tabs[$event.index]" [(selectedIndex)]="tabIndex">
+                        <mat-tab *ngFor="let tab of tabs; let i = index">
+                            <ng-template mat-tab-label>
+                                {{tab.label}}
+                                <mat-icon
+                                    class="close"
+                                    (click)="closeTab(tab)">
+                                    close
+                                </mat-icon>
+                            </ng-template>
+
+                            <ng-template matTabContent>
+                                <app-file-grid
+                                    [viewMode]="tab.viewMode"
+                                    [tab]="tab"
+                                    [config]="config"
+                                    [gridSize]="gridSize"
+                                    [sortOrder]="tab.sortOrder"
+                                    [(selection)]="tab.selection"
+                                    [(path)]="tab.path"
+                                    (pathChange)="onTabPathChange(tab)"
+                                    [(value)]="gridValues[i]"
+                                    (valueChange)="onGridValueChange()"
+                                    (loadFiles)="onTabLoadFiles(tab, $event)"
+
+                                    (fileSelect)="fileSelect.next($event)"
+                                    (fileDblClick)="fileDblClick.next($event)"
+                                    (folderSelect)="folderSelect.next($event)"
+                                    (folderDblClick)="folderDblClick.next($event)"
+                                />
+                            </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </as-split-area>
+        </as-split>
+    </mat-drawer-content>
+</mat-drawer-container>
+

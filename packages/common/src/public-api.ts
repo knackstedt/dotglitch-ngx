@@ -50,3 +50,11 @@ export * from './components/dynamic-html/dynamic-html.service';
 export * from './components/dynamic-html/dynamic-html.module';
 export * from './components/dynamic-html/dynamic-html.component';
 export * from './components/dynamic-html/types';
+
+
+
+export * from './components/filemanager/filemanager.component';
+export * from './components/music-library/music-library.component';
+export * from './components/tabulator/tabulator.component';
+export * from './components/vscode/vscode.component';
+export * from './components/types';

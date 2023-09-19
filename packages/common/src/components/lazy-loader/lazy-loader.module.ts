@@ -12,11 +12,11 @@ export class LazyLoaderModule {
         return ({
             ngModule: LazyLoaderModule,
             providers: [
-                LazyLoaderService,
                 {
                     provide: NGX_LAZY_LOADER_CONFIG,
                     useValue: config
-                }
+                },
+                LazyLoaderService
             ]
         });
     }
