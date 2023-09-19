@@ -49,30 +49,31 @@ export class MenuDirective {
         // Automatically attach context menu items to
         // the contextmenu event
         if (this.ctxMenuItems) {
-            el.onclick = this.openMenu.bind(this);
             el.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 this.openMenu(e as any, this.ctxMenuItems);
             });
         }
 
-        if (!this.config?.trigger) {
-            el.addEventListener('click', this.openMenu.bind(this));
-        }
-        else {
-            const triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
+        if (this.menuItems?.length > 0) {
+            if (!this.config?.trigger) {
+                el.addEventListener('click', this.openMenu.bind(this));
+            }
+            else {
+                const triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
 
-            triggers.forEach(t => {
-                if (t == "contextmenu") {
-                    el.addEventListener(t, (e) => {
-                        e.preventDefault();
-                        this.openMenu(e as any, this.ctxMenuItems);
-                    });
-                }
-                else {
-                    el.addEventListener(t, this.openMenu.bind(this));
-                }
-            });
+                triggers.forEach(t => {
+                    if (t == "contextmenu") {
+                        el.addEventListener(t, (e) => {
+                            e.preventDefault();
+                            this.openMenu(e as any, this.ctxMenuItems);
+                        });
+                    }
+                    else {
+                        el.addEventListener(t, this.openMenu.bind(this));
+                    }
+                });
+            }
         }
     }
 
