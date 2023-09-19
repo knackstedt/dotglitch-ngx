@@ -143,8 +143,6 @@ export class MenuComponent implements OnInit {
         this.items = this._data?.items;
         this.config = this._data?.config;
         this.id = this._data?.id;
-
-        console.log(this.ownerCords)
     }
 
     ngOnInit() {
