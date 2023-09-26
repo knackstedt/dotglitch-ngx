@@ -34,7 +34,7 @@
                     <td class="icon" *ngIf="showIconColumn">
                         <img *ngIf="matIconRx.test(item.icon); else matIcon" [src]="item.icon" />
                         <ng-template #matIcon>
-                            <mat-icon [fontIcon]="item.icon"></mat-icon>
+                            <mat-icon [fontIcon]="item.icon" [style.color]="item.iconColor"></mat-icon>
                         </ng-template>
                     </td>
 

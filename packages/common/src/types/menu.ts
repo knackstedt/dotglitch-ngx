@@ -77,6 +77,11 @@ type BaseMenuItem<T = any> = {
     icon?: string,
 
     /**
+     * CSS color string to apply on the mat icon
+     */
+    iconColor?: string,
+
+    /**
      * Optional child menu
      */
     children?: MenuItem<T>[],
