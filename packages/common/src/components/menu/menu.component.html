@@ -16,7 +16,7 @@
     (wheel)="onWheel($event)"
 ></div>
 
-<table>
+<table *ngIf="!template">
     <tbody>
         <ng-container *ngFor="let item of items">
             <ng-container>
@@ -100,48 +100,12 @@
     </tbody>
 </table>
 
-<!-- <div *ngIf="true" class="backdrop"></div> -->
-<!-- <div
-    *ngIf="parentCords && this.selfCords"
-    class="backdrop parent"
-    [style.top]="(parentCords.y - selfCords.y + 6) + 'px'"
-    [style.left]="(parentCords.x - selfCords.x + 12) + 'px'"
-    [style.width]="(parentCords.width) + 'px'"
-    [style.height]="(parentCords.height) + 'px'"
->
-</div> -->
-<!-- <ng-container *ngIf="parentCords && selfCords">
-    <div #top
-        class="backdrop-outer"
-        [style.bottom]="(parentCords.y - selfCords.y)*-1 + parentCords.height + 'px'"
-        style="background: #f003;"
-        (pointerenter)="onLeave()"
-    ></div>
-    <div #right
-        class="backdrop-outer"
-        [style.left]="((parentCords.x - selfCords.x) + parentCords.width) + 'px'"
-        style="background: #0f03;"
-        (pointerenter)="onLeave()"
-    >
-    <div>px: {{parentCords.x}}</div>
-    <div>py: {{parentCords.y}}</div>
-    <div>pw: {{parentCords.width}}</div>
-    <div>ph: {{parentCords.height}}</div>
-    <div>sx: {{selfCords.x}}</div>
-    <div>sy: {{selfCords.y}}</div>
-    <div>sw: {{selfCords.width}}</div>
-    <div>sh: {{selfCords.height}}</div>
-    </div>
-    <div #bottom
-        class="backdrop-outer"
-        [style.top]="((parentCords.y + parentCords.height - selfCords.y)) + 'px'"
-        style="background: #00f3;"
-        (pointerenter)="onLeave()"
-    ></div>
-    <div #left
-        class="backdrop-outer"
-        [style.right]="((parentCords.x - selfCords.x)*-1 + parentCords.width + 32) + 'px'"
-        style="background: #fff3;"
-        (pointerenter)="onLeave()"
-    ></div>
-</ng-container> -->
+<ng-container *ngIf="template">
+    <ng-container *ngIf="templateType == 'template'; else portalOutlet">
+        <ng-container
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ '$implicit': data, dialog: dialogRef }"
+        />
+    </ng-container>
+    <ng-template #portalOutlet [cdkPortalOutlet]="componentPortal" ></ng-template>
+</ng-container>

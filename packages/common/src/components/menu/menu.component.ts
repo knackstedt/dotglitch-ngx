@@ -49,44 +49,6 @@ const calcComponentBounds = async (component: Type<any>, data: any) => {
     return rect;
 }
 
-@Component({
-    selector: 'ngx-menu-template-wrapper',
-
-    template: `
-    <ng-container *ngIf="templateType == 'template'; else portalOutlet">
-        <ng-container
-            [ngTemplateOutlet]="template"
-            [ngTemplateOutletContext]="{ '$implicit': data, dialog: dialogRef }"
-        />
-    </ng-container>
-    <ng-template #portalOutlet [cdkPortalOutlet]="componentPortal" ></ng-template>
-`,
-    imports: [ NgTemplateOutlet, PortalModule, NgIf ],
-    standalone: true
-})
-class TemplateWrapper {
-
-    data: Object;
-    template: TemplateRef<any>;
-
-    templateType: "template" | "component"
-    componentPortal: ComponentPortal<any>;
-
-    constructor(
-        @Optional() public dialogRef: MatDialogRef<any>,
-        @Inject(MAT_DIALOG_DATA) private _data: any,
-        public viewContainer: ViewContainerRef
-    ) {
-        this.data = _data.data;
-        this.template = _data.template;
-
-        this.templateType = this.template instanceof TemplateRef ? "template" : "component";
-
-        if (this.templateType == "component") {
-            this.componentPortal = new ComponentPortal(this.template as any);
-        }
-    }
-}
 
 @Component({
     selector: 'ngx-menu',
@@ -96,6 +58,7 @@ class TemplateWrapper {
         NgIf,
         NgForOf,
         NgTemplateOutlet,
+        PortalModule,
         MatIconModule,
         MatProgressSpinnerModule,
         TooltipDirective
@@ -129,6 +92,11 @@ export class MenuComponent implements OnInit {
     showIconColumn = true;
     showShortcutColumn = true;
 
+    template: TemplateRef<any>;
+    templateType: "template" | "component";
+    componentPortal: ComponentPortal<any>;
+    private childDialogs: MatDialogRef<any>[] = [];
+
     constructor(
         public viewContainer: ViewContainerRef,
         public sanitizer: DomSanitizer,
@@ -143,6 +111,15 @@ export class MenuComponent implements OnInit {
         this.items = this._data?.items;
         this.config = this._data?.config;
         this.id = this._data?.id;
+
+
+        this.template = _data.template;
+
+        this.templateType = this.template instanceof TemplateRef ? "template" : "component";
+
+        if (this.templateType == "component") {
+            this.componentPortal = new ComponentPortal(this.template as any);
+        }
     }
 
     ngOnInit() {
@@ -189,7 +166,6 @@ export class MenuComponent implements OnInit {
                 height: this.ownerCords.height + 32,
                 width: this.ownerCords.width + 32
             }
-
         }
 
         setTimeout(() => {
@@ -238,7 +214,7 @@ export class MenuComponent implements OnInit {
 
         // Set position coordinates
         const { width, height } = await (item.childTemplate
-            ? calcComponentBounds(TemplateWrapper, { template: item.childTemplate })
+            ? calcComponentBounds(MenuComponent, { template: item.childTemplate })
             : calcMenuItemBounds(item.children, this.data));
 
         if (bounds.y + height > window.innerHeight)
@@ -249,7 +225,7 @@ export class MenuComponent implements OnInit {
         if (!cords.bottom) cords.top = bounds.y + "px";
         if (!cords.left) cords.left = bounds.x + bounds.width + "px";
 
-        const component = item.children ? MenuComponent : TemplateWrapper as any;
+        const component = item.children ? MenuComponent : MenuComponent as any;
 
         const dialogRef = this.dialog.open(component, {
             position: cords,
@@ -279,9 +255,12 @@ export class MenuComponent implements OnInit {
                         item['_selfclose'] = Date.now();
                     }
 
+                    this.childDialogs.splice(this.childDialogs.findIndex(d => d == dialogRef), 1);
+
                     _s.unsubscribe();
                 });
 
+        this.childDialogs.push(dialogRef);
         return dialogRef;
     }
 
@@ -299,10 +278,17 @@ export class MenuComponent implements OnInit {
      */
     // @HostListener("window:resize", ['event'])
     // @HostListener("window:blur", ['event'])
-    close() {
-        this.closeSignal.emit();
+    close(result?) {
+        if (result != -1)
+            this.closeSignal.emit();
 
-        this.dialogRef?.close();
+        this.childDialogs.forEach(d => d.close())
+        this.dialogRef?.close(result);
+    }
+
+    closeOnVoid(force = false) {
+        if (!this.isLockedOpen || force)
+            this.close(-1);
     }
 
     /**
@@ -330,11 +316,6 @@ export class MenuComponent implements OnInit {
             const newLeft = (window.innerWidth - (width + (this.config.edgePadding || 12))) + "px"
             target.style['margin-left'] = newLeft;
         }
-    }
-
-    closeOnVoid(force = false) {
-        if (!this.isLockedOpen || force)
-            this.dialogRef.close(-1);
     }
 
     // If the void element gets stuck open, make wheel events pass through.

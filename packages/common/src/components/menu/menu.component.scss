@@ -10,14 +10,7 @@
         }
     }
 
-    // .cdk-overlay-container .context-menu-backdrop.cdk-overlay-backdrop-showing {
-    //     opacity: 0;
-    // }
-
     .cdk-overlay-pane.ngx-menu {
-        // .mat-dialog-container {
-        //     padding: 0;
-        // }
         .mat-mdc-dialog-surface {
             overflow: visible;
         }
@@ -79,6 +72,7 @@ tr {
         min-width: 100px;
     }
 }
+
 .hr {
     height: 1px;
     // background: var(--ngx-menu-separator-color, #2a2a2a);
@@ -135,30 +129,6 @@ hr {
 td {
     vertical-align: middle;
 }
-
-// .backdrop {
-//     position: absolute;
-//     z-index: -1;
-//     inset: -32px -12px -32px -12px;
-//     background-color: #0003;
-// }
-
-// .backdrop-outer {
-//     position: absolute;
-//     z-index: -2;
-//     // inset: -500px;
-//     background-color: #0003;
-
-//     top: -50vh;
-//     bottom: -50vh;
-//     left: -50vw;
-//     right: -50vw;
-// }
-
-// .backdrop.parent {
-//     background-color: #f006;
-//     inset: 0;
-// }
 
 .void, .owner-mask {
     position: absolute;
