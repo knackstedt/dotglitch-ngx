@@ -2,7 +2,11 @@
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/common",
     "assets": [
-        "./assets"
+        {
+            "glob": "**/*",
+            "input": "./src/assets",
+            "output": "./assets"
+        }
     ],
     "lib": {
         "entryFile": "src/public-api.ts"
