@@ -16,7 +16,6 @@
 Quickstart 
 =====
 
-<!-- [Demo](https://dotglitch.dev/#/ContextMenuLibrary) -->
 
 ## Install
 
@@ -25,22 +24,24 @@ $ npm install @dotglitch/ngx-common
 ```
 
 - Featured
- - [Lazy Loader](./src/components/lazy-loader/README.md)
+    - [Lazy Loader](./src/components/lazy-loader/README.md)
 - Directives
- - [App Menu & Context Menu](./src/directives/menu.md)
- - [Tooltip](./src/directives/tooltip.md)
-<!-- - Components -->
+    - [App Menu & Context Menu](./src/directives/menu.md)
+    - [Tooltip](./src/directives/tooltip.md)
+- Components
+    - [VS code wrapper](./src/components/vscode/README.md)
 - Services
- - [Fetch](./src/services/fetch.md)
- - [Dependency](./src/services/dependency.md)
- - [Keyboard](./src/services/keyboard.md)
- - [Dialog](./src/services/dialog.md)
+    - [Fetch](./src/services/fetch.md)
+    - [Dependency](./src/services/dependency.md)
+    - [Keyboard](./src/services/keyboard.md)
+    - [Dialog](./src/services/dialog.md)
+    - [Navigation](./src/services/navigation.md)
 - Pipes
- - [HTML-Bypass](./src/pipes/html-bypass.md)
- - [Resource-Bypass](./src/pipes/resource-bypass.md)
- - [Script-Bypass](./src/pipes/script-bypass.md)
- - [Style-Bypass](./src/pipes/style-bypass.md)
- - [URL-Bypass](./src/pipes/url-bypass.md)
+    - [HTML-Bypass](./src/pipes/html-bypass.md)
+    - [Resource-Bypass](./src/pipes/resource-bypass.md)
+    - [Script-Bypass](./src/pipes/script-bypass.md)
+    - [Style-Bypass](./src/pipes/style-bypass.md)
+    - [URL-Bypass](./src/pipes/url-bypass.md)
 
 <!-- Roadmap
 =====
