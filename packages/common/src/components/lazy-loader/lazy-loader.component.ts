@@ -199,11 +199,28 @@ export class LazyLoaderComponent implements AfterViewInit {
     private log;
 
     // Force 500ms delay before revealing the spinner
-    private loaderEmitter = new EventEmitter();
-    private clearLoader$ = this.loaderEmitter.pipe(debounceTime(300));
-    private loaderSub: Subscription;
-    showLoader = true; // whether we render the DOM for the spinner
-    isClearingLoader = false; // should the spinner start fading out
+    private clearEmitter = new EventEmitter();
+    private clearLoader$ = this.clearEmitter.pipe(debounceTime(300));
+
+    private showEmitter = new EventEmitter();
+    private showLoader$ = this.showEmitter.pipe(debounceTime(1));
+
+    private subscriptions = [
+        this.clearLoader$.subscribe(() => {
+            this.isClearingLoader = true;
+
+            setTimeout(() => {
+                this.renderSpinner = false;
+            }, 300)
+        }),
+        this.showLoader$.subscribe(() => {
+            this.isClearingLoader = false;
+            this.renderSpinner = true;
+        })
+    ];
+
+    public renderSpinner = true; // whether we render the DOM for the spinner
+    public isClearingLoader = false; // should the spinner start fading out
 
     constructor(
         private service: LazyLoaderService,
@@ -223,18 +240,13 @@ export class LazyLoaderComponent implements AfterViewInit {
             this.id = this.dialogArguments.id;
             this.group = this.dialogArguments.group;
         }
-
-        this.loaderSub = this.clearLoader$.subscribe(() => {
-            this.showLoader = false;
-        });
     }
 
     private initialized = false;
     async ngAfterViewInit() {
         this.ngOnDestroy(false);
         this.isClearingLoader = false;
-        this.showLoader = true;
-
+        this.renderSpinner = true;
         this.initialized = true;
 
         if (!this._id) {
@@ -310,23 +322,16 @@ export class LazyLoaderComponent implements AfterViewInit {
 
             if (isLoading$ && typeof isLoading$.subscribe == "function") {
                 this.distractorSubscription = isLoading$.subscribe(loading => {
-                    if (!loading) {
-                        this.isClearingLoader = true;
-                        this.loaderEmitter.emit();
-                    }
-                    else {
-                        this.showLoader = true;
-                        this.isClearingLoader = false;
-                    }
+                    loading ? this.showEmitter.emit() : this.clearEmitter.emit();
                 });
             }
             else {
-                this.isClearingLoader = true;
+                this.clearEmitter.emit();
             }
 
             const name = Object.keys(bundle)[0];
             this.log(`Loaded '${name}'`);
-            this.loaderEmitter.emit();
+            this.clearEmitter.emit();
 
             return componentRef;
         }
@@ -357,7 +362,9 @@ export class LazyLoaderComponent implements AfterViewInit {
 
         // Clear all things
         if (clearAll) {
-            this.loaderSub?.unsubscribe();
+            Object.entries(this.subscriptions).forEach(([key, sub]) => {
+                sub.unsubscribe();
+            });
         }
 
         this.distractorSubscription?.unsubscribe();
@@ -440,7 +447,7 @@ export class LazyLoaderComponent implements AfterViewInit {
         if (this.config.notFoundComponent)
             this.targetContainer.createComponent(this.config.notFoundComponent);
 
-        this.showLoader = false;
+        this.clearEmitter.emit();
     }
 
     /**
@@ -453,6 +460,6 @@ export class LazyLoaderComponent implements AfterViewInit {
         if (this.config.errorComponent)
             this.targetContainer.createComponent(this.config.errorComponent);
 
-        this.showLoader = false;
+        this.clearEmitter.emit();
     }
 }
