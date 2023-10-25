@@ -347,9 +347,9 @@ export class FileGridComponent implements OnInit {
 
                     const url = this.config.apiSettings.deleteEntryUrlTemplate
                         ? this.config.apiSettings.deleteEntryUrlTemplate(path)
-                        : this.config.apiSettings.deleteEntryUrl
+                        : this.config.apiSettings.deleteEntryUrl;
 
-                    this.fetch.delete(url)
+                    this.fetch.post(url, { path: evt.path + evt.name })
                         .then(() => this.loadFolder())
                 },
             },

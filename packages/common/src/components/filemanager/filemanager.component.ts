@@ -67,6 +67,15 @@ export type FileViewTab = {
     sortOrder: FileSorting
 }
 
+// TODO: replace http configs
+type HttpConfiguration = (
+    { url: string } |
+    { urlTemplate: (path: string) => string }
+) & {
+    method?: "get" | "put" | "post" | "patch" | "delete",
+    headers?: { [key: string]: string }
+}
+
 export type NgxFileManagerConfiguration = Partial<{
     /**
      * Initial path
@@ -78,7 +87,7 @@ export type NgxFileManagerConfiguration = Partial<{
      * Defaults to '/'.
      *
      * User cannot view outside of this path.
-     *   (Not to be used as a security measure)
+     *   (Not to be used as a security measure!)
      */
     chrootPath: string,
 
