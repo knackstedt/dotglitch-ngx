@@ -157,8 +157,8 @@ export class MenuComponent implements OnInit {
             );
 
         if (this.ownerCords) {
-            const selfY = parseInt(this.selfCords.top.replace('px', ''));
-            const selfX = parseInt(this.selfCords.left.replace('px', ''));
+            const selfY = parseInt(this.selfCords.top?.replace('px', '') || '0');
+            const selfX = parseInt(this.selfCords.left?.replace('px', '') || '0');
 
             this.coverRectCords = {
                 top: this.ownerCords.y - selfY - 16,
