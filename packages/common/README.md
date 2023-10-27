@@ -30,6 +30,7 @@ $ npm install @dotglitch/ngx-common
     - [Tooltip](./src/directives/tooltip.md)
 - Components
     - [VS code wrapper](./src/components/vscode/README.md)
+    - [React Magic Wrapper](./src/components/vscode/README.md)
 - Services
     - [Fetch](./src/services/fetch.md)
     - [Dependency](./src/services/dependency.md)
