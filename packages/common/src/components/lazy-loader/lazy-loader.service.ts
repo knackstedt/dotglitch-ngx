@@ -6,7 +6,7 @@ import { stringToSlug, Logger } from '../../utils';
 const $id = Symbol("id") as any as string;
 const $group = Symbol("group") as any as string;
 
-export const NGX_LAZY_LOADER_CONFIG = new InjectionToken<NgxLazyLoaderConfig>('config');
+export const NGX_LAZY_LOADER_CONFIG = new InjectionToken<NgxLazyLoaderConfig>('lazyloader-config');
 
 @Injectable({
     providedIn: 'root'

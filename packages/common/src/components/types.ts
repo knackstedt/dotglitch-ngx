@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export const NGX_WEB_COMPONENTS_CONFIG = new InjectionToken<NgxWebComponentsConfig>('config');
+export const NGX_WEB_COMPONENTS_CONFIG = new InjectionToken<NgxWebComponentsConfig>('webcomponents-config');
 
 export type NgxWebComponentsConfig = Partial<{
     /**

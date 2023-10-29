@@ -12,5 +12,5 @@ export class DynamicHTMLOptions {
     components: Array<ComponentWithSelector>;
 }
 
-export const NGX_DYNAMIC_CONFIG = new InjectionToken<DynamicHTMLOptions>('config');
+export const NGX_DYNAMIC_CONFIG = new InjectionToken<DynamicHTMLOptions>('dynamichtml-config');
 
