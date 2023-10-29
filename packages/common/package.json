@@ -31,6 +31,7 @@
     "angular-split": ">=15.0.0",
     "ngx-scrollbar": ">=12.0.0",
     "tabulator-tables": ">=5.5.0",
+    "monaco-editor": ">=0.40.0",
     "path-browserify": ">=1.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
