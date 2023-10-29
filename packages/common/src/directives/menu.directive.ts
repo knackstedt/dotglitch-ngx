@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { getPosition } from './utils';
 import { MenuItem, MenuOptions } from '../types/menu';
 import { MenuComponent, calcMenuItemBounds } from '../components/menu/menu.component';
+import { ulid } from 'ulidx';
 
 @Directive({
     selector: '[ngx-contextmenu],[ngx-menu],[ngxContextmenu],[ngxMenu]',
@@ -115,7 +116,7 @@ export const openMenu = async (
         config.alignment = "start";
 
     const cords = getPosition(el || evt, config, await calcMenuItemBounds(menuItems, data));
-    const specificId = crypto.randomUUID();
+    const specificId = ulid();
 
     return new Promise(res => {
         dialog.open(MenuComponent, {

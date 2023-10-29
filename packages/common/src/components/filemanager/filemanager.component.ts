@@ -12,6 +12,7 @@ import { FileSorting, NGX_WEB_COMPONENTS_CONFIG, NgxWebComponentsConfig } from '
 import { IconResolver } from './icon-resolver';
 import { LazyLoaderService, NGX_LAZY_LOADER_CONFIG } from '../lazy-loader/lazy-loader.service';
 import { Fetch } from '../../public-api';
+import { ulid } from 'ulidx';
 
 // TODO:
 /**
@@ -281,7 +282,7 @@ export class FilemanagerComponent implements OnInit {
 
     initTab(path: string) {
         this.tabs.push(this.currentTab = {
-            id: crypto.randomUUID(),
+            id: ulid(),
             label: this.getTabLabel(path),
             breadcrumb: this.calcBreadcrumb(path),
             path,

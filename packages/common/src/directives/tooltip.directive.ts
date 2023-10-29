@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { getPosition } from './utils';
 import {  } from '../types/popup';import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
 import { TooltipOptions } from '../types/tooltip';
+import { ulid } from 'ulidx';
 
 @Directive({
     selector: '[ngxTooltip],[ngx-tooltip]',
@@ -111,7 +112,7 @@ export const openTooltip = async (
     const rect = await calcTooltipBounds(template, data);
     const ownerCords = el.getBoundingClientRect();
     const cords = getPosition(el, config, rect);
-    const specificId = crypto.randomUUID();
+    const specificId = ulid();
 
     return new Promise(res => {
         dialog.open(TooltipComponent, {
