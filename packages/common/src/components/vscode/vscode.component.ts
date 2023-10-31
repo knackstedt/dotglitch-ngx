@@ -77,12 +77,14 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
     @Input() mouseWheelScrollSensitivity = 2;
     @Input() scrollBeyondLastLine = false;
     @Input() scrollBeyondLastColumn = 0;
-    @Input() scrollbarAlwaysConsumeMouseWheel = 2;
 
     @Input() lineNumbers: MonacoEditor.editor.LineNumbersType = "on";
 
+    @Input() restSettings: MonacoEditor.editor.IStandaloneEditorConstructionOptions = {};
+
     get settings() {
         return {
+            ...this.restSettings,
             theme: this.theme,
             language: this.language,
             tabSize: this.tabSize,
@@ -101,8 +103,6 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
             lineNumbers: this.lineNumbers
         } as MonacoEditor.editor.IStandaloneEditorConstructionOptions;
     }
-
-    verticalScrollExhausted = false;
 
     private _sub;
     constructor(private viewContainer: ViewContainerRef) {
