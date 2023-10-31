@@ -186,6 +186,11 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
     private installMonaco() {
         if (VscodeComponent.isMonacoInstalled) return;
 
+        if (window['monaco']) {
+            VscodeComponent.isMonacoInstalled = true;
+            return;
+        }
+
         // Monaco has a UMD loader that requires this
         // Merge with any pre-existing global require objects.
         if (!window['require']) window['require'] = {} as any;
