@@ -13,6 +13,7 @@ export class ThemeService extends BehaviorSubject<AppTheme>{
         super(isLightMode ? "light" : "dark");
 
         this.subscribe(t => {
+            if (!t || t as any == 'undefined') return;
 
             if (document.body.classList.contains("dark") && t == "light")
                 document.body.classList.remove("dark");
