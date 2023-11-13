@@ -3,14 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 
 type AppTheme = "light" | "dark";
 
-const isLightMode = document.body.classList.contains("light");
 
 @Injectable({
     providedIn: 'root'
 })
 export class ThemeService extends BehaviorSubject<AppTheme>{
     constructor() {
-        super(isLightMode ? "light" : "dark");
+        super(document.body.classList.contains("light") ? "light" : "dark");
 
         this.subscribe(t => {
             if (!t || t as any == 'undefined') return;
