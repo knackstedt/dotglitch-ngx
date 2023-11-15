@@ -30,7 +30,7 @@
                     (pointerenter)="row['hover'] = true;"
                     (pointerleave)="row['hover'] = false"
                 >
-                <!--  (item['children']?.length > 0 || item['childTemplate']) && onHover(item, row); closeOnLeave=true -->
+
                     <td class="icon" *ngIf="showIconColumn">
                         <img *ngIf="matIconRx.test(item.icon); else matIcon" [src]="item.icon" />
                         <ng-template #matIcon>
@@ -39,59 +39,88 @@
                     </td>
 
                     <!-- 'Normal' action based item -->
-                    <ng-container>
-                        <td class="label"
-                            [style.padding-left]="showIconColumn ? 0 : '16px'"
+                    <td class="label"
+                        [style.padding-left]="showIconColumn ? 0 : '16px'"
+                    >
+                        <a
+                            #anchor
+                            [attr.target]="item.linkTarget"
+                            [attr.href]="(item['_link'] || item.link) ? sanitizer.bypassSecurityTrustUrl(item['_link'] || item.link) : undefined"
                         >
-                            <a
-                                [attr.target]="item.linkTarget"
-                                [attr.href]="(item['_link'] || item.link) ? sanitizer.bypassSecurityTrustUrl(item['_link'] || item.link) : undefined"
-                            >
-                                <ng-container
-                                    *ngIf="$any(item.labelTemplate)?.prototype; else labelTemplate"
-                                    [ngTemplateOutlet]="$any(item).labelTemplate"
-                                    [ngTemplateOutletContext]="{ '$implicit': data, 'dialog': dialogRef }"
-                                />
+                            <ng-container
+                                *ngIf="$any(item.labelTemplate)?.prototype; else simpleLabel"
+                                [ngTemplateOutlet]="$any(item).labelTemplate"
+                                [ngTemplateOutletContext]="{
+                                    '$implicit': data,
+                                    'dialog': dialogRef,
+                                    'context': item['_context'],
+                                    'item': item,
+                                    'element': anchor,
+                                    'menu': this
+                                }"
+                            />
 
-                                <ng-template #labelTemplate>
-                                    <ng-container *ngIf="!$any(item)?.labelTemplate">
-                                        <div [innerHTML]="item['_formattedLabel']"></div>
-                                    </ng-container>
-                                    <ng-container *ngIf="$any(item)?.labelTemplate">
-                                        {{$any(item)?.labelTemplate(data || {})}}
-                                    </ng-container>
-                                </ng-template>
-                            </a>
-                        </td>
-                    </ng-container>
+                            <ng-template #simpleLabel>
+                                <ng-container *ngIf="!$any(item)?.labelTemplate">
+                                    <div [innerHTML]="item['_formattedLabel']"></div>
+                                </ng-container>
+                                <ng-container *ngIf="$any(item)?.labelTemplate">
+                                    {{$any(item)?.labelTemplate(data || {})}}
+                                </ng-container>
+                            </ng-template>
+                        </a>
+                    </td>
 
                     <td class="shortcut" *ngIf="showShortcutColumn">
                         {{item.shortcutLabel}}
                     </td>
                     <td style="min-width: 16px">
-                        <mat-icon *ngIf="
-                            (item.children && item.children.length > 0) ||
-                            item.childTemplate ||
-                            (item.childrenResolver && !item['_isResolving'])
+                        <mat-icon *ngIf="(
+                                (item['children']?.length > 0) ||
+                                (item['_children']?.length > 0) ||
+                                item.childTemplate ||
+                                item.children?.['call'] ||
+                                item.childrenResolver
+                            ) &&
+                            !item['_isResolving']
                         "
-                            sytle="transform: translateY(2px)"
+                            style="transform: translateY(2px)"
                         >
                             chevron_right
                         </mat-icon>
 
-                        <mat-progress-spinner *ngIf="item['_isResolving']" mode="indeterminate" [diameter]="20" style="margin-right: 4px"/>
+                        <mat-progress-spinner
+                            *ngIf="item['_isResolving']"
+                            mode="indeterminate"
+                            [diameter]="20"
+                            style="margin-right: 4px"
+                        />
                     </td>
                 </tr>
 
-                <tr *ngIf="item != 'separator' && item.separator == true" class="disabled separator">
-                    <td class="center" [attr.colspan]="2 + (showIconColumn ? 1 : 0) + (showShortcutColumn ? 1 : 0)">
+                <!-- Separator with label -->
+                <tr
+                    *ngIf="item != 'separator' && item.separator == true"
+                    class="disabled separator"
+                >
+                    <td
+                        class="center"
+                        [attr.colspan]="2 + (showIconColumn ? 1 : 0) + (showShortcutColumn ? 1 : 0)"
+                    >
                         <span class="hr">
                             {{item['label'] || ''}}
                         </span>
                     </td>
                 </tr>
-                <tr *ngIf="item == 'separator'" class="disabled separator">
-                    <td [attr.colspan]="2 + (showIconColumn ? 1 : 0) + (showShortcutColumn ? 1 : 0)">
+
+                <!-- Separator -->
+                <tr
+                    *ngIf="item == 'separator'"
+                    class="disabled separator"
+                >
+                    <td
+                        [attr.colspan]="2 + (showIconColumn ? 1 : 0) + (showShortcutColumn ? 1 : 0)"
+                    >
                         <hr/>
                     </td>
                 </tr>
@@ -104,8 +133,15 @@
     <ng-container *ngIf="templateType == 'template'; else portalOutlet">
         <ng-container
             [ngTemplateOutlet]="template"
-            [ngTemplateOutletContext]="{ '$implicit': data, dialog: dialogRef }"
+            [ngTemplateOutletContext]="{
+                '$implicit': data,
+                'dialog': dialogRef,
+                'context': parentContext,
+                'item': parentItem,
+                'element': this.viewContainer?.element?.nativeElement,
+                'menu': this            }"
+            [ngTemplateOutletInjector]=""
         />
     </ng-container>
-    <ng-template #portalOutlet [cdkPortalOutlet]="componentPortal" ></ng-template>
+    <ng-template #portalOutlet [cdkPortalOutlet]="componentPortal"></ng-template>
 </ng-container>

@@ -15,7 +15,7 @@
     (pointerdown)="hasBootstrapped && closeOnVoid(true)"
 ></div>
 
-<div class="container">
+<div #container class="container">
     <ng-container
         *ngIf="isTemplate == false"
         [ngComponentOutlet]="$any(template)"
@@ -27,7 +27,12 @@
     >
         <ng-container
             [ngTemplateOutlet]="$any(template)"
-            [ngTemplateOutletContext]="{ '$implicit': data, dialog: dialogRef }"
+            [ngTemplateOutletContext]="{
+                '$implicit': data,
+                'dialog': dialogRef,
+                'element': container,
+                'tooltip': this
+            }"
         ></ng-container>
     </ng-container>
 </div>

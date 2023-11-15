@@ -73,6 +73,8 @@ export class MenuComponent implements OnInit {
 
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
+    @Input() parentItem;
+    @Input() parentContext;
 
     @Output() closeSignal = new EventEmitter();
 
@@ -105,13 +107,15 @@ export class MenuComponent implements OnInit {
         @Optional() public dialogRef: MatDialogRef<any>
     ) {
         // Defaults are set before @Input() hooks evaluate
+        this.dialog = this.dialog || this._data?.dialog;
         this.data  = this._data?.data;
         this.ownerCords = this._data?.ownerCords;
         this.selfCords = this._data?.selfCords;
         this.items = this._data?.items;
         this.config = this._data?.config;
         this.id = this._data?.id;
-
+        this.parentItem = this._data?.parentItem;
+        this.parentContext = this._data?.parentContext;
 
         this.template = _data.template;
 
@@ -123,24 +127,26 @@ export class MenuComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.items?.forEach(i => {
             if (typeof i == "string") return;
 
             // Set defaults
             i['_disabled'] = false;
             i['_visible'] = true;
+            i['_context'] = typeof i.context == "function" ? i.context(this.data) : i.context;
 
             if (i.label)
                 try { i['_formattedLabel'] = this.formatLabel(i.label); } catch (e) { console.warn(e) }
 
             if (typeof i.isDisabled == "function")
-                try { i['_disabled'] = i.isDisabled(this.data || {}); } catch(e) { console.warn(e) }
+                try { i['_disabled'] = i.isDisabled(this.data || {}, i['_context']); } catch(e) { console.warn(e) }
 
             if (typeof i.isVisible == "function")
-                try { i['_visible'] = i.isVisible(this.data || {}); } catch (e) { console.warn(e) }
+                try { i['_visible'] = i.isVisible(this.data || {}, i['_context']); } catch (e) { console.warn(e) }
 
             if (typeof i.linkTemplate == "function")
-                try { i['_link'] = i.linkTemplate(this.data || {}); } catch (e) { console.warn(e) }
+                try { i['_link'] = i.linkTemplate(this.data || {}, i['_context']); } catch (e) { console.warn(e) }
         });
 
         // Show the icon column if there are any items with an icon
@@ -183,18 +189,28 @@ export class MenuComponent implements OnInit {
         if (typeof item == 'string') return null;
         if (item.separator) return null;
 
+        const context = await item['_context'];
+
         // If cache is enabled, only load if we don't have any children.
         const forceLoad = (item.cacheResolvedChildren ? !item.children : true);
 
         if (item.childrenResolver && forceLoad) {
             item['_isResolving'] = true;
-            item.children = await item.childrenResolver(this.data);
+            item['_children'] = await item.childrenResolver(this.data, context);
             item['_isResolving'] = false;
+        }
+        else if (typeof item.children == "function" && forceLoad) {
+            item['_isResolving'] = true;
+            item['_children'] = await item.children(this.data, context);
+            item['_isResolving'] = false;
+        }
+        else {
+            item['_children'] = item.children;
         }
 
         if (!item.childTemplate && !item.children) {
             if (item.action) {
-                item.action(this.data);
+                item.action(this.data, context);
                 this.close();
             }
             // If no action, this is simply a text item.
@@ -215,17 +231,17 @@ export class MenuComponent implements OnInit {
         // Set position coordinates
         const { width, height } = await (item.childTemplate
             ? calcComponentBounds(MenuComponent, { template: item.childTemplate })
-            : calcMenuItemBounds(item.children, this.data));
+            : calcMenuItemBounds(item['_children'], this.data));
 
         if (bounds.y + height > window.innerHeight)
             cords.bottom = "0px";
         if (bounds.x + bounds.width + width > window.innerWidth)
             cords.left = ((bounds.x - width)) + "px";
 
-        if (!cords.bottom) cords.top = bounds.y + "px";
-        if (!cords.left) cords.left = bounds.x + bounds.width + "px";
+        if (!cords.bottom) cords.top  = bounds.y + "px";
+        if (!cords.left)   cords.left = bounds.x + bounds.width + "px";
 
-        const component = item.children ? MenuComponent : MenuComponent as any;
+        const component = item['_children'] ? MenuComponent : MenuComponent as any;
 
         const dialogRef = this.dialog.open(component, {
             position: cords,
@@ -236,7 +252,9 @@ export class MenuComponent implements OnInit {
                 data: this.data,
                 ownerCords: row.getBoundingClientRect(),
                 selfCords: cords,
-                items: item.children,
+                parentItem: item,
+                parentContext: item['_context'],
+                items: item['_children'],
                 template: item.childTemplate,
                 config: this.config
             }
@@ -247,7 +265,7 @@ export class MenuComponent implements OnInit {
                 .subscribe((result) => {
                     if (result !== null && result != -1) {
                         if (result && typeof item.action == 'function')
-                            item.action(result);
+                            item.action(result, context);
 
                         this.close();
                     }

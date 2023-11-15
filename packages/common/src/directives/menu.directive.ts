@@ -121,6 +121,7 @@ export const openMenu = async (
     return new Promise(res => {
         dialog.open(MenuComponent, {
             data: {
+                dialog,
                 data: data,
                 items: menuItems,
                 config: config,

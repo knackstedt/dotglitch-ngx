@@ -10,7 +10,7 @@ export type MenuOptions = Partial<PopupOptions & {
     trigger: MenuTrigger | MenuTrigger[];
 }>;
 
-type BaseMenuItem<T = any> = {
+type BaseMenuItem<T = any, Q = object | number | string | boolean | bigint | symbol | undefined> = {
     /**
      * Label for the menu-item
      */
@@ -20,14 +20,14 @@ type BaseMenuItem<T = any> = {
      * Custom angular template to use for the label
      * Alternatively accepts a lambda function
      */
-    labelTemplate?: TemplateRef<any> | ((data: T) => string)
+    labelTemplate?: TemplateRef<any> | ((data: T, context: Q) => string)
 
     /**
      * Callback method that is called when a user activates
      * a context-menu item.
      * Use the `contextMenuData` decorator for passing data.
      */
-    action?: (data: T) => any,
+    action?: (data: T, context: Q) => any,
 
     /**
      * Instead of an action, this item can be a hyperlink pointing to this URL
@@ -45,19 +45,19 @@ type BaseMenuItem<T = any> = {
      * Custom template function for resolving a link when the context menu
      * is opened
      */
-    linkTemplate?: ((data: T) => string),
+    linkTemplate?: ((data: T, context: Q) => string),
 
     /**
      * Callback method that is called upon a context menu activation
      * that when it returns true, will show the item as disabled.
      */
-    isDisabled?: (data: T) => boolean,
+    isDisabled?: (data: T, context: Q) => boolean,
 
     /**
      * Callback method that is called upon a context menu activation
      * that when returning false, will hide the menu item.
      */
-    isVisible?: (data: T) => boolean,
+    isVisible?: (data: T, context: Q) => boolean,
 
     /**
      * If a shortcut is set, the text-label.
@@ -84,17 +84,18 @@ type BaseMenuItem<T = any> = {
     /**
      * Optional child menu
      */
-    children?: MenuItem<T>[],
+    children?: MenuItem<T>[] | ((data: T, context: Q) => MenuItem<T>[]) | ((data: T, context: Q) => Promise<MenuItem<T>[]>),
 
     /**
      * Optional resolver that dynamically loads the contents
      * for the menu item.
      * Can be used to dynamically determine the submenu contents
      */
-    childrenResolver?: (data: T) => Promise<MenuItem<T>[]>,
+    childrenResolver?: (data: T, context: Q) => Promise<MenuItem<T>[]>,
 
     /**
-     * If `childrenResolver` is provided, disable caching of
+     * If `children` is a method or `childrenResolver` is provided
+     * disable caching of
      * the resolved children.
      */
     cacheResolvedChildren?: boolean,
@@ -102,7 +103,14 @@ type BaseMenuItem<T = any> = {
     /**
      * Instead of an array of children, render a template
      */
-    childTemplate?: TemplateRef<T> | Type<any>,
+    childTemplate?: TemplateRef<any> | Type<any>,
+
+    /**
+     * Optional `context` that can be passed from the menu
+     */
+    context?: ((data: T) => Promise<Q>) |
+              ((data: T) =>         Q) |
+                                    Q
 
     /**
      * This item is a separator.
@@ -111,6 +119,6 @@ type BaseMenuItem<T = any> = {
     separator?: boolean;
 };
 
-export type MenuItem<T = any> =
-    BaseMenuItem<T> |
+export type MenuItem<T = any, Q = any> =
+    BaseMenuItem<T, Q> |
     "separator";

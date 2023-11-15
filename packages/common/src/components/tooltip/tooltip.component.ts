@@ -82,6 +82,7 @@ export class TooltipComponent {
         // Defaults are set before @Input() hooks evaluate
         this.data = this.data || this._data?.data || {};
         this.config = this.config || this._data?.config;
+        this.dialog = this.dialog || this._data?.dialog;
         this.template = this.template || this._data?.template;
         this.ownerCords = this.ownerCords || this._data?.ownerCords;
         this.selfCords = this.selfCords || this._data?.selfCords;

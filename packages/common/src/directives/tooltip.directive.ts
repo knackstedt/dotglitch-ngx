@@ -119,6 +119,7 @@ export const openTooltip = async (
             autoFocus: focusTrap,
             restoreFocus: focusTrap,
             data: {
+                dialog,
                 data: data,
                 template: template,
                 config: config,
