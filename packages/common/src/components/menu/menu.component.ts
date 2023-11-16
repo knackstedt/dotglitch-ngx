@@ -49,6 +49,8 @@ const calcComponentBounds = async (component: Type<any>, data: any) => {
     return rect;
 }
 
+const $data = Symbol("data");
+const $hover = Symbol("hover");
 
 @Component({
     selector: 'ngx-menu',
@@ -70,13 +72,14 @@ export class MenuComponent implements OnInit {
     @Input() public items: MenuItem[];
     @Input() public config: MenuOptions;
     @Input() public id: string;
+    @Input() public overlayOverlap = 32;
+    @Input() public hoverDelay = 300;
+    @Input() public showDebugOverlay = false;
 
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
     @Input() parentItem;
     @Input() parentContext;
-
-    @Output() closeSignal = new EventEmitter();
 
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
@@ -134,7 +137,9 @@ export class MenuComponent implements OnInit {
             // Set defaults
             i['_disabled'] = false;
             i['_visible'] = true;
-            i['_context'] = typeof i.context == "function" ? i.context(this.data) : i.context;
+            i['_context'] = (typeof i.context == "function")
+                          ? i.context(this.data)
+                          : i.context;
 
             if (i.label)
                 try { i['_formattedLabel'] = this.formatLabel(i.label); } catch (e) { console.warn(e) }
@@ -167,10 +172,10 @@ export class MenuComponent implements OnInit {
             const selfX = parseInt(this.selfCords.left?.replace('px', '') || '0');
 
             this.coverRectCords = {
-                top: this.ownerCords.y - selfY - 16,
-                left: this.ownerCords.x - selfX - 16,
-                height: this.ownerCords.height + 32,
-                width: this.ownerCords.width + 32
+                top: this.ownerCords.y - selfY - (this.overlayOverlap/2),
+                left: this.ownerCords.x - selfX - (this.overlayOverlap/2),
+                height: this.ownerCords.height + this.overlayOverlap,
+                width: this.ownerCords.width + this.overlayOverlap
             }
         }
 
@@ -179,13 +184,31 @@ export class MenuComponent implements OnInit {
         }, 200);
     }
 
+    ngAfterViewInit() {
+        const el = this.viewContainer.element.nativeElement as HTMLElement;
+        el.addEventListener("keydown", evt => {
+            this.isLockedOpen = true;
+        });
+        el.addEventListener("pointerdown", evt => {
+            this.isLockedOpen = true;
+        });
+        el.addEventListener("touch", evt => {
+            this.isLockedOpen = true;
+        });
+    }
+
+    ngOnDestroy() {
+        //
+        this.childDialogs.forEach(d => d.close({[$data]: true}))
+    }
+
     /**
      *
      * @param item
      * @param evt
      * @returns
      */
-    async onMenuItemClick(item: MenuItem, row: HTMLTableRowElement, hideBackdrop = false) {
+    async onMenuItemClick(item: MenuItem, row: HTMLTableRowElement) {
         if (typeof item == 'string') return null;
         if (item.separator) return null;
 
@@ -209,12 +232,13 @@ export class MenuComponent implements OnInit {
         }
 
         if (!item.childTemplate && !item.children) {
-            if (item.action) {
-                item.action(this.data, context);
-                this.close();
+            if (typeof item.action == "function") {
+                const res = await item.action(this.data, context)
+                this.close(res);
+                return res;
             }
-            // If no action, this is simply a text item.
 
+            // If no action, this is simply a text item.
             return null;
         }
 
@@ -241,9 +265,7 @@ export class MenuComponent implements OnInit {
         if (!cords.bottom) cords.top  = bounds.y + "px";
         if (!cords.left)   cords.left = bounds.x + bounds.width + "px";
 
-        const component = item['_children'] ? MenuComponent : MenuComponent as any;
-
-        const dialogRef = this.dialog.open(component, {
+        const dialogRef = this.dialog.open(MenuComponent, {
             position: cords,
             panelClass: ["ngx-menu"].concat(this.config?.customClass || []),
             backdropClass: "ngx-menu-backdrop",
@@ -253,7 +275,7 @@ export class MenuComponent implements OnInit {
                 ownerCords: row.getBoundingClientRect(),
                 selfCords: cords,
                 parentItem: item,
-                parentContext: item['_context'],
+                parentContext: context,
                 items: item['_children'],
                 template: item.childTemplate,
                 config: this.config
@@ -262,18 +284,28 @@ export class MenuComponent implements OnInit {
 
         let _s = dialogRef
             .afterClosed()
-                .subscribe((result) => {
-                    if (result !== null && result != -1) {
-                        if (result && typeof item.action == 'function')
-                            item.action(result, context);
-
-                        this.close();
+                .subscribe(async (result) => {
+                    // Clicked "void" on a submenu
+                    if (typeof result == "object" && result[$data] == true) {
+                        this.close(result);
                     }
-                    else {
-                        item['_selfclose'] = Date.now();
+                    // Went back to parent menu -- do not close (same as result == null)
+                    else if (typeof result == "object" && result[$data] == false) {
+
+                    }
+                    // Got some other result value
+                    else if (result != null) {
+                        // Perform action callback
+                        if (typeof item.action == 'function') {
+                            this.close(await item.action(result, context));
+                        }
+                        // Just close.
+                        else {
+                            this.close();
+                        }
                     }
 
-                    this.childDialogs.splice(this.childDialogs.findIndex(d => d == dialogRef), 1);
+                    this.childDialogs.splice(this.childDialogs.indexOf(dialogRef), 1);
 
                     _s.unsubscribe();
                 });
@@ -297,16 +329,28 @@ export class MenuComponent implements OnInit {
     // @HostListener("window:resize", ['event'])
     // @HostListener("window:blur", ['event'])
     close(result?) {
-        if (result != -1)
-            this.closeSignal.emit();
-
         this.childDialogs.forEach(d => d.close())
         this.dialogRef?.close(result);
     }
 
     closeOnVoid(force = false) {
-        if (!this.isLockedOpen || force)
-            this.close(-1);
+        if (!this.isLockedOpen || force) {
+            this.close({[$data]: force});
+        }
+    }
+
+    startHoverTimer(item, row) {
+        item[$hover] = setTimeout(() => {
+            delete item[$hover];
+            if (item.children || item.childTemplate || item.childrenResolver) {
+                row['hover'] = true;
+                this.onMenuItemClick(item, row);
+            }
+        }, this.hoverDelay);
+    }
+    stopHoverTimer(item) {
+        item[$hover] && clearTimeout(item[$hover]);
+        delete item[$hover];
     }
 
     /**
