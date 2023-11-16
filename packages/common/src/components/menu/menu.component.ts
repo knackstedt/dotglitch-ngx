@@ -340,12 +340,12 @@ export class MenuComponent implements OnInit {
     }
 
     startHoverTimer(item, row) {
+        if (!item.children && !item.childTemplate && !item.childrenResolver)
+            return;
         item[$hover] = setTimeout(() => {
             delete item[$hover];
-            if (item.children || item.childTemplate || item.childrenResolver) {
-                row['hover'] = true;
-                this.onMenuItemClick(item, row);
-            }
+            row['hover'] = true;
+            this.onMenuItemClick(item, row);
         }, this.hoverDelay);
     }
     stopHoverTimer(item) {
