@@ -38,7 +38,8 @@ tr {
     transition: background-color 75ms ease,
                 color 75ms ease;
 
-    &:not(.disabled):hover {
+    &:not(.disabled).hover,
+    &:not(.disabled).open {
         background-color: var(--ngx-menu-hover-background-color, #94ebeb);
         color: var(--ngx-menu-hover-text-color, #000);
 

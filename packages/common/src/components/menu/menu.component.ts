@@ -231,6 +231,9 @@ export class MenuComponent implements OnInit {
             item['_children'] = item.children;
         }
 
+        if (item['_children'] || item.childTemplate)
+            row['_open'] = true;
+
         if (!item.childTemplate && !item.children) {
             if (typeof item.action == "function") {
                 const res = await item.action(this.data, context)
@@ -305,6 +308,8 @@ export class MenuComponent implements OnInit {
                         }
                     }
 
+                    row['_open'] = false;
+
                     this.childDialogs.splice(this.childDialogs.indexOf(dialogRef), 1);
 
                     _s.unsubscribe();
@@ -340,11 +345,20 @@ export class MenuComponent implements OnInit {
     }
 
     startHoverTimer(item, row) {
-        if (!item.children && !item.childTemplate && !item.childrenResolver)
+
+        // Invert check to make the logic simpler
+        // TL;DR: if (any) of these are true, we will do the hover action
+        if (!(
+            Array.isArray(item.children) && item.children.length > 0 ||
+            typeof item.children == "function" ||
+            item.childTemplate ||
+            item.childrenResolver
+        ))
             return;
+
         item[$hover] = setTimeout(() => {
             delete item[$hover];
-            row['hover'] = true;
+            row['_open'] = true;
             this.onMenuItemClick(item, row);
         }, this.hoverDelay);
     }

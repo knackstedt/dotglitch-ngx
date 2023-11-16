@@ -26,7 +26,8 @@
                 *ngIf="item != 'separator' && item.separator != true && item['_visible']"
                 [class.disabled]="item['_disabled']"
                 (click)="!item['_disabled'] && onMenuItemClick(item, row)"
-                [class.hover]="item['children'] && row['hover']"
+                [class.hover]="row['hover']"
+                [class.open]="row['_open']"
                 (pointerenter)="row['hover'] = true; startHoverTimer(item, row)"
                 (pointerleave)="row['hover'] = false; stopHoverTimer(item)"
             >
