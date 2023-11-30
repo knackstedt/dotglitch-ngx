@@ -106,7 +106,7 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
 
     private _sub;
     constructor(private viewContainer: ViewContainerRef) {
-        this.installMonaco();
+        InstallMonacoUMD(this.installationLocation);
 
         this._sub = this.typeDebounce.subscribe(t => {
             this.codeChange.next(this._code = this.editor.getValue());
@@ -126,24 +126,7 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
     }
 
     async ngAfterViewInit() {
-
-        await new Promise((res, rej) => {
-            let count = 0;
-            let i = window.setInterval(() => {
-                count++;
-
-                if (window['monaco'] != undefined) {
-                    window.clearInterval(i);
-
-                    Monaco = window['monaco'];
-                    res(true);
-                }
-                if (count >= 100) {
-                    window.clearInterval(i);
-                    res(false);
-                }
-            }, 100);
-        });
+        await InstallMonacoUMD();
 
         this.createEditor();
     }
@@ -158,8 +141,10 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
             this.customLanguage.init(Monaco);
         }
 
-
-        let editor = this.editor = Monaco.editor.create(this.viewContainer?.element?.nativeElement, this.settings as any);
+        let editor = this.editor = Monaco.editor.create(
+            this.viewContainer?.element?.nativeElement,
+            this.settings as any
+        );
 
         // const autoTypings = await
         MonacoAutoTypeImporter.create(editor, {
@@ -177,43 +162,6 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
 
     private configureLanguageSupport() {
 
-    }
-
-    /**
-     * true if the monaco UMD files are injected into the webpage
-     */
-    private static isMonacoInstalled = false;
-    private installMonaco() {
-        if (VscodeComponent.isMonacoInstalled) return;
-
-        if (window['monaco']) {
-            VscodeComponent.isMonacoInstalled = true;
-            return;
-        }
-
-        // Monaco has a UMD loader that requires this
-        // Merge with any pre-existing global require objects.
-        if (!window['require']) window['require'] = {} as any;
-        if (!window['require']['paths']) window['require']['paths'] = {};
-
-        if (this.installationLocation.endsWith('/'))
-            this.installationLocation = this.installationLocation.slice(0, -1);
-
-        window['require']['paths'].vs = this.installationLocation;
-
-        const monacoFiles = [
-            'loader.js',
-            'editor/editor.main.nls.js',
-            'editor/editor.main.js',
-        ];
-
-        for (let i = 0; i < monacoFiles.length; i++) {
-            const script = document.createElement("script");
-            script.setAttribute("defer", "");
-            script.setAttribute("src", this.installationLocation + '/' + monacoFiles[i]);
-            document.body.append(script);
-        }
-        VscodeComponent.isMonacoInstalled = true;
     }
 
     download() {
@@ -240,4 +188,53 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
     resize = (): void => {
         this.editor?.layout();
     };
+}
+
+export const InstallMonacoUMD = async (path?: string) => {
+    if (window['monaco']) return window['monaco'];
+
+    // Only perform installation if a path is specified.
+    if (path) {
+        // Monaco has a UMD loader that requires this
+        // Merge with any pre-existing global require objects.
+        if (!window['require']) window['require'] = {} as any;
+        if (!window['require']['paths']) window['require']['paths'] = {};
+
+        if (path.endsWith('/'))
+            path = path.slice(0, -1);
+
+        window['require']['paths'].vs = path;
+
+        const monacoFiles = [
+            'loader.js',
+            'editor/editor.main.nls.js',
+            'editor/editor.main.js',
+        ];
+
+        for (let i = 0; i < monacoFiles.length; i++) {
+            const script = document.createElement("script");
+            script.setAttribute("defer", "");
+            script.setAttribute("src", path + '/' + monacoFiles[i]);
+            document.body.append(script);
+        }
+    }
+
+    // Return a promise that will resolve when monaco finishes loading
+    return await new Promise((res, rej) => {
+        let count = 0;
+        let i = window.setInterval(() => {
+            count++;
+
+            if (window['monaco'] != undefined) {
+                window.clearInterval(i);
+
+                Monaco = window['monaco'];
+                res(true);
+            }
+            else if (count >= 100) {
+                window.clearInterval(i);
+                res(false);
+            }
+        }, 100);
+    });
 }
