@@ -193,8 +193,11 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
 export const InstallMonacoUMD = async (path?: string) => {
     if (window['monaco']) return window['monaco'];
 
+    // Prevent duplicate injection
+    const scriptEls = document.querySelectorAll('body>script[monaco][defer][src]');
+
     // Only perform installation if a path is specified.
-    if (path) {
+    if (path && scriptEls.length == 0) {
         // Monaco has a UMD loader that requires this
         // Merge with any pre-existing global require objects.
         if (!window['require']) window['require'] = {} as any;
@@ -213,6 +216,7 @@ export const InstallMonacoUMD = async (path?: string) => {
 
         for (let i = 0; i < monacoFiles.length; i++) {
             const script = document.createElement("script");
+            script.setAttribute("monaco", "");
             script.setAttribute("defer", "");
             script.setAttribute("src", path + '/' + monacoFiles[i]);
             document.body.append(script);
