@@ -6,6 +6,7 @@ import { createApplication } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import { PopupOptions } from '../../types/popup';
 
+
 export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, data: any) => {
     const args = {
         data: data || {},
@@ -40,7 +41,6 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
 
     return rect;
 }
-
 
 @Component({
     selector: 'ngx-tooltip',
@@ -114,6 +114,22 @@ export class TooltipComponent {
             if (this.pointerIsOnVoid && !this.isLockedOpen)
                 this.dialogRef.close();
         }, 200);
+    }
+
+    ngAfterViewInit() {
+        const el = this.viewContainer.element.nativeElement as HTMLElement;
+
+        el.addEventListener("keydown", evt => {
+            this.isLockedOpen = true;
+        });
+
+        el.addEventListener("pointerdown", evt => {
+            this.isLockedOpen = true;
+        });
+
+        el.addEventListener("touch", evt => {
+            this.isLockedOpen = true;
+        });
     }
 
     /**

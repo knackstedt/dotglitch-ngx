@@ -15,7 +15,10 @@
     (pointerdown)="hasBootstrapped && closeOnVoid(true)"
 ></div>
 
-<div #container class="container">
+<div
+    #container
+    class="container"
+>
     <ng-container
         *ngIf="isTemplate == false"
         [ngComponentOutlet]="$any(template)"
