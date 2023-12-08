@@ -10,7 +10,7 @@ export type MenuOptions = Partial<PopupOptions & {
     trigger: MenuTrigger | MenuTrigger[];
 }>;
 
-type BaseMenuItem<T = any, Q = object | number | string | boolean | bigint | symbol | undefined> = {
+export type BaseMenuItem<T = any, Q = object | number | string | boolean | bigint | symbol | undefined> = {
     /**
      * Label for the menu-item
      */
