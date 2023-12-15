@@ -1,5 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, Inject, Input, OnInit, Optional, Output, TemplateRef, Type, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, Inject, Input, OnInit, Optional, Output, TemplateRef, Type, ViewContainerRef, isDevMode } from '@angular/core';
 import { DomSanitizer, createApplication } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -74,7 +74,7 @@ export class MenuComponent implements OnInit {
     @Input() public id: string;
     @Input() public overlayOverlap = 32;
     @Input() public hoverDelay = 300;
-    @Input() public showDebugOverlay = false;
+    @Input() public showDebugOverlay = true;
 
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
@@ -84,6 +84,7 @@ export class MenuComponent implements OnInit {
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
     public isLockedOpen = false;
+    public pointerHasBeenOverMask = false;
 
     coverRectCords = {
         top: 0,
@@ -358,8 +359,11 @@ export class MenuComponent implements OnInit {
 
         item[$hover] = setTimeout(() => {
             delete item[$hover];
-            row['_open'] = true;
-            this.onMenuItemClick(item, row);
+
+            if (!this.pointerIsOnVoid) {
+                row['_open'] = true;
+                this.onMenuItemClick(item, row);
+            }
         }, this.hoverDelay);
     }
     stopHoverTimer(item) {

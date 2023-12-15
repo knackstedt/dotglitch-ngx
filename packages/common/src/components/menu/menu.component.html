@@ -8,6 +8,7 @@
     [style.width]="coverRectCords.width + 'px'"
     [style.background]="showDebugOverlay ? '#f004' : '#0000'"
     style="z-index: -1"
+    (pointerenter)="pointerHasBeenOverMask=true"
 ></div>
 
 <div class="void"
@@ -15,6 +16,7 @@
     (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
     (pointerleave)="pointerIsOnVoid = false"
     (pointerdown)="hasBootstrapped && closeOnVoid(true)"
+    (pointermove)="hasBootstrapped && !isLockedOpen && closeOnVoid()"
     (wheel)="onWheel($event)"
 ></div>
 
@@ -148,3 +150,12 @@
         [cdkPortalOutlet]="componentPortal"
     />
 </ng-container>
+
+<div *ngIf="showDebugOverlay">
+    <div>hbs: {{hasBootstrapped}}</div>
+    <div>pov: {{pointerIsOnVoid}}</div>
+    <div>ilo: {{isLockedOpen}}</div>
+    <div>hbom: {{pointerHasBeenOverMask}}</div>
+
+    <div>type: {{templateType}}</div>
+</div>
