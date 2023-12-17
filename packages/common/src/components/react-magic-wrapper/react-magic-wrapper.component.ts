@@ -38,8 +38,6 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         private ngContainer: ViewContainerRef,
         private ngTheme: ThemeService
     ) {
-        if (!this.ngReactComponent)
-            throw new Error("ReactMagicWrapperComponent cannot start without a provided ngReactComponent!");
     }
 
     ngOnInit() {
