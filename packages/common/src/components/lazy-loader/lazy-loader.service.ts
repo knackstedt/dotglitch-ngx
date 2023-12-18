@@ -1,6 +1,6 @@
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { CompiledComponent, CompiledModule, ComponentRegistration, ComponentResolveStrategy, DynamicRegistrationArgs, NgxLazyLoaderConfig } from './types';
-import { stringToSlug, Logger } from '../../utils';
+import { stringToSlug, ConsoleLogger } from '../../utils';
 
 // Monkey-patch the type of these symbols.
 const $id = Symbol("id") as any as string;
@@ -29,7 +29,7 @@ export class LazyLoaderService {
     }
 
     private static configure(config: NgxLazyLoaderConfig) {
-        const { log, warn, err } = Logger("ngx-lazy-loader", "#009688");
+        const { log, warn, err } = ConsoleLogger("ngx-lazy-loader", "#009688");
 
         this.config = {
             componentResolveStrategy: ComponentResolveStrategy.PickFirst,

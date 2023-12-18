@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Logger } from '../utils';
+import { ConsoleLogger } from '../utils';
 import { LazyLoaderService } from '../public-api';
 
-const { log, warn, err } = Logger("NavigationService", "#ff9800");
+const { log, warn, err } = ConsoleLogger("NavigationService", "#ff9800");
 
 type NavigationArguments = {
     root: string,

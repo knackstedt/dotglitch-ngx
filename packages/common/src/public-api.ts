@@ -59,3 +59,6 @@ export * from './components/tabulator/tabulator.component';
 export * from './components/vscode/vscode.component';
 export * from './components/react-magic-wrapper/react-magic-wrapper.component';
 export * from './components/types';
+
+
+export { ConsoleLogger } from './utils/index';

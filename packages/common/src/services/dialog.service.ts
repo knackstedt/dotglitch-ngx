@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { Logger } from '../utils';
+import { ConsoleLogger } from '../utils';
 import { LazyLoaderComponent } from '../components/lazy-loader/lazy-loader.component';
 import { LazyLoaderService } from '../components/lazy-loader/lazy-loader.service';
 
-const { log, warn, err } = Logger("DialogService", "#607d8b");
+const { log, warn, err } = ConsoleLogger("DialogService", "#607d8b");
 
 export type DialogOptions = Partial<Omit<MatDialogConfig<any>, 'data'> & {
     /**
