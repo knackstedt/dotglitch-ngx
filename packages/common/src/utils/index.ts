@@ -15,6 +15,46 @@ export const saveObjectAsFile = (name: string, data: Object) => {
 class Emoticon {
     constructor (public icon: string){}
 }
+
+/**
+ * authorization 🔐 \
+ * user 🪪 \
+ * security 🛡 \
+ * system 🖥 \
+ * toolbox 🧰 \
+ * chore ⚙ \
+ * config 🛠 \
+ * renderer 📐 \
+ * package 📦 \
+ * time ⏳ \
+ * download 📥 \
+ * upload 📤 \
+ * bug 🦠 \
+ * bomb 💣 \
+ * tnt 🧨 \
+ * warning ⚠️ \
+ * chart 📊 \
+ * chart_up 📈 \
+ * chart_down 📉 \
+ * circle_red 🔴 \
+ * circle_orange 🟠 \
+ * circle_yellow 🟡 \
+ * circle_green 🟢 \
+ * circle_blue 🔵 \
+ * circle_violet 🟣 \
+ * circle_black ⚫️ \
+ * circle_white ⚪️ \
+ * circle_brown 🟤 \
+ * square_red 🟥 \
+ * square_orange 🟧 \
+ * square_yellow 🟨 \
+ * square_green 🟩 \
+ * square_blue 🟦 \
+ * square_violet 🟪 \
+ * square_black ⬛️ \
+ * square_white ⬜️ \
+ * square_brown 🟫
+ */
 export const LogIcon = {
     authorization: new Emoticon("🔐"),
     user: new Emoticon("🪪"),
