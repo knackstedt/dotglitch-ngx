@@ -116,7 +116,7 @@ class Log {
     log(message: string, ...args)
     log(iconOrMessage: Emoticon | string, messageText: string, ...args) {
         if (iconOrMessage instanceof Emoticon) {
-            console.log(`${iconOrMessage} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
+            console.log(`${iconOrMessage.icon} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
         }
         else {
             console.log(`%c[${this.context}] %c${iconOrMessage}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
@@ -127,7 +127,7 @@ class Log {
     warn(message: string, ...args)
     warn(iconOrMessage: Emoticon | string, messageText: string, ...args) {
         if (iconOrMessage instanceof Emoticon) {
-            console.warn(`${iconOrMessage} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
+            console.warn(`${iconOrMessage.icon} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
         }
         else {
             console.warn(`%c[${this.context}] %c${iconOrMessage}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
@@ -138,7 +138,7 @@ class Log {
     err(message: string, ...args)
     err(iconOrMessage: Emoticon | string, messageText: string, ...args) {
         if (iconOrMessage instanceof Emoticon) {
-            console.error(`${iconOrMessage} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
+            console.error(`${iconOrMessage.icon} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
         }
         else {
             console.error(`%c[${this.context}] %c${iconOrMessage}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
