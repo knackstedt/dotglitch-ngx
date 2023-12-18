@@ -71,6 +71,9 @@ export const LogIcon = {
     bug: new Emoticon("🦠"),
     bomb: new Emoticon("💣"),
     tnt: new Emoticon("🧨"),
+    stop: new Emoticon("🛑"),
+    police: new Emoticon("🚨"),
+    rocket: new Emoticon("🚀"),
     warning: new Emoticon("⚠️"),
     chart: new Emoticon("📊"),
     chart_up: new Emoticon("📈"),
@@ -101,7 +104,13 @@ class Log {
         private context: string,
         private contextColor: string,
         private textColor: string
-    ) { }
+    ) {
+        // Force the bindings to stay intact with overloads.
+        this.log = this.log.bind(this);
+        this.warn = this.warn.bind(this);
+        this.err = this.err.bind(this);
+        this.error = this.error.bind(this);
+    }
 
     log(icon: Emoticon, message: string, ...args)
     log(message: string, ...args)
@@ -139,12 +148,8 @@ class Log {
     error(icon: Emoticon, message: string, ...args)
     error(message: string, ...args)
     error(iconOrMessage: Emoticon | string, messageText: string, ...args) {
-        if (iconOrMessage instanceof Emoticon) {
-            console.error(`${iconOrMessage} %c[${this.context}] %c${messageText}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
-        }
-        else {
-            console.error(`%c[${this.context}] %c${iconOrMessage}`, 'color: ' + this.contextColor, 'color: ' + this.textColor, ...args);
-        }
+        // @ts-ignore
+        this.err(iconOrMessage, messageText, ...args);
     }
 }
 
