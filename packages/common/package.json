@@ -1,7 +1,7 @@
 {
   "name": "@dotglitch/ngx-common",
   "private": false,
-  "version": "1.0.51",
+  "version": "1.1.0",
   "repository": {
     "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/common"
   },
@@ -21,10 +21,10 @@
     "angular-service"
   ],
   "peerDependencies": {
-    "@angular/common": ">=15.0.0",
-    "@angular/core": ">=15.0.0",
-    "@angular/cdk": ">=15.0.0",
-    "@angular/material": ">=15.0.0"
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/cdk": ">=17.0.0",
+    "@angular/material": ">=17.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0",
