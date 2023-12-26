@@ -33,6 +33,7 @@ export * from './services/keyboard.service';
 export * from './services/file.service';
 export * from './services/theme.service';
 export * from './services/navigation.service';
+export * from './services/command-palette.service';
 // export * from './services/serviceworker.service';
 
 /**
@@ -44,15 +45,16 @@ export * from './components/lazy-loader/lazy-loader.component';
 export * from './components/lazy-loader/types';
 
 /**
-** Services
+** Dynamic HTML (WIP)
 */
 export * from './components/dynamic-html/dynamic-html.service';
 export * from './components/dynamic-html/dynamic-html.module';
 export * from './components/dynamic-html/dynamic-html.component';
 export * from './components/dynamic-html/types';
 
-
-
+/**
+ ** Components
+ */
 export * from './components/filemanager/filemanager.component';
 // export * from './components/music-library/music-library.component';
 export * from './components/tabulator/tabulator.component';

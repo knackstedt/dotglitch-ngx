@@ -1,0 +1,42 @@
+<mat-form-field style="width: 100%; padding: 8px 8px 0 8px">
+    <input
+        matInput
+        type="text"
+        [value]="queryString"
+        (keydown)="onKeyDown($event)"
+    >
+</mat-form-field>
+
+@if (filteredCommands.length == 0) {
+    <div class="commands">
+        <div class="command selected"><div class="label">No matching results.</div></div>
+    </div>
+}
+@else {
+    <div
+        class="commands"
+        [style.flex]="(filteredCommands.length * 28) + 'px'"
+    >
+        <ng-scrollbar>
+            <cdk-virtual-scroll-viewport itemSize="28" scrollViewport>
+                <div
+                    *cdkVirtualFor="let command of filteredCommands; let index = index"
+                    class="command"
+                    [class.selected]="index==activeIndex"
+                    (click)="executeCommand(command)"
+                >
+                    <div
+                        class="label"
+                        [innerHTML]="command['_renderedLabel'] || command.label || command.description"
+                    ></div>
+                    <div>
+                        @for (shortcut of (command.shortcutKey.find ? command.shortcutKey : [command.shortcutKey]); track shortcut) {
+                            <app-shortcut [shortcut]="shortcut"></app-shortcut>
+                        }
+                    </div>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </ng-scrollbar>
+    </div>
+}
+
