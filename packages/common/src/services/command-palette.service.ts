@@ -60,7 +60,7 @@ export type CommandAction<T = any> = {
     /**
      * The non-modifier key(s) that must be pressed for the event to fire.
      */
-    shortcutKey: KeybindCode | KeybindCode[],
+    shortcutKey?: KeybindCode | KeybindCode[],
 
     /**
      * Action that is invoked when the keyboard shortcut is pressed or the item
@@ -137,12 +137,22 @@ export class CommandPaletteService {
         this.interval = setInterval(() => {
             // Go backwards since we're splicing items out of the array.
             for (let i = this.commandBlocks.length; i >= 0; i--) {
-                const commandBlock = this.commandBlocks[i];
+                let commandBlock = this.commandBlocks[i];
+
+                // If the current index is somehow null, rip it out of
+                // the array and wait for cleanup to trigger again
+                // for the rest of the array.
+                // TODO: Could this lead to leaks where things at the end
+                // never get cleaned?
+                if (commandBlock == null) {
+                    this.commandBlocks.splice(i, 1);
+                    return;
+                }
 
                 // If the element has been disconnected from the DOM, we will
                 // treat it as having been permanently removed.
                 // TODO: Could this ever cause unintended consequences?
-                if (!commandBlock.element.isConnected)
+                if (!commandBlock?.element.isConnected)
                     this.commandBlocks.splice(i, 1);
             }
         }, 5 * 60 * 1000);
@@ -230,10 +240,12 @@ export class CommandPaletteService {
         }
 
         // Make the shortcut keys lowercase so case sensitivity doesn't scalp someone
-        if (Array.isArray(action.shortcutKey))
-            action.shortcutKey = action.shortcutKey.map(k => k.toLowerCase()) as any;
-        else
-            action.shortcutKey = action.shortcutKey.toLowerCase() as any;
+        if (action.shortcutKey) {
+            if (Array.isArray(action.shortcutKey))
+                action.shortcutKey = action.shortcutKey.map(k => k.toLowerCase()) as any;
+            else
+                action.shortcutKey = action.shortcutKey.toLowerCase() as any;
+        }
 
         commandBlock.actions.push(action);
     }
