@@ -30,8 +30,10 @@
                         [innerHTML]="command['_renderedLabel'] || command.label || command.description"
                     ></div>
                     <div>
-                        @for (shortcut of (command.shortcutKey.find ? command.shortcutKey : [command.shortcutKey]); track shortcut) {
-                            <app-shortcut [shortcut]="shortcut"></app-shortcut>
+                        @for (shortcut of (command.shortcutKey?.find ? command.shortcutKey : [command.shortcutKey]); track shortcut) {
+                            @if (shortcut) {
+                                <app-shortcut [shortcut]="shortcut"></app-shortcut>
+                            }
                         }
                     </div>
                 </div>

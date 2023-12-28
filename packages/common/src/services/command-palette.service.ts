@@ -67,7 +67,7 @@ export type CommandAction<T = any> = {
      * is activated in the GUI menu
      * If the GUI menu is open, it will show a spinner if the action returns a `Promise`
      */
-    action: (evt: KeyboardEvent, data?: T) => Promise<any> | any,
+    action?: (evt: KeyboardEvent, data?: T) => Promise<any> | any,
 
     /**
      * Arbitrary data object to be passed into the action
@@ -104,8 +104,17 @@ export type CommandAction<T = any> = {
      */
     rootName?: string,
 
-    // preventDefault?: boolean,
-    // stopPropagation?: boolean
+    /**
+     * Control whether this command action is visible in the popup command
+     * palette GUI.
+     */
+    visibleInList?: boolean,
+
+    /**
+     * Enable selecting an item to show a list of sub-items
+     */
+    subMenu?: CommandAction<T>[] | (() => Promise<CommandAction<T>[]>) | (() => CommandAction<T>[])
+
 };
 
 type CommandBlock = {
@@ -117,9 +126,6 @@ export type CommandPaletteOptions = {
     keybind: KeybindCode
 }
 
-/**
- *
- */
 @Injectable({
     providedIn: 'root'
 })
@@ -232,8 +238,8 @@ export class CommandPaletteService {
         })();
 
         // This is likely a duplicate entry
-        if (commandBlock.actions.find(a => a.shortcutKey == action.shortcutKey)) {
-            warn(LogIcon.warning, `Inserting duplicate action on element`, { element, action });
+        if (commandBlock.actions.find(a => a.shortcutKey && a.shortcutKey == action.shortcutKey)) {
+            warn(`Inserting duplicate action on element`, { element, action });
         }
         else {
             log(LogIcon.circle_blue, `Inserted action`, action)
@@ -275,7 +281,8 @@ export class CommandPaletteService {
                 action: () => this.openPalette(),
                 description: "Open the command palette",
                 keywords: ["command", "prompt", "console", "actions"],
-                label: "Command Palette"
+                label: "Command Palette",
+                visibleInList: false
             }
         ]);
     }

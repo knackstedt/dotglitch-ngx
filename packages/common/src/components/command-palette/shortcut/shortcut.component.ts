@@ -14,6 +14,6 @@ export class ShortcutComponent {
     keys: string[] = [];
 
     ngOnChanges() {
-        this.keys = this.shortcut.split("+");
+        this.keys = this.shortcut?.split("+");
     }
 }

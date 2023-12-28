@@ -38,6 +38,9 @@ export class CommandPaletteComponent implements OnInit {
     ngOnInit() {
         this.commands = this.commandPalette.getRegisteredCommands(this.contextElement);
         this.filteredCommands = this.commands;
+
+        // Reset the filter labels
+        this.commands.forEach(command => command['_renderedLabel'] = '');
     }
 
     onKeyDown(evt: KeyboardEvent) {
