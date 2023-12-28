@@ -74,7 +74,7 @@ export class MenuComponent implements OnInit {
     @Input() public id: string;
     @Input() public overlayOverlap = 32;
     @Input() public hoverDelay = 300;
-    @Input() public showDebugOverlay = true;
+    @Input() public showDebugOverlay = false;
 
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
