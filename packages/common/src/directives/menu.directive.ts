@@ -123,6 +123,8 @@ export const openMenu = async (
             data: {
                 dialog,
                 data: data,
+                ownerCords: el?.getBoundingClientRect(),
+                selfCords: cords,
                 items: menuItems,
                 config: config,
                 id: specificId

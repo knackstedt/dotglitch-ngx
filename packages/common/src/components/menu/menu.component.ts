@@ -68,6 +68,7 @@ const $hover = Symbol("hover");
     standalone: true
 })
 export class MenuComponent implements OnInit {
+
     @Input() public data: any;
     @Input() public items: MenuItem[];
     @Input() public config: MenuOptions;
