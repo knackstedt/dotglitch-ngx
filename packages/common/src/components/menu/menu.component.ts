@@ -1,5 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, Inject, Input, OnInit, Optional, Output, TemplateRef, Type, ViewContainerRef, isDevMode } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnInit, Optional, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, createApplication } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
