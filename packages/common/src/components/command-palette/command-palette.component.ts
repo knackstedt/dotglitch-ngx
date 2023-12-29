@@ -36,7 +36,8 @@ export class CommandPaletteComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.commands = this.commandPalette.getRegisteredCommands(this.contextElement);
+        this.commands = this.commandPalette.getRegisteredCommands(this.contextElement)
+            .filter(c => c.visibleInList != false);
         this.filteredCommands = this.commands;
 
         // Reset the filter labels
@@ -59,13 +60,15 @@ export class CommandPaletteComponent implements OnInit {
         }
 
         if (evt.key == "ArrowDown") {
-            this.activeIndex = Math.min(this.filteredCommands.length, this.activeIndex+1)
+            this.activeIndex = Math.min(this.filteredCommands.length-1, this.activeIndex+1)
             return;
         }
 
         this.activeIndex = 0;
         this.commands.forEach(c => c['_renderedLabel'] = '');
 
+        // Check in the next tick to get the input's
+        // value so that it's updated
         setTimeout(() => {
             this.queryString = (evt.target as HTMLInputElement).value;
 
