@@ -122,7 +122,7 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
             }
         }
         if (changes['theme'])
-            Monaco?.editor.setTheme(this.theme);
+            window['monaco']?.editor.setTheme(this.theme);
     }
 
     async ngAfterViewInit() {
@@ -138,10 +138,10 @@ export class VscodeComponent implements AfterViewInit, OnDestroy {
 
     private createEditor() {
         if (this.customLanguage) {
-            this.customLanguage.init(Monaco);
+            this.customLanguage.init(window['monaco']);
         }
 
-        let editor = this.editor = Monaco.editor.create(
+        let editor = this.editor = window['monaco'].editor.create(
             this.viewContainer?.element?.nativeElement,
             this.settings as any
         );
@@ -231,8 +231,6 @@ export const InstallMonacoUMD = async (path?: string) => {
 
             if (window['monaco'] != undefined) {
                 window.clearInterval(i);
-
-                Monaco = window['monaco'];
                 res(true);
             }
             else if (count >= 100) {
