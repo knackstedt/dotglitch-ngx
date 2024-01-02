@@ -296,7 +296,7 @@ export class CommandPaletteService {
                 top: "8px"
             },
             data: {
-
+                contextElement: document.activeElement
             }
         });
     }

@@ -72,3 +72,18 @@ cdk-virtual-scroll-viewport {
         display: none;
     }
 }
+
+::ng-deep .dark :host {
+    border: 1px solid #e5e5e5;
+    background-color: #f8f8f8;
+
+    .commands .command {
+        &:hover {
+            background-color: #f2f2f2;
+        }
+
+        &.selected {
+            background-color: #e8e8e8;
+        }
+    }
+}

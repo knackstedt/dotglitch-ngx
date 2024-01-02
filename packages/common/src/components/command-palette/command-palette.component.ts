@@ -1,7 +1,7 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { CommandAction, CommandPaletteService } from '../../services/command-palette.service';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { ShortcutComponent } from './shortcut/shortcut.component';
@@ -30,9 +30,10 @@ export class CommandPaletteComponent implements OnInit {
 
     constructor(
         private readonly commandPalette: CommandPaletteService,
-        private readonly dialog: MatDialogRef<any>
+        private readonly dialog: MatDialogRef<any>,
+        @Inject(MAT_DIALOG_DATA) data: any
     ) {
-
+        this.contextElement = this.contextElement ?? data.contextElement;
     }
 
     ngOnInit() {
@@ -50,17 +51,22 @@ export class CommandPaletteComponent implements OnInit {
             if (this.filteredCommands.length > 0)
                 this.executeCommand(this.filteredCommands[this.activeIndex]);
 
+            evt.stopPropagation();
             return;
         }
 
         if (evt.key == "ArrowUp") {
             // Fire the first command
             this.activeIndex = Math.max(this.activeIndex-1, 0);
+
+            evt.stopPropagation();
             return;
         }
 
         if (evt.key == "ArrowDown") {
-            this.activeIndex = Math.min(this.filteredCommands.length-1, this.activeIndex+1)
+            this.activeIndex = Math.min(this.filteredCommands.length-1, this.activeIndex+1);
+
+            evt.stopPropagation();
             return;
         }
 
