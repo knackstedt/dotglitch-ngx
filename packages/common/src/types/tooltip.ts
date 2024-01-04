@@ -20,5 +20,11 @@ export type TooltipOptions = Partial<PopupOptions & {
      * What user interaction event should make the tooltip appear.
      *  - Default `hover`
      */
-    triggers: ("click" | "hover")[]
+    triggers: ("click" | "hover")[],
+
+    /**
+     * Set to `true` to keep the tooltip open when hovered over.
+     * Primarily used for popping up interactive components
+     */
+    stayOpen: boolean
 }>;

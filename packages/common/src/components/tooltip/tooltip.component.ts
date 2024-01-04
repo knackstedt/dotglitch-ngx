@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Optional } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
-import { PopupOptions } from '../../types/popup';
+import { TooltipOptions } from '../../types/tooltip';
 
 
 export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, data: any) => {
@@ -56,7 +56,7 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
 })
 export class TooltipComponent {
     @Input() data: any;
-    @Input() config: PopupOptions;
+    @Input() config: TooltipOptions;
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
     @Input() template: TemplateRef<any> | Type<any>;
@@ -86,7 +86,7 @@ export class TooltipComponent {
         this.template = this.template || this._data?.template;
         this.ownerCords = this.ownerCords || this._data?.ownerCords;
         this.selfCords = this.selfCords || this._data?.selfCords;
-        this.isLockedOpen = this._data?.isLockedOpen;
+        this.isLockedOpen = this._data?.isLockedOpen || this.config?.stayOpen;
     }
 
     ngOnInit() {

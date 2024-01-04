@@ -10,7 +10,7 @@
 ></div>
 
 <div class="void"
-    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
+    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
     (pointerleave)="pointerIsOnVoid = false"
     (pointerdown)="hasBootstrapped && closeOnVoid(true)"
 ></div>

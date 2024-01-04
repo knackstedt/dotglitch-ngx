@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, TemplateRef, Type, ViewContainerRef } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { getPosition } from './utils';
 import {  } from '../types/popup';import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
 import { TooltipOptions } from '../types/tooltip';
@@ -106,7 +106,8 @@ export const openTooltip = async (
     data: any,
     el: HTMLElement,
     config?: TooltipOptions,
-    focusTrap = false
+    focusTrap = false,
+    matPopupOptions?: MatDialogConfig<any>
 ) => {
 
     const rect = await calcTooltipBounds(template, data);
@@ -129,7 +130,8 @@ export const openTooltip = async (
             },
             panelClass: ["ngx-tooltip", 'ngx-' + specificId].concat(config?.customClass || []),
             position: cords,
-            hasBackdrop: false
+            hasBackdrop: false,
+            ...matPopupOptions
         })
             .afterClosed()
             .subscribe(s => {
