@@ -1,13 +1,14 @@
-import { CommonModule } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { Component, HostListener, Inject, Input, TemplateRef, Type, ViewContainerRef } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { Optional } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import { TooltipOptions } from '../../types/tooltip';
 
+declare const Zone;
 
-export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, data: any) => {
+export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, data: any, matDialogConfig: MatDialogConfig) => {
     const args = {
         data: data || {},
         template,
@@ -16,30 +17,51 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
         ownerCords: { x: 0, y: 0, width: 0, height: 0 },
         id: null
     }
-    // Forcibly bootstrap the ctx menu outside of the client application's zone.
-    const app = await createApplication({
-        providers: [
-            { provide: MAT_DIALOG_DATA, useValue: args }
-        ]
-    });
 
-    const del = document.createElement("div");
-    del.style.position = "absolute";
-    del.style.left = '-1000vw';
-    document.body.append(del);
+    // dimensions should be in px... Might need to handle vw/v
+    if (matDialogConfig?.width && matDialogConfig?.height) {
+        return {
+            width: parseInt(matDialogConfig.width),
+            height: parseInt(matDialogConfig.height),
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+        } as DOMRect;
+    }
 
-    const base = app.bootstrap(TooltipComponent, del);
-    const { instance } = base;
 
-    await firstValueFrom(app.isStable);
+    return new Promise<DOMRect>((res, rej) => {
+        const zone = Zone.current.fork({
+            name: 'zone',
+        });
+        zone.run(async () => {
+            // Forcibly bootstrap the ctx menu outside of the client application's zone.
+            const app = await createApplication({
+                providers: [
+                    { provide: MAT_DIALOG_DATA, useValue: args }
+                ]
+            });
+            app.injector
 
-    const el: HTMLElement = instance.viewContainer?.element?.nativeElement;
+            const del = document.createElement("div");
+            del.style.position = "absolute";
+            del.style.left = '-1000vw';
+            document.body.append(del);
 
-    const rect = el.getBoundingClientRect();
-    app.destroy();
-    del.remove();
+            const base = app.bootstrap(TooltipComponent, del);
+            const { instance } = base;
 
-    return rect;
+            await firstValueFrom(app.isStable);
+
+            const el: HTMLElement = instance.viewContainer?.element?.nativeElement;
+
+            const rect = el.getBoundingClientRect();
+            app.destroy();
+            del.remove();
+            res(rect)
+        });
+    })
 }
 
 @Component({
@@ -47,10 +69,8 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.scss'],
     imports: [
-        // NgIf,
-        // NgTemplateOutlet,
-        // NgComponentOutlet,
-        CommonModule,
+        NgTemplateOutlet,
+        NgComponentOutlet
     ],
     standalone: true
 })
@@ -65,6 +85,9 @@ export class TooltipComponent {
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
     public isLockedOpen = false;
+
+    clientWidth = window.innerWidth;
+    clientHeight = window.innerHeight;
 
     coverRectCords = {
         top: 0,
@@ -132,6 +155,45 @@ export class TooltipComponent {
         });
     }
 
+    @HostListener("window:keydown", ['$event'])
+    onKeyDown(evt: KeyboardEvent) {
+        if (this.config.freezeOnKeyCode) {
+            if (evt.code == this.config.freezeOnKeyCode)
+                this.isLockedOpen = true;
+        }
+    }
+
+    onVoidPointerDown(evt: PointerEvent) {
+        if (!this.isLockedOpen) {
+            const el = this.viewContainer.element.nativeElement as HTMLElement;
+            el.querySelector(".void").remove();
+
+            setTimeout(() => {
+                const clonedEvt = new PointerEvent("pointerdown", evt);
+                const target = document.elementFromPoint(evt.clientX, evt.clientY) as HTMLElement;
+
+                console.log("DEBUG EVENTS", {evt, clonedEvt});
+                target.dispatchEvent(clonedEvt);
+            }, 15)
+        }
+
+        this.closeOnVoid(true)
+    }
+
+    // If the void element gets stuck open, make wheel events pass through.
+    onWheel(evt: WheelEvent) {
+        const el = this.viewContainer.element.nativeElement as HTMLElement;
+        el.style.display = "none";
+        const target = document.elementFromPoint(evt.clientX, evt.clientY);
+        el.style.display = "block";
+
+        target.scroll({
+            top: evt.deltaY + target.scrollTop,
+            left: evt.deltaX + target.scrollLeft,
+            behavior: "smooth"
+        });
+    }
+
     /**
      * Close the tooltip if these actions occur
      */
@@ -141,6 +203,9 @@ export class TooltipComponent {
     private onClose() {
         if (!this.isLockedOpen)
             this.dialogRef?.close();
+
+        this.clientWidth = window.innerWidth;
+        this.clientHeight = window.innerHeight;
     }
 
     closeOnVoid(force = false) {

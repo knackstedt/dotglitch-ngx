@@ -40,7 +40,9 @@
     right: -100vw;
     bottom: -100vh;
     left: -100vw;
-    z-index: -2
+    z-index: -2;
+    position: fixed;
+    // background-color: #2f2f2f66;
 }
 
 .container {

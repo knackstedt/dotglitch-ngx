@@ -110,7 +110,7 @@ export const openTooltip = async (
     matPopupOptions?: MatDialogConfig<any>
 ) => {
 
-    const rect = await calcTooltipBounds(template, data);
+    const rect = await calcTooltipBounds(template, data, matPopupOptions);
     const ownerCords = el.getBoundingClientRect();
     const cords = getPosition(el, config, rect);
     const specificId = ulid();
@@ -124,6 +124,7 @@ export const openTooltip = async (
                 data: data,
                 template: template,
                 config: config,
+                matPopupOptions,
                 ownerCords: ownerCords,
                 selfCords: cords,
                 id: specificId

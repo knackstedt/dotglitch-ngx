@@ -1,33 +1,63 @@
 <!-- Mouse event blocker for pointer leave -->
-<div
-    *ngIf="coverRectCords"
-    class="owner-mask"
-    [style.top]="coverRectCords.top + 'px'"
-    [style.left]="coverRectCords.left + 'px'"
-    [style.height]="coverRectCords.height + 'px'"
-    [style.width]="coverRectCords.width + 'px'"
-    style="z-index: -1;"
-></div>
+@if (coverRectCords) {
+    <!-- <div
+        class="owner-mask"
+        [style.top]="coverRectCords.top + 'px'"
+        [style.left]="coverRectCords.left + 'px'"
+        [style.height]="coverRectCords.height + 'px'"
+        [style.width]="coverRectCords.width + 'px'"
+        style="z-index: -1;"
+        (pointerdown)="onVoidPointerDown($event)"
+    ></div> -->
 
-<div class="void"
-    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
-    (pointerleave)="pointerIsOnVoid = false"
-    (pointerdown)="hasBootstrapped && closeOnVoid(true)"
-></div>
+    <div class="void left"
+        [style.top]="'0px'"
+        [style.left]="'0px'"
+        [style.height]="'100%'"
+        [style.width]="(ownerCords.left) + 'px'"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
+        (pointerleave)="pointerIsOnVoid = false"
+        (pointerdown)="onVoidPointerDown($event)"
+        (wheel)="onWheel($event)"
+    ></div>
+    <div class="void top"
+        [style.top]="'0px'"
+        [style.left]="ownerCords.left + 'px'"
+        [style.height]="ownerCords.top + 'px'"
+        [style.width]="ownerCords.width + 'px'"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
+        (pointerleave)="pointerIsOnVoid = false"
+        (pointerdown)="onVoidPointerDown($event)"
+        (wheel)="onWheel($event)"
+    ></div>
+    <div class="void right"
+        [style.top]="'0px'"
+        [style.left]="(ownerCords.left + ownerCords.width) + 'px'"
+        [style.height]="'100%'"
+        [style.width]="(clientWidth - (ownerCords.left + ownerCords.width)) + 'px'"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
+        (pointerleave)="pointerIsOnVoid = false"
+        (pointerdown)="onVoidPointerDown($event)"
+        (wheel)="onWheel($event)"
+    ></div>
+    <div class="void"
+        [style.top]="(ownerCords.top + ownerCords.height) + 'px'"
+        [style.left]="ownerCords.left + 'px'"
+        [style.height]="(clientHeight - (ownerCords.top + ownerCords.height)) + 'px'"
+        [style.width]="ownerCords.width + 'px'"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && closeOnVoid()"
+        (pointerleave)="pointerIsOnVoid = false"
+        (pointerdown)="onVoidPointerDown($event)"
+        (wheel)="onWheel($event)"
+    ></div>
+}
+
 
 <div
     #container
     class="container"
 >
-    <ng-container
-        *ngIf="isTemplate == false"
-        [ngComponentOutlet]="$any(template)"
-    >
-    </ng-container>
-
-    <ng-container
-        *ngIf="isTemplate == true"
-    >
+    @if (isTemplate) {
         <ng-container
             [ngTemplateOutlet]="$any(template)"
             [ngTemplateOutletContext]="{
@@ -37,5 +67,11 @@
                 'tooltip': this
             }"
         ></ng-container>
-    </ng-container>
+    }
+    @else {
+        <ng-container
+            [ngComponentOutlet]="$any(template)"
+        >
+        </ng-container>
+    }
 </div>
