@@ -6,8 +6,6 @@ See referenced documentation to each project below:
 
  - [ngx-common](./packages/common/README.md)
     - Package containing many useful Angular services, components, and directives.
- - [ngx-bytemd](./packages/bytemd/README.md)
-    - Angular [Bytemd](https://bytemd.js.org/) wrapper.
  - [ngx-reactflow](./packages/reactflow/README.md)
     - Angular [ReactFlow](https://reactflow.dev/) wrapper.
  - [ngx-stackedit](https://github.com/knackstedt/stackedit)
