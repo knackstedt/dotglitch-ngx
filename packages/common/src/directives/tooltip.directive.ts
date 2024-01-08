@@ -1,7 +1,7 @@
 import { Directive, Input, HostListener, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { getPosition } from './utils';
-import {  } from '../types/popup';import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
+import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
 import { TooltipOptions } from '../types/tooltip';
 import { ulid } from 'ulidx';
 
@@ -42,13 +42,23 @@ export class TooltipDirective {
     ) {
         if (this.config.freezeOnKeyCode !== null) {
             this.isFreezeOnKeyCodeBound = true;
-            document.body.addEventListener("keydown", this.onKeyDownEvt);
+            window.addEventListener("keydown", this.onKeyDownEvt);
         }
+    }
+
+    ngAfterViewInit() {
+        const el = this.viewContainer.element.nativeElement as HTMLElement;
+
+        this.config?.triggers?.forEach(t => {
+            el.addEventListener(t, () => {
+                this.open();
+            })
+        })
     }
 
     ngOnDestroy() {
         if (this.isFreezeOnKeyCodeBound) {
-            document.body.removeEventListener("keydown", this.onKeyDownEvt);
+            window.removeEventListener("keydown", this.onKeyDownEvt);
         }
     }
 
@@ -60,22 +70,20 @@ export class TooltipDirective {
     }
     private onKeyDownEvt = this.onKeyDown.bind(this);
 
-    // Needs to be public so we can manually open the dialog
+    async open() {
+        if (!this.dialogInstance) {
+            const el = this.viewContainer.element.nativeElement;
+            this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
+        }
+    }
+
     @HostListener('pointerenter', ['$event'])
     public async onPointerEnter(evt: PointerEvent) {
         // If the template is not a template ref, do nothing.
         if (!(this.template instanceof TemplateRef))
             return;
 
-        // If the click trigger is set, we will immediately open the tooltip.
-        // This will bypass all other triggers.
-        if (this.config?.triggers?.includes("click")) {
-            if (!this.dialogInstance) {
-                const el = this.viewContainer.element.nativeElement;
-                const data = this.data;
-                data.isLockedOpen = true;
-                this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
-            }
+        if (Array.isArray(this.config?.triggers) && !this.config.triggers.includes("hover")) {
             return;
         }
 
@@ -86,10 +94,7 @@ export class TooltipDirective {
             if (!this.isCursorOverTarget)
                 return;
 
-            if (!this.dialogInstance) {
-                const el = this.viewContainer.element.nativeElement;
-                this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
-            }
+            this.open();
         }, this.config.delay ?? 250);
     }
 
