@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Optional, Output, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -170,7 +170,7 @@ export type NgxFileManagerConfiguration = Partial<{
 })
 export class FilemanagerComponent implements OnInit {
     @ViewChild('tabGroup') tabGroup: MatTabGroup;
-    @ViewChildren(FileGridComponent) fileGrids: FileGridComponent[];
+    @ViewChildren(FileGridComponent) fileGrids: QueryList<FileGridComponent>;
     @ViewChild(TreeViewComponent) treeView: TreeViewComponent;
     @ViewChild(ToolbarComponent) toolbar: ToolbarComponent;
     @ViewChild(MatDrawerContainer) drawer: MatDrawerContainer;
@@ -236,7 +236,7 @@ export class FilemanagerComponent implements OnInit {
     isHomeAncestor = false;
 
     currentTab: FileViewTab = {} as any;
-    get currentFileGrid() { return this.fileGrids[this.tabIndex] }
+    get currentFileGrid() { return this.fileGrids.get(this.tabIndex) }
     tabIndex = 0;
     tabs: FileViewTab[] = [];
 

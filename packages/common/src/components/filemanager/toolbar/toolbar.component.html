@@ -21,6 +21,10 @@
     </div>
 
     <div style="width: 40px" *ngIf="!drawerMode"></div>
+    <gtk-icon-button
+        fontIcon="sync"
+        (click)="onRefresh()"
+    />
 </ng-container>
 
 

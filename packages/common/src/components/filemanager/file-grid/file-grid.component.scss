@@ -138,7 +138,12 @@
     }
 }
 
-
+.controls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+}
 
 .select-hint {
     position: absolute;

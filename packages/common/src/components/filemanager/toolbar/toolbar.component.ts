@@ -154,4 +154,9 @@ export class ToolbarComponent {
         this.fileManager.currentTab.sortOrder = mode;
         this.fileManager.refreshSorting();
     }
+
+    onRefresh() {
+        // console.log(this.fileManager);
+        this.fileManager.fileGrids.forEach(g => g.loadFolder());
+    }
 }

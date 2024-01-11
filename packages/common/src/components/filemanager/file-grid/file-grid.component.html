@@ -1,6 +1,6 @@
-<ng-container *ngIf="showLoader">
+@if (showLoader) {
     <mat-progress-bar [class.hide]="hideLoader" mode="query"/>
-</ng-container>
+}
 
 <div
     style="display: contents"
@@ -86,3 +86,21 @@
     {{selectionText}}
 </div>
 
+<div class="controls">
+    <button
+        mat-flat-button
+        class="upload-button"
+        (click)="onCreateFolder()"
+    >
+        <mat-icon>create_new_folder</mat-icon>
+        New Folder
+    </button>
+    <button
+        mat-flat-button
+        class="upload-button"
+        (click)="onUploadFile()"
+    >
+        <mat-icon>upload_file</mat-icon>
+        Upload
+    </button>
+</div>

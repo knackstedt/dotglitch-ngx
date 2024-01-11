@@ -15,6 +15,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { uploadFile } from '../helpers';
 import { DialogService, Fetch, KeyboardService, MenuDirective, MenuItem, openMenu } from '../../../public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 const itemWidth = (80 + 20);
 
@@ -31,6 +33,8 @@ const itemWidth = (80 + 20);
         MatInputModule,
         MatCheckboxModule,
         MatProgressBarModule,
+        MatIconModule,
+        MatButtonModule,
         TabulatorComponent,
         MenuDirective,
         ScrollingModule
@@ -142,21 +146,13 @@ export class FileGridComponent implements OnInit {
             label: "New Folder",
             // shortcutLabel: "Shift+Ctrl+N",
             icon: "create_new_folder",
-            action: (data) => {
-                // console.log("New folder goodness");
-                // console.log(data);
-                this.dialog.open("folder-rename", "@dotglitch/ngx-web-components", {
-                    inputs: { path: data?.path || this.path, name: data?.name || '', config: this.config }
-                }).then(r => this.loadFolder())
-            }
+            action: (data) => this.onCreateFolder(data)
         },
         {
             label: "Upload file",
             // shortcutLabel: "Ctrl+D",
             icon: "file_upload",
-            action: (evt) => uploadFile(this.fetch, this.config, this._path, evt ? (evt.path + evt.name) : null, this.fileManager.contextTags).then(res => {
-                this.loadFolder();
-            })
+            action: (evt) => this.onUploadFile(evt)
         },
         "separator",
         // {
@@ -633,7 +629,7 @@ export class FileGridComponent implements OnInit {
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
     }
 
-    public resize() {
+    resize() {
         if (!this.filesRef) {
             setTimeout(() => this.resize(), 25);
             return;
@@ -727,9 +723,25 @@ export class FileGridComponent implements OnInit {
     sort() {
         this._sortFilter();
     }
+
+    onUploadFile(evt?: FSDescriptor) {
+        uploadFile(
+            this.fetch,
+            this.config,
+            this._path,
+            evt ? (evt.path + evt.name) : null,
+            this.fileManager.contextTags
+        )
+        .then(res => {
+            // Refresh folder contents
+            this.loadFolder();
+        })
+    }
+
+    onCreateFolder(data?: FSDescriptor) {
+        this.dialog.open("folder-rename", "@dotglitch/ngx-web-components", {
+            inputs: { path: data?.path || this.path, name: data?.name || '', config: this.config }
+        }).then(r => this.loadFolder())
+    }
 }
-
-
-
-
 
