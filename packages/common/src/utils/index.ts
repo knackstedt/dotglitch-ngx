@@ -12,12 +12,16 @@ export const saveObjectAsFile = (name: string, data: Object) => {
     a.remove();
 };
 
-class Emoticon {
+/**
+ * Construct an emoticon with any unicode icon you specify
+ */
+export class Emoticon {
     constructor (public icon: string){}
 }
 
 /**
  * authorization 🔐 \
+ * navigation 🧭 \
  * user 🪪 \
  * security 🛡 \
  * system 🖥 \
@@ -57,6 +61,7 @@ class Emoticon {
  */
 export const LogIcon = {
     authorization: new Emoticon("🔐"),
+    navigation: new Emoticon("🧭"),
     user: new Emoticon("🪪"),
     security: new Emoticon("🛡"),
     system: new Emoticon("🖥"),
