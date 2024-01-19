@@ -154,6 +154,9 @@ export class MenuComponent implements OnInit {
 
             if (typeof i.linkTemplate == "function")
                 try { i['_link'] = i.linkTemplate(this.data || {}, i['_context']); } catch (e) { console.warn(e) }
+
+            if (typeof i.iconTemplate == "function")
+                try { i['_icon'] = i.iconTemplate(this.data || {}, i['_context']); } catch (e) { console.warn(e); }
         });
 
         // Show the icon column if there are any items with an icon

@@ -77,6 +77,14 @@ export type BaseMenuItem<T = any, Q = object | number | string | boolean | bigin
     icon?: string,
 
     /**
+     * Callback to choose the icon used for an item.
+     * Executed upon opening the menu.
+     *
+     * See `icon` for details.
+     */
+    iconTemplate?: ((data: T, context: Q) => string),
+
+    /**
      * CSS color string to apply on the mat icon
      */
     iconColor?: string,
