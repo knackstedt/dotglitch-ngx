@@ -31,19 +31,13 @@ export class TooltipDirective {
     @Input("ngxTooltipContext")
     @Input("ngx-tooltip-context") data: any = {};
 
-
-    private dialogInstance: MatDialogRef<any>;
     private isCursorOverTarget = false;
-    private isFreezeOnKeyCodeBound = false;
+    private dialogIsOpen = false;
 
     constructor(
         private dialog: MatDialog,
         private viewContainer: ViewContainerRef
     ) {
-        if (this.config.freezeOnKeyCode !== null) {
-            this.isFreezeOnKeyCodeBound = true;
-            window.addEventListener("keydown", this.onKeyDownEvt);
-        }
     }
 
     ngAfterViewInit() {
@@ -56,24 +50,12 @@ export class TooltipDirective {
         })
     }
 
-    ngOnDestroy() {
-        if (this.isFreezeOnKeyCodeBound) {
-            window.removeEventListener("keydown", this.onKeyDownEvt);
-        }
-    }
-
-    onKeyDown(evt) {
-        // TODO: fade message 'tooltip is locked open'
-        if (evt.code == ("F2")) {
-            this.dialogInstance.componentInstance.isLockedOpen = true;
-        }
-    }
-    private onKeyDownEvt = this.onKeyDown.bind(this);
-
     async open() {
-        if (!this.dialogInstance) {
+        if (!this.dialogIsOpen) {
             const el = this.viewContainer.element.nativeElement;
-            this.dialogInstance = await openTooltip(this.dialog, this.template, this.data, el, this.config);
+            this.dialogIsOpen = true;
+            await openTooltip(this.dialog, this.template, this.data, el, this.config);
+            this.dialogIsOpen = false;
         }
     }
 
