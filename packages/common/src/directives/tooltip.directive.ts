@@ -45,6 +45,9 @@ export class TooltipDirective {
 
         this.config?.triggers?.forEach(t => {
             el.addEventListener(t, () => {
+                if (t == "click")
+                    this.config.stayOpen = true;
+
                 this.open();
             })
         })
