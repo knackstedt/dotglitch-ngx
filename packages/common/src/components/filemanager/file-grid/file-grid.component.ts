@@ -1,10 +1,10 @@
-import { Component, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef, Optional, Inject, TemplateRef, ChangeDetectorRef, SecurityContext } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef, TemplateRef, ChangeDetectorRef, SecurityContext } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CellComponent, EmptyCallback } from 'tabulator-tables';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { DirectoryDescriptor, FileDescriptor, FilemanagerComponent, FileViewTab, FSDescriptor, NgxFileManagerConfiguration } from '../filemanager.component';
