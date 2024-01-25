@@ -1,4 +1,4 @@
-import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, HostListener, Inject, Input, OnInit, Optional, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, createApplication } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -9,6 +9,9 @@ import { ComponentPortal, PortalModule } from '@angular/cdk/portal';
 import { firstValueFrom } from 'rxjs';
 import { MenuItem, MenuOptions } from '../../types/menu';
 import { TooltipDirective } from '../../directives/tooltip.directive';
+
+declare const Zone: any;
+const zone = new Zone(Zone.current, { name: "@dotglitch_menu", properties: {} });
 
 export const calcMenuItemBounds = async (menuItems: MenuItem[], dataObj: any) => {
     const data = {
@@ -24,29 +27,33 @@ export const calcMenuItemBounds = async (menuItems: MenuItem[], dataObj: any) =>
 }
 
 const calcComponentBounds = async (component: Type<any>, data: any) => {
-    // Forcibly bootstrap the ctx menu outside of the client application's zone.
-    const app = await createApplication({
-        providers: [
-            { provide: MAT_DIALOG_DATA, useValue: data }
-        ]
-    });
+    return new Promise<DOMRect>((res, rej) => {
+        zone.run(async () => {
+            const app = await createApplication({
+                providers: [
+                    { provide: MAT_DIALOG_DATA, useValue: data }
+                ]
+            });
 
-    const del = document.createElement("div");
-    del.style.position = "absolute";
-    del.style.left = '-1000vw';
-    document.body.append(del);
+            const del = document.createElement("div");
+            del.style.position = "absolute";
+            del.style.left = '-1000vw';
+            document.body.append(del);
 
-    const base = app.bootstrap(component, del);
-    const { instance } = base;
+            const base = app.bootstrap(component, del);
+            const { instance } = base;
 
-    await firstValueFrom(app.isStable);
+            await firstValueFrom(app.isStable);
 
-    const el: HTMLElement = instance.viewContainer?.element?.nativeElement;
+            const el: HTMLElement = instance.viewContainer?.element?.nativeElement;
 
-    const rect = el.getBoundingClientRect();
-    app.destroy();
-    del.remove();
-    return rect;
+            const rect = el.getBoundingClientRect();
+            app.destroy();
+            del.remove();
+
+            res(rect);
+        });
+    })
 }
 
 const $data = Symbol("data");
@@ -57,8 +64,6 @@ const $hover = Symbol("hover");
     templateUrl: './menu.component.html',
     styleUrls: ['./menu.component.scss'],
     imports: [
-        NgIf,
-        NgForOf,
         NgTemplateOutlet,
         PortalModule,
         MatIconModule,
@@ -81,10 +86,10 @@ export class MenuComponent implements OnInit {
     @Input() selfCords;
     @Input() parentItem;
     @Input() parentContext;
+    @Input() isLockedOpen = false;
 
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
-    public isLockedOpen = false;
     public pointerHasBeenOverMask = false;
 
     coverRectCords = {

@@ -7,8 +7,10 @@ import { firstValueFrom } from 'rxjs';
 import { TooltipOptions } from '../../types/tooltip';
 
 declare const Zone;
+const zone = new Zone(Zone.current, { name: "@dotglitch_menu", properties: {} });
 
 export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, data: any, matDialogConfig: MatDialogConfig) => {
+
     const args = {
         data: data || {},
         template,
@@ -30,11 +32,7 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
         } as DOMRect;
     }
 
-
     return new Promise<DOMRect>((res, rej) => {
-        const zone = Zone.current.fork({
-            name: 'zone',
-        });
         zone.run(async () => {
             // Forcibly bootstrap the ctx menu outside of the client application's zone.
             const app = await createApplication({
@@ -42,7 +40,6 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
                     { provide: MAT_DIALOG_DATA, useValue: args }
                 ]
             });
-            app.injector
 
             const del = document.createElement("div");
             del.style.position = "absolute";
@@ -59,6 +56,7 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
             const rect = el.getBoundingClientRect();
             app.destroy();
             del.remove();
+
             res(rect)
         });
     })

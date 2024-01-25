@@ -6,7 +6,7 @@ import { TooltipOptions } from '../types/tooltip';
 import { ulid } from 'ulidx';
 
 @Directive({
-    selector: '*[ngxTooltip],*[ngx-tooltip]',
+    selector: '[ngx-tooltip]',
     providers: [
         MatDialog
     ],
@@ -16,19 +16,16 @@ export class TooltipDirective {
 
     /**
      */
-    @Input("ngxTooltip")
     @Input("ngx-tooltip") template: TemplateRef<any> | Type<any>;
 
     /**
      * Configuration for opening the app menu
      */
-    @Input("ngxTooltipConfig")
     @Input("ngx-tooltip-config") config: TooltipOptions = {};
 
     /**
      * Arbitrary data to pass into the template
      */
-    @Input("ngxTooltipContext")
     @Input("ngx-tooltip-context") data: any = {};
 
     private isCursorOverTarget = false;

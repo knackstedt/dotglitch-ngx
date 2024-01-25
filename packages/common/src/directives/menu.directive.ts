@@ -6,7 +6,7 @@ import { MenuComponent, calcMenuItemBounds } from '../components/menu/menu.compo
 import { ulid } from 'ulidx';
 
 @Directive({
-    selector: '*[ngx-contextmenu],*[ngx-menu],*[ngxContextmenu],*[ngxMenu]',
+    selector: '[ngx-contextmenu],[ngx-menu]',
     providers: [
         MatDialog
     ],
@@ -17,26 +17,22 @@ export class MenuDirective {
     /**
      * The data representing the item the menu was opened for.
      */
-    @Input("ngxMenuContext")
     @Input("ngx-menu-context") data: any;
 
     /**
      * The items that will be bound to the context menu.
      */
-    @Input("ngxContextmenu")
     @Input("ngx-contextmenu") ctxMenuItems: MenuItem[];
 
     /**
      * The items that will be bound to the menu that pops
      * up when the user clicks the element.
      */
-    @Input("ngxMenu")
     @Input("ngx-menu") menuItems: MenuItem[];
 
     /**
      * Configuration for opening the app menu
      */
-    @Input("ngxMenuConfig")
     @Input("ngx-menu-config") config: MenuOptions = {};
 
     constructor(
