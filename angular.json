@@ -23,16 +23,6 @@
                         }
                     },
                     "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "tsConfig": "packages/common/tsconfig.spec.json",
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ]
-                    }
                 }
             }
         },
@@ -61,105 +51,6 @@
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
                         "tsConfig": "packages/reactflow/tsconfig.spec.json",
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ]
-                    }
-                }
-            }
-        },
-        "bytemd": {
-            "projectType": "library",
-            "root": "packages/bytemd",
-            "sourceRoot": "packages/bytemd/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "project": "packages/bytemd/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "packages/bytemd/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "packages/bytemd/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "tsConfig": "packages/bytemd/tsconfig.spec.json",
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ]
-                    }
-                }
-            }
-        },
-        "monaco-editor": {
-            "projectType": "library",
-            "root": "packages/monaco-editor",
-            "sourceRoot": "packages/monaco-editor/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "project": "packages/monaco-editor/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "packages/monaco-editor/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "packages/monaco-editor/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "tsConfig": "packages/monaco-editor/tsconfig.spec.json",
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ]
-                    }
-                }
-            }
-        },
-        "tabulator": {
-            "projectType": "library",
-            "root": "packages/tabulator",
-            "sourceRoot": "packages/tabulator/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "project": "packages/tabulator/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "packages/tabulator/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "packages/tabulator/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "tsConfig": "packages/tabulator/tsconfig.spec.json",
                         "polyfills": [
                             "zone.js",
                             "zone.js/testing"
