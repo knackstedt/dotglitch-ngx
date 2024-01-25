@@ -1,4 +1,4 @@
-import { Directive, Input, ViewContainerRef } from '@angular/core';
+import { Directive, Input, ViewContainerRef, SecurityContext } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { getPosition } from './utils';
 import { MenuItem, MenuOptions } from '../types/menu';
@@ -6,7 +6,7 @@ import { MenuComponent, calcMenuItemBounds } from '../components/menu/menu.compo
 import { ulid } from 'ulidx';
 
 @Directive({
-    selector: '[ngx-contextmenu],[ngx-menu],[ngxContextmenu],[ngxMenu]',
+    selector: '*[ngx-contextmenu],*[ngx-menu],*[ngxContextmenu],*[ngxMenu]',
     providers: [
         MatDialog
     ],
@@ -58,7 +58,9 @@ export class MenuDirective {
 
         if (this.menuItems?.length > 0) {
             if (!this.config?.trigger) {
-                el.addEventListener('click', this.openMenu.bind(this));
+                el.addEventListener('click', (e) => {
+                    this.openMenu(e as any, this.menuItems);
+                });
             }
             else {
                 const triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
@@ -85,7 +87,14 @@ export class MenuDirective {
 
         const isCtxEvent = evt.button == 2;
 
-        return openMenu(this.dialog, items, this.data, evt, this.config, isCtxEvent ? null : el)
+        return openMenu(
+            this.dialog,
+            items,
+            this.data,
+            evt,
+            this.config,
+            isCtxEvent ? null : el
+        )
             .then((...res) => {
                 el.classList.remove("ngx-menu-open");
                 return res;

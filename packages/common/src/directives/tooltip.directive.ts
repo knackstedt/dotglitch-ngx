@@ -6,7 +6,7 @@ import { TooltipOptions } from '../types/tooltip';
 import { ulid } from 'ulidx';
 
 @Directive({
-    selector: '[ngxTooltip],[ngx-tooltip]',
+    selector: '*[ngxTooltip],*[ngx-tooltip]',
     providers: [
         MatDialog
     ],
