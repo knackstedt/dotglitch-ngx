@@ -10,7 +10,7 @@
     "email": "andrewk@vivaldi.net",
     "name": "Andrew G. Knackstedt"
   },
-  "description": "Angular context menu that works with templates",
+  "description": "Angular components and utilities that are commonly used.",
   "keywords": [
     "angular",
     "ngx",
@@ -27,7 +27,7 @@
     "@angular/material": ">=17.0.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0",
+    "tslib": "^2.6.2",
     "angular-split": ">=15.0.0",
     "ngx-scrollbar": ">=12.0.0",
     "tabulator-tables": ">=5.5.0",
