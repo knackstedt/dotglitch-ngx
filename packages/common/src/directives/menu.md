@@ -28,37 +28,36 @@ export class AppModule { }
 > `Context menus` show up when a user right-clicks a specific element in a given application.
 > `App menus` are menus that show up on buttons when you click them. The support provided by this package is for convenience of feature support, allowing you to make context menus that also appear when buttons are pressed, which is very useful for mobile development or in cases where complex button menus are required.
 
-`component.html`
+`example.component.html`
 ```html
 <ul>
     <!-- Bind the context menu to the list item -->
-    <li *ngFor="let item of items" [ngx-common]="actionMenu" [ngx-common-context]="item">
-        
-        <!-- Bind the same menu to a button that can easily be clicked on mobile -->
-        <button mat-icon-button [ngx-app-menu]="actionMenu" [ngx-app-menu-context]="item">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-
-        <div>
-            Item: {{item}}
-        </div>
-    </li>
+    @for (item of items; track item) {
+        <li [ngx-common]="actionMenu" [ngx-common-context]="item">
+            
+            <!-- Bind the same menu to a button that can easily be clicked on mobile -->
+            <button mat-icon-button [ngx-app-menu]="actionMenu" [ngx-app-menu-context]="item">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+    
+            <div>
+                Item: {{item}}
+            </div>
+        </li>
+    }
 </ul>
 ```
 
-`component.ts`
+`example.component.ts`
 ```ts
 import { Component } from '@angular/core';
-import { NgForOf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MenuItem } from '@dotglitch/ngx-common';
 
 @Component({
-    selector: 'app-tag-picker',
-    templateUrl: './tag-picker.component.html',
-    styleUrls: ['./tag-picker.component.scss'],
+    selector: 'app-example',
+    templateUrl: './example.component.html',
     imports: [
-        NgForOf,
         MatButtonModule,
         NgxMenuDirective
     ],
@@ -161,6 +160,6 @@ Roadmap
   - [*] Support for better styling
   - [*] Support for templates without relying on `@ViewChild`
   - [*] Add more trigger events for app menu
-  - [ ] Better ARIA support and configuration
   - [*] Support dynamic entries
+  - [ ] Better ARIA support and configuration
   - [ ] Enable sharing menus and combining menu chunks
