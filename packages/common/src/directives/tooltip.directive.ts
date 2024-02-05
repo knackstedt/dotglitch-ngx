@@ -4,6 +4,7 @@ import { getPosition } from './utils';
 import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
 import { TooltipOptions } from '../types/tooltip';
 import { ulid } from 'ulidx';
+import { firstValueFrom } from 'rxjs';
 
 @Directive({
     selector: '[ngx-tooltip]',
@@ -102,7 +103,7 @@ export const openTooltip = async (
     const cords = getPosition(el, config, rect);
     const specificId = ulid();
 
-    return new Promise(res => {
+    return firstValueFrom(
         dialog.open(TooltipComponent, {
             autoFocus: focusTrap,
             restoreFocus: focusTrap,
@@ -121,9 +122,6 @@ export const openTooltip = async (
             hasBackdrop: false,
             ...matPopupOptions
         })
-            .afterClosed()
-            .subscribe(s => {
-                res(s);
-            })
-    }) as Promise<any>;
+        .afterClosed()
+    );
 };
