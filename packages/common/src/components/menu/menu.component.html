@@ -9,6 +9,7 @@
         [style.background]="showDebugOverlay ? '#f004' : '#0000'"
         style="z-index: -1"
         (pointerenter)="pointerHasBeenOverMask=true"
+        (click)="isLockedOpen = true"
     ></div>
 }
 
@@ -29,7 +30,7 @@
                 @if (item != 'separator' && item.separator != true && item['_visible']) {
                     <tr #row
                         [class.disabled]="item['_disabled']"
-                        (click)="!item['_disabled'] && onMenuItemClick(item, row)"
+                        (click)="!item['_disabled'] && onMenuItemClick(item, row, true)"
                         [class.hover]="row['hover']"
                         [class.open]="row['_open']"
                         (pointerenter)="row['hover'] = true; startHoverTimer(item, row)"

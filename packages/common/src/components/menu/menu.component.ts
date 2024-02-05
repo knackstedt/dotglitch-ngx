@@ -79,7 +79,7 @@ export class MenuComponent implements OnInit {
     @Input() public config: MenuOptions;
     @Input() public id: string;
     @Input() public overlayOverlap = 32;
-    @Input() public hoverDelay = 300;
+    @Input() public hoverDelay = 400;
     @Input() public showDebugOverlay = false;
 
     @Input() ownerCords: DOMRect;
@@ -126,6 +126,7 @@ export class MenuComponent implements OnInit {
         this.id = this._data?.id;
         this.parentItem = this._data?.parentItem;
         this.parentContext = this._data?.parentContext;
+        this.isLockedOpen = this.isLockedOpen || this._data?.config?.['_isLockedOpen'];
 
         this.template = _data.template;
 
@@ -218,7 +219,7 @@ export class MenuComponent implements OnInit {
      * @param evt
      * @returns
      */
-    async onMenuItemClick(item: MenuItem, row: HTMLTableRowElement) {
+    async onMenuItemClick(item: MenuItem, row: HTMLTableRowElement, keepOpen = false) {
         if (typeof item == 'string') return null;
         if (item.separator) return null;
 
@@ -278,6 +279,10 @@ export class MenuComponent implements OnInit {
         if (!cords.bottom) cords.top  = bounds.y + "px";
         if (!cords.left)   cords.left = bounds.x + bounds.width + "px";
 
+
+        const config = structuredClone(this.config)
+        config['_isLockedOpen'] = keepOpen;
+
         const dialogRef = this.dialog.open(MenuComponent, {
             position: cords,
             panelClass: ["ngx-menu"].concat(this.config?.customClass || []),
@@ -291,7 +296,7 @@ export class MenuComponent implements OnInit {
                 parentContext: context,
                 items: item['_children'],
                 template: item.childTemplate,
-                config: this.config
+                config: config
             }
         });
 

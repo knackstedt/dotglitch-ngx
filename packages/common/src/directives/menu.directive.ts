@@ -4,6 +4,7 @@ import { getPosition } from './utils';
 import { MenuItem, MenuOptions } from '../types/menu';
 import { MenuComponent, calcMenuItemBounds } from '../components/menu/menu.component';
 import { ulid } from 'ulidx';
+import { firstValueFrom } from 'rxjs';
 
 @Directive({
     selector: '[ngx-contextmenu],[ngx-menu]',
@@ -48,24 +49,24 @@ export class MenuDirective {
         if (this.ctxMenuItems) {
             el.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                this.openMenu(e as any, this.ctxMenuItems);
+                this.openMenu(e as any, this.ctxMenuItems, true);
             });
         }
 
         if (this.menuItems?.length > 0) {
             if (!this.config?.trigger) {
                 el.addEventListener('click', (e) => {
-                    this.openMenu(e as any, this.menuItems);
+                    this.openMenu(e as any, this.menuItems, true);
                 });
             }
             else {
                 const triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
 
                 triggers.forEach(t => {
-                    if (t == "contextmenu") {
+                    if (["contextmenu", "click"].includes(t)) {
                         el.addEventListener(t, (e) => {
                             e.preventDefault();
-                            this.openMenu(e as any, this.ctxMenuItems);
+                            this.openMenu(e as any, this.ctxMenuItems, true);
                         });
                     }
                     else {
@@ -76,12 +77,15 @@ export class MenuDirective {
         }
     }
 
-    async openMenu(evt: PointerEvent, items = this.menuItems) {
+    async openMenu(evt: PointerEvent, items = this.menuItems, keepOpen = false) {
         const el = this.viewContainer.element.nativeElement as HTMLElement;
 
         el.classList.add("ngx-menu-open");
 
         const isCtxEvent = evt.button == 2;
+
+        const config = structuredClone(this.config);
+        config['_isLockedOpen'] = keepOpen;
 
         return openMenu(
             this.dialog,
@@ -123,7 +127,7 @@ export const openMenu = async (
     const cords = getPosition(el || evt, config, await calcMenuItemBounds(menuItems, data));
     const specificId = ulid();
 
-    return new Promise(res => {
+    return firstValueFrom(
         dialog.open(MenuComponent, {
             data: {
                 dialog,
@@ -138,9 +142,5 @@ export const openMenu = async (
             position: cords,
             backdropClass: "ngx-menu-backdrop"
         })
-        .afterClosed()
-        .subscribe(s => {
-            res(s);
-        })
-    }) as Promise<any>;
+        .afterClosed());
 };
