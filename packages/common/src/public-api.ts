@@ -13,6 +13,7 @@ export * from './types/popup';
  */
 export * from './directives/tooltip.directive';
 export * from './directives/menu.directive';
+export * from './directives/image-cache.directive';
 
 /**
  ** Pipes

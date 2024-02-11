@@ -1,45 +1,47 @@
 {
-  "name": "@dotglitch/ngx-common",
-  "private": false,
-  "version": "1.1.17",
-  "repository": {
-    "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/common"
-  },
-  "license": "MIT",
-  "author": {
-    "email": "andrewk@vivaldi.net",
-    "name": "Andrew G. Knackstedt"
-  },
-  "description": "Angular components and utilities that are commonly used.",
-  "keywords": [
-    "angular",
-    "ngx",
-    "typescript",
-    "ivy",
-    "ng2",
-    "ng",
-    "angular-service"
-  ],
-  "peerDependencies": {
-    "@angular/common": ">=17.0.0",
-    "@angular/core": ">=17.0.0",
-    "@angular/cdk": ">=17.0.0",
-    "@angular/material": ">=17.0.0"
-  },
-  "dependencies": {
-    "tslib": "^2.6.2",
-    "angular-split": ">=15.0.0",
-    "ngx-scrollbar": ">=12.0.0",
-    "tabulator-tables": ">=5.5.0",
-    "monaco-editor": ">=0.40.0",
-    "path-browserify": ">=1.0.0",
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0",
-    "ulidx": ">=2.0.0"
-  },
-  "devDependencies": {
-    "@types/react": ">=18.2.21",
-    "@types/react-dom": ">=18.2.7"
-  },
-  "sideEffects": false
+    "name": "@dotglitch/ngx-common",
+    "private": false,
+    "version": "1.1.17",
+    "repository": {
+        "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/common"
+    },
+    "license": "MIT",
+    "author": {
+        "email": "andrewk@vivaldi.net",
+        "name": "Andrew G. Knackstedt"
+    },
+    "description": "Angular components and utilities that are commonly used.",
+    "keywords": [
+        "angular",
+        "ngx",
+        "typescript",
+        "ivy",
+        "ng2",
+        "ng",
+        "angular-service"
+    ],
+    "peerDependencies": {
+        "@angular/common": ">=17.0.0",
+        "@angular/core": ">=17.0.0",
+        "@angular/cdk": ">=17.0.0",
+        "@angular/material": ">=17.0.0"
+    },
+    "dependencies": {
+        "angular-split": ">=15.0.0",
+        "localforage": ">=1.10.0",
+        "monaco-editor": ">=0.40.0",
+        "ngx-scrollbar": ">=12.0.0",
+        "path-browserify": ">=1.0.0",
+        "react": ">=18.0.0",
+        "react-dom": ">=18.0.0",
+        "tabulator-tables": ">=5.5.0",
+        "tslib": "^2.6.2",
+        "ulidx": ">=2.0.0"
+    },
+    "devDependencies": {
+        "@types/react": ">=18.0.0",
+        "@types/react-dom": ">=18.0.0",
+        "@types/localforage": "^0.0.34"
+    },
+    "sideEffects": false
 }
