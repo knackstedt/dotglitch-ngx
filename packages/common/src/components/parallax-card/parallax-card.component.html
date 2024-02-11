@@ -1,0 +1,28 @@
+@if (renderCardBack) {
+    <div class="card backface">
+        <div class="card-bg" style="transform: translateX(0) translateY(0)">
+            <ng-template [ngTemplateOutlet]="backBackground" />
+        </div>
+        <div class="card-content">
+            <ng-template [ngTemplateOutlet]="backContent" />
+        </div>
+    </div>
+}
+
+@if (renderCardFront) {
+    <div class="card front">
+        <div class="card-bg" style="transform: translateX(0) translateY(0)">
+            <ng-template [ngTemplateOutlet]="background" />
+        </div>
+        <div class="card-content">
+            @if (content) {
+                <ng-template [ngTemplateOutlet]="content"/>
+            }
+            @else {
+                <ng-content/>
+            }
+        </div>
+    </div>
+}
+
+

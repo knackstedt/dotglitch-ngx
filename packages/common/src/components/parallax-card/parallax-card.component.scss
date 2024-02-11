@@ -1,0 +1,60 @@
+:host {
+    display: block;
+    position: relative;
+    cursor: pointer;
+
+    --easing-function: cubic-bezier(0.23, 1, 0.32, 1);
+    --border-radius: 9px;
+}
+
+.card {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    background-color: #333;
+
+    backface-visibility: hidden;
+    overflow: hidden;
+
+    box-shadow:
+        #0000 0 0 40px 5px,
+        rgba(0, 0, 0, 0.66) 0 30px 60px 0,
+        inset #333 0 0 0 5px;
+
+    border-radius: var(--border-radius);
+    transition: transform var(--flip-animation-duration) var(--easing-function), box-shadow 2s var(--easing-function);
+    transform-style: preserve-3d;
+
+    &:hover {
+        .card-content {
+            border: 2px solid #fff;
+        }
+
+        box-shadow:
+            #fff6 0 0 40px 5px,
+            rgba(0, 0, 0, 0.66) 0 30px 60px 0,
+            inset #333 0 0 0 5px;
+    }
+}
+
+.card-bg {
+    inset: var(--card-bg-inset);
+    position: absolute;
+    pointer-events: none;
+    transition: transform 0.6s var(--easing-function);
+}
+
+.card-content {
+    position: absolute;
+    top: 0;
+    color: #fff;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    border: 2px solid #fff0;
+    border-radius: var(--border-radius);
+
+    transition: transform 0.6s var(--easing-function),
+                border-color 0.6s var(--easing-function);
+}
