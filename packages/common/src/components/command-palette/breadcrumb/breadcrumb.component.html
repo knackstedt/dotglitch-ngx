@@ -1,0 +1,12 @@
+@for (crumb of breadcrumbs; track crumb; let i = $index) {
+    <div class="crumb">
+        <div
+            class="crumb_inner"
+            [class.destroy]="crumb.destroying"
+            [class.root]="i == 0"
+            (click)="selectBreadcrumb(crumb)"
+        >
+                {{crumb.action.label}}
+        </div>
+    </div>
+}

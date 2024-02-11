@@ -1,0 +1,111 @@
+:host {
+    display: flex;
+}
+
+.crumb {
+    overflow: hidden;
+    height: 26px;
+    padding: 0 16px;
+    margin: 0 -16px;
+
+    .crumb_inner {
+        --background-color: #3498db;
+
+        color: #fff;
+        position: relative;
+        background: var(--background-color);
+        padding: 2px 5px 0 6px;
+        margin-right: 12px;
+        text-align: center;
+        white-space: pre;
+        font-size: 14px;
+        user-select: none;
+        cursor: pointer;
+        transition: transform var(--transition), opacity var(--transition), width var(--transition);
+        animation: crumbIn var(--transition) 1;
+
+        &.destroy {
+            animation: crumbOut var(--transition) 1;
+        }
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            border: 0 solid var(--background-color);
+            border-width: 14px 8px;
+            width: 0;
+            height: 0;
+        }
+
+        &:before {
+            left: -14px;
+            border-left-color: #0000;
+        }
+
+        &:after {
+            left: 100%;
+            border-color: #0000;
+            border-left-color: var(--background-color);
+        }
+
+        &:hover {
+            --background-color: #1abc9c;
+        }
+
+        &:active {
+            --background-color: #16a085;
+        }
+    }
+
+    &:nth-child(even) .crumb_inner {
+        --background-color: #2980b9;
+    }
+
+    &:first-child .crumb_inner {
+        padding-left: 6px;
+        border-radius: 4px 0 0 4px;
+
+        &:before {
+            border: none;
+        }
+    }
+
+    &:last-child:not(:only-child) .crumb_inner {
+        padding-right: 6px;
+        border-radius: 0 4px 4px 0;
+
+        &:after {
+            border: none;
+        }
+    }
+}
+
+@keyframes crumbIn {
+    from {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes crumbOut {
+    to {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+
+    from {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
+mat-form-field input {
+    transition: width 200ms ease, opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}

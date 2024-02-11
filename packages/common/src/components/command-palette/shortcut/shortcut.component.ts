@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { KeybindCode } from '../../../services/command-palette.service';
 
 @Component({
-    selector: 'app-shortcut',
+    selector: 'ngx-commandpalette-shortcut',
     templateUrl: './shortcut.component.html',
     styleUrls: ['./shortcut.component.scss'],
     standalone: true

@@ -80,12 +80,27 @@ export type CommandAction<T = any> = {
     label?: string,
 
     /**
+     * Hint that follows the label, subtly
+     */
+    hint?: string,
+
+    /**
+     * Icon for the entry
+     * Can be a mat-icon
+     * Will be a mat-icon if the string is simple
+     * If the string contains a slash or colon, it will be loaded as
+     * an image source
+     */
+    icon?: string,
+
+    /**
      * Keywords that can help pick this command
      */
     keywords?: string | string[],
 
     /**
      * Description for the popup
+     * WIP
      */
     description?: string,
 
@@ -96,8 +111,14 @@ export type CommandAction<T = any> = {
      *
      * If there are multiple matching descendants, only
      * the furthest descendant will be fired
+     *
+     * For command scoping, we read the data-label attribute
+     * Alternatively, you can set label and element as an object here.
      */
-    rootElement?: HTMLElement,
+    rootElement?: HTMLElement | string | {
+        element: HTMLElement | string,
+        label: string
+    },
 
     /**
      * The label for the root. Used for the UI control and debugging.
@@ -297,7 +318,10 @@ export class CommandPaletteService {
             },
             data: {
                 contextElement: document.activeElement
-            }
+            },
+            restoreFocus: true,
+            // autoFocus: false,
+            role: 'dialog'
         });
     }
 

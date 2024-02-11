@@ -4,18 +4,25 @@
     width: 860px;
     max-height: 460px;
     border: 1px solid #484848;
-    border-radius: 5px;
+    border-radius: 6px;
     background-color: #222222;
     user-select: none;
+    overflow: hidden;
+
+    --text-color: #ccc;
+    --transition: 250ms ease;
 }
+
 
 .commands {
     max-height: 100%;
     overflow: hidden;
+    position: relative;
+    padding: 0 6px;
 
     .command {
         display: flex;
-        height: 28px;
+
         padding-left: 16px;
         padding-right: 32px;
 
@@ -23,11 +30,18 @@
         border-radius: 3px;
         justify-content: space-between;
 
+        color: var(--text-color);
+        font-size: 15.5px;
+        background-color: #0000;
+
         &:hover {
             background-color: #2a2d2e;
         }
         &.selected {
             background-color: #04395e;
+        }
+        &.has-icon {
+            padding-left: 8px;
         }
 
         .label {
@@ -39,6 +53,42 @@
                 }
             }
         }
+
+        .icon {
+            width: 38px;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            max-height: 100%;
+            padding: 4px;
+        }
+
+        .hint {
+            margin-left: 12px;
+            opacity: 0.75;
+        }
+    }
+
+    &.shadow {
+        &::after {
+            box-shadow: #000 0 6px 6px -6px inset;
+        }
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        box-shadow: #0000 0 6px 6px -6px inset;
+        transition: box-shadow 300ms ease;
     }
 }
 
@@ -46,36 +96,51 @@ ng-scrollbar.ng-scrollbar {
     --scrollbar-padding: 0px;
     --scrollbar-size: 14px;
     --scrollbar-border-radius: 0;
-    --scrollbar-thumb-color: #0000;
+    --scrollbar-thumb-color: #4440;
     --scrollbar-thumb-transition: height ease-out .15s, width ease-out .15s, background-color ease 1200ms;
+    animation: fadeScrollbar 1200ms ease;
 
     &:hover {
-        --scrollbar-thumb-color: #444;
+        --scrollbar-thumb-color: #444f;
+    }
+}
+
+@keyframes fadeScrollbar {
+    from {
+        --scrollbar-thumb-color: #444f;
+    }
+    to {
+        --scrollbar-thumb-color: #4440;
     }
 }
 
 cdk-virtual-scroll-viewport {
     height: 100%;
+    padding-bottom: 6px;
 }
 
 :host ::ng-deep {
     .mdc-text-field--no-label:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) .mat-mdc-form-field-infix {
-        padding: 4px 0;
+        padding: 2px 0 4px 0;
     }
     .mat-mdc-form-field-infix {
         min-height: 32px;
+        display: flex;
+        // gap: 4px;
     }
     .mat-mdc-text-field-wrapper {
         margin-bottom: 8px;
+        padding: 0 12px;
     }
     .mat-mdc-form-field-subscript-wrapper {
         display: none;
     }
 }
 
-::ng-deep .dark :host {
+::ng-deep .light app-command-palette {
     border: 1px solid #e5e5e5;
     background-color: #f8f8f8;
+    --text-color: #262626;
 
     .commands .command {
         &:hover {
@@ -87,3 +152,4 @@ cdk-virtual-scroll-viewport {
         }
     }
 }
+

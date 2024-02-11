@@ -1,5 +1,9 @@
 <mat-form-field style="width: 100%; padding: 8px 8px 0 8px">
+    <ngx-commandpalette-breadcrumb
+        [breadcrumbs]="breadcrumbs"
+    />
     <input
+        #textinput
         matInput
         type="text"
         [value]="queryString"
@@ -17,24 +21,48 @@
 @else {
     <div
         class="commands"
-        [style.flex]="(filteredCommands.length * 28) + 'px'"
+        [style.flex]="(filteredCommands.length * rowHeight) + 'px'"
+        [class.shadow]="scrollbar?.viewport?.scrollTop > 2"
     >
-        <ng-scrollbar>
-            <cdk-virtual-scroll-viewport itemSize="28" scrollViewport>
+        <ng-scrollbar #scrollbar>
+            <cdk-virtual-scroll-viewport [itemSize]="rowHeight" scrollViewport [minBufferPx]="150">
                 <div
                     *cdkVirtualFor="let command of filteredCommands; let index = index"
                     class="command"
+                    [style.height]="rowHeight + 'px'"
                     [class.selected]="index==activeIndex"
+                    [class.has-icon]="command.icon"
+                    [attr.index]="index"
                     (click)="executeCommand(command)"
                 >
+                    @if (command.icon) {
+                        <div class="icon">
+                            @if (!MAT_ICON_REGEX.test(command.icon)) {
+                                <mat-icon [fontIcon]="command.icon"></mat-icon>
+                            }
+                            @else {
+                                <img [src]="command.icon"/>
+                            }
+                        </div>
+                    }
+
                     <div
                         class="label"
                         [innerHTML]="command['_renderedLabel'] || command.label || command.description"
                     ></div>
+
+                    @if (command['_renderedHint'] || command.hint) {
+                        <div
+                            class="hint"
+                            [innerHTML]="command['_renderedHint'] || command.hint"
+                        ></div>
+                    }
+                    <div style="flex: 1"></div>
+
                     <div>
                         @for (shortcut of (command.shortcutKey?.find ? command.shortcutKey : [command.shortcutKey]); track shortcut) {
                             @if (shortcut) {
-                                <app-shortcut [shortcut]="shortcut"></app-shortcut>
+                                <ngx-commandpalette-shortcut [shortcut]="shortcut"/>
                             }
                         }
                     </div>
