@@ -41,7 +41,7 @@ export class LazyLoaderService {
             ...config
         };
 
-        config.entries?.forEach(e => this.addComponentToRegistry(e))
+        config?.entries?.forEach(e => this.addComponentToRegistry(e))
 
         // If a custom resolution strategy is provided but no resolution function is passed,
         // we throw an error
