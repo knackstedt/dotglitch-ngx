@@ -338,7 +338,7 @@ export class LazyLoaderComponent implements AfterViewInit {
         catch (ex) {
 
             if (isDevMode()) {
-                console.warn("Component " + this._id + " threw an error on mount!");
+                console.warn("Component DDD " + this._id + " threw an error on mount!");
                 console.warn("This will cause you to see a 404 panel.");
                 console.error(ex);
             }

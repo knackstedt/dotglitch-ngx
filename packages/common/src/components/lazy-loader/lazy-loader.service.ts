@@ -23,7 +23,7 @@ export class LazyLoaderService {
 
     public static config: NgxLazyLoaderConfig;
 
-    constructor(@Inject(NGX_LAZY_LOADER_CONFIG) config: NgxLazyLoaderConfig = {}) {
+    constructor(@Optional() @Inject(NGX_LAZY_LOADER_CONFIG) config: NgxLazyLoaderConfig = {}) {
         // Ensure this is singleton and works regardless of special instancing requirements.
         LazyLoaderService.configure(config);
     }

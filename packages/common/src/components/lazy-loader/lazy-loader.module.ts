@@ -8,7 +8,7 @@ import { LazyLoaderService, NGX_LAZY_LOADER_CONFIG } from './lazy-loader.service
     exports: [LazyLoaderComponent]
 })
 export class LazyLoaderModule {
-    public static forRoot(config: NgxLazyLoaderConfig): ModuleWithProviders<LazyLoaderModule> {
+    public static forRoot(@Optional() config: NgxLazyLoaderConfig): ModuleWithProviders<LazyLoaderModule> {
         return ({
             ngModule: LazyLoaderModule,
             providers: [
