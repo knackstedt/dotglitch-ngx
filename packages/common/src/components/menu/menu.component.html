@@ -21,6 +21,7 @@
         (pointerleave)="pointerIsOnVoid = false"
         (pointerdown)="hasBootstrapped && closeOnVoid(true)"
         (pointermove)="hasBootstrapped && !isLockedOpen && closeOnVoid()"
+        (click)="closeOnVoid(true)"
         (wheel)="onWheel($event)"
     ></div>
 }
