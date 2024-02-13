@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, HostListener, Inject, Input, OnInit, Optional, TemplateRef, Type, ViewContainerRef } from '@angular/core';
+import { Component, HostListener, Inject, Input, Optional, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { DomSanitizer, createApplication } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -72,7 +72,7 @@ const $hover = Symbol("hover");
     ],
     standalone: true
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
 
     @Input() public data: any;
     @Input() public items: MenuItem[];
@@ -217,9 +217,6 @@ export class MenuComponent implements OnInit {
 
     /**
      *
-     * @param item
-     * @param evt
-     * @returns
      */
     async onMenuItemClick(item: MenuItem, row: HTMLTableRowElement, keepOpen = false) {
         if (typeof item == 'string') return null;
@@ -265,7 +262,7 @@ export class MenuComponent implements OnInit {
             top: null,
             left: null,
             bottom: null,
-            right: null
+            // right: null
         };
 
         // Set position coordinates
@@ -287,7 +284,7 @@ export class MenuComponent implements OnInit {
 
         // Do not project in the top left corner -- this scenario
         // happens when a dialog opens as the parent is killed.
-        if (cords.left == 0 && cords.top == 0)
+        if (cords.left == '0px' && cords.top == '0px')
             return;
 
         const dialogRef = this.dialog.open(MenuComponent, {
