@@ -91,6 +91,7 @@ export class MenuComponent implements OnInit {
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
     public pointerHasBeenOverMask = false;
+    parentIsNgxMenu = false;
 
     coverRectCords = {
         top: 0,
@@ -127,6 +128,7 @@ export class MenuComponent implements OnInit {
         this.parentItem = this._data?.parentItem;
         this.parentContext = this._data?.parentContext;
         this.isLockedOpen = this.isLockedOpen || this._data?.config?.['_isLockedOpen'];
+        this.parentIsNgxMenu = this._data?.parentIsNgxMenu;
 
         this.template = _data.template;
 
@@ -283,6 +285,11 @@ export class MenuComponent implements OnInit {
         const config = structuredClone(this.config)
         config['_isLockedOpen'] = keepOpen;
 
+        // Do not project in the top left corner -- this scenario
+        // happens when a dialog opens as the parent is killed.
+        if (cords.left == 0 && cords.top == 0)
+            return;
+
         const dialogRef = this.dialog.open(MenuComponent, {
             position: cords,
             panelClass: ["ngx-menu"].concat(this.config?.customClass || []),
@@ -296,7 +303,8 @@ export class MenuComponent implements OnInit {
                 parentContext: context,
                 items: item['_children'],
                 template: item.childTemplate,
-                config: config
+                config: config,
+                parentIsNgxMenu: true
             }
         });
 
@@ -360,6 +368,7 @@ export class MenuComponent implements OnInit {
     }
 
     startHoverTimer(item, row) {
+        this.childDialogs.forEach(cd => cd.close());
 
         // Invert check to make the logic simpler
         // TL;DR: if (any) of these are true, we will do the hover action
@@ -380,6 +389,7 @@ export class MenuComponent implements OnInit {
             }
         }, this.hoverDelay);
     }
+
     stopHoverTimer(item) {
         item[$hover] && clearTimeout(item[$hover]);
         delete item[$hover];

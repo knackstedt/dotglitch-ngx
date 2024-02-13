@@ -1,5 +1,5 @@
 <!-- Mouse event blocker for pointer leave -->
-@if (coverRectCords) {
+@if (coverRectCords && !parentIsNgxMenu) {
     <div
         class="owner-mask"
         [style.top]="coverRectCords.top + 'px'"
@@ -9,18 +9,21 @@
         [style.background]="showDebugOverlay ? '#f004' : '#0000'"
         style="z-index: -1"
         (pointerenter)="pointerHasBeenOverMask=true"
+        (pointermove)="pointerHasBeenOverMask=true"
         (click)="isLockedOpen = true"
     ></div>
 }
 
-<div class="void"
-    [style.background]="showDebugOverlay ? '#00f4' : '#0000'"
-    (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
-    (pointerleave)="pointerIsOnVoid = false"
-    (pointerdown)="hasBootstrapped && closeOnVoid(true)"
-    (pointermove)="hasBootstrapped && !isLockedOpen && closeOnVoid()"
-    (wheel)="onWheel($event)"
-></div>
+@if (!parentIsNgxMenu) {
+    <div class="void"
+        [style.background]="showDebugOverlay ? '#00f4' : '#0000'"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
+        (pointerleave)="pointerIsOnVoid = false"
+        (pointerdown)="hasBootstrapped && closeOnVoid(true)"
+        (pointermove)="hasBootstrapped && !isLockedOpen && closeOnVoid()"
+        (wheel)="onWheel($event)"
+    ></div>
+}
 
 @if (!template) {
     <table>
