@@ -269,23 +269,7 @@ export class FileGridComponent implements OnInit {
             {
                 label: "Download",
                 icon: "download",
-                action: (file) => {
-                    let target = `${window.origin}${this.config.apiSettings.downloadEntryUrl}`;
-                    let path = file.path + file.name;
-
-                    if (file.kind == "directory" && !path.endsWith('/'))
-                        path += "/";
-
-                    target += `${target.includes('?') ? '&' : '?'}path=${path}&ngsw-bypass=true`;
-                    console.log(target);
-                    // window.open(target);
-                    var link = document.createElement("a");
-                    link.download = file.name;
-                    link.href = target;
-                    link.click();
-                    link.remove();
-                    this.fileManager.fileDownload.next(file);
-                }
+                action: (file) => this.fileManager.downloadFile(file)
             },
             {
                 label: "Open in new Tab",

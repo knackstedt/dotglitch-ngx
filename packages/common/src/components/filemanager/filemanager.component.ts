@@ -436,4 +436,22 @@ export class FilemanagerComponent implements OnInit {
 
         return url;
     }
+
+    downloadFile(file: FSDescriptor) {
+        let path = file.path + file.name;
+        if (file.kind == "directory" && !path.endsWith('/'))
+            path += "/";
+
+        const url = this.config.apiSettings.deleteEntryUrlTemplate
+            ? this.config.apiSettings.deleteEntryUrlTemplate(path)
+            : this.config.apiSettings.deleteEntryUrl;
+
+        // window.open(target);
+        var link = document.createElement("a");
+        link.download = file.name;
+        link.href = url;
+        link.click();
+        link.remove();
+        this.fileDownload.next(file);
+    }
 }
