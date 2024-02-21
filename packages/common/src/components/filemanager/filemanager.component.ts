@@ -442,9 +442,9 @@ export class FilemanagerComponent implements OnInit {
         if (file.kind == "directory" && !path.endsWith('/'))
             path += "/";
 
-        const url = this.config.apiSettings.deleteEntryUrlTemplate
-            ? this.config.apiSettings.deleteEntryUrlTemplate(path)
-            : this.config.apiSettings.deleteEntryUrl;
+        const url = this.config.apiSettings.downloadEntryUrlTemplate
+            ? this.config.apiSettings.downloadEntryUrlTemplate(path)
+            : this.config.apiSettings.downloadEntryUrl;
 
         // window.open(target);
         var link = document.createElement("a");
