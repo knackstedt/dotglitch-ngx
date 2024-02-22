@@ -319,8 +319,9 @@ export class CommandPaletteService {
             data: {
                 contextElement: document.activeElement
             },
+            panelClass: ['ngx-command-palette'],
+            backdropClass: ['ngx-command-palette'],
             restoreFocus: true,
-            // autoFocus: false,
             role: 'dialog'
         });
     }
