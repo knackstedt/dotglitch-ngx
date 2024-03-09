@@ -10,8 +10,6 @@ import { FilemanagerComponent } from '../filemanager.component';
     templateUrl: './tree-view.component.html',
     styleUrls: ['./tree-view.component.scss'],
     imports: [
-        NgIf,
-        NgForOf,
         NgTemplateOutlet,
         MatExpansionModule,
         MatProgressBarModule

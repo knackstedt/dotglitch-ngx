@@ -4,15 +4,16 @@ import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { Fetch } from '../../../public-api';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-checksum',
     templateUrl: './checksum.component.html',
     styleUrls: ['./checksum.component.scss'],
     imports: [
-        CommonModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        MatButtonModule
     ],
     standalone: true
 })

@@ -156,8 +156,6 @@ export type NgxFileManagerConfiguration = Partial<{
     templateUrl: './filemanager.component.html',
     styleUrls: ['./filemanager.component.scss'],
     imports: [
-        NgIf,
-        NgForOf,
         AngularSplitModule,
         FileGridComponent,
         MatTabsModule,

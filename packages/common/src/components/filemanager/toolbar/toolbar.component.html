@@ -6,7 +6,7 @@
     <mat-icon>list</mat-icon>
 </button>
 
-<ng-container *ngIf="!showBareMinimum">
+@if (!showBareMinimum) {
     <div class="buttongroup">
         <gtk-icon-button
             fontIcon="arrow_back_ios_new"
@@ -20,12 +20,14 @@
         />
     </div>
 
-    <div style="width: 40px" *ngIf="!drawerMode"></div>
+    @if (!drawerMode) {
+        <div style="width: 40px"></div>
+    }
     <gtk-icon-button
         fontIcon="sync"
         (click)="onRefresh()"
     />
-</ng-container>
+}
 
 
 <app-breadcrumb
@@ -36,7 +38,7 @@
     [config]="config"
 />
 
-<ng-container *ngIf="!drawerMode">
+@if (!drawerMode) {
     <!-- <div style="flex: 1"></div> -->
 
     <gtk-icon-button
@@ -51,7 +53,9 @@
         fontIcon="search"
     /> -->
 
-    <div style="width: 100px" *ngIf="fileManager.width > 800"></div>
+    @if (fileManager.width > 800) {
+        <div style="width: 100px"></div>
+    }
 
     <gtk-icon-button
         [fontIcon]="currentTab.viewMode == 'list' ? 'view_list' : 'grid_view'"
@@ -63,5 +67,5 @@
         [ngx-menu]="sortOptions"
         [ngx-menu-config]="{position: 'bottom'}"
     />
-</ng-container>
 
+}

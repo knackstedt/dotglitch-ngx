@@ -14,7 +14,6 @@ import { DialogService, Fetch, MenuDirective, MenuItem } from '../../../public-a
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.scss'],
     imports: [
-        NgIf,
         MatIconModule,
         MatButtonModule,
         GtkIconButtonComponent,

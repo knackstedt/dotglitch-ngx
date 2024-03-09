@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
     templateUrl: './icon-button.component.html',
     styleUrls: ['./icon-button.component.scss'],
     imports: [
-        CommonModule,
         MatIconModule,
         MatButtonModule
     ],

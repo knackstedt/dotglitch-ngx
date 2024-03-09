@@ -116,6 +116,8 @@ export class FileGridComponent implements OnInit {
 
     showLoader = false;
     hideLoader = false;
+    failedLoad = false;
+    error;
 
     readonly columns = [
         { id: "name", label: "Name" },
@@ -432,6 +434,7 @@ export class FileGridComponent implements OnInit {
     async loadFolder() {
         this.showLoader = true;
         this.hideLoader = false;
+        this.failedLoad = false;
 
         const url = this.config.apiSettings.listEntriesUrlTemplate
             ? this.config.apiSettings.listEntriesUrlTemplate(this.path)
@@ -467,7 +470,11 @@ export class FileGridComponent implements OnInit {
                 setTimeout(() => this.resize(), 2500);
                 setTimeout(() => this.resize(), 5000);
             })
-            .catch(e => console.error(e))
+            .catch(e => {
+                this.failedLoad = true;
+                this.error = e;
+                console.error(e);
+            })
             .finally(() => {
                 this.hideLoader = true;
                 setTimeout(() => {

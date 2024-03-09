@@ -143,6 +143,7 @@
     bottom: 12px;
     right: 12px;
     display: flex;
+    gap: 12px;
 }
 
 .select-hint {
@@ -163,8 +164,12 @@
     }
 }
 
+.content-area {
+    border: 4px dashed #0000;
+}
+
 .showDropArea {
-    border: 4px dashed #121212cc;
+    border: 4px dashed var(--theme-primary, #808080cc);
     transition: border-color 250ms ease;
 }
 

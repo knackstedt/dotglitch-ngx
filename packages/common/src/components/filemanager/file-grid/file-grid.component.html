@@ -11,80 +11,145 @@
     (dragleave)="draggingOver = false"
     (ondrop)="onDrop($event)"
 >
-    <!-- <ng-container *ngIf="draggingOver"></ng-container> -->
-    <!-- Grid mode -->
-    <ng-scrollbar
-        *ngIf="viewMode == 'grid'"
-        class="grid {{gridSize}} {{config.imageSize || 'normal'}}"
-        [class.selectionMode]="config.mode == 'focusFiles'"
-        [class.showDropArea]="draggingOver"
-        style="height: 100%; width: 100%"
-        track="vertical"
-        pointerEventsMethod="scrollbar"
-        [ngx-contextmenu]="folderContextMenu"
-    >
-        <div class="resize-observer" #fileViewport></div>
-        <cdk-virtual-scroll-viewport
-            itemSize="134"
-            scrollViewport
-            (click)="selection = []; selectionText = ''"
-        >
-            <div class="row" *cdkVirtualFor="let row of sortedFolders">
-                <div class="file"
-                    *ngFor="let item of row"
-                    [class.selected]="selection.includes(item)"
-                    [class.generic]="item['_icon'].needsBackdrop"
-                    [ngx-contextmenu]="fileContextMenu"
-                    [ngx-menu-context]="item"
+
+    @if (failedLoad) {
+        <div style="display: flex; align-items: center; justify-items: center; height: 100%">
+            <div style="max-width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <img style="width: 200px" src="data:image/svg+xml,%3Csvg fill='var(--text-color)' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='800px' height='800px' viewBox='0 0 600.525 600.525' xml:space='preserve'%3E%3Cg%3E%3Cg%3E%3Cpath d='M57.375,138.656L43.031,95.146c-23.428,8.128-40.162,29.166-42.553,54.028l45.9,3.825 C46.856,146.306,51.16,140.568,57.375,138.656z'/%3E%3Crect y='288.309' width='45.9' height='45.901'/%3E%3Cpath d='M554.625,446.091c0,3.346-0.956,6.215-2.868,9.084l38.25,25.34c6.693-10.039,10.04-21.992,10.04-34.424V423.14h-45.899 v22.951H554.625z'/%3E%3Crect x='456.609' y='146.306' width='45.9' height='45.9'/%3E%3Crect x='485.297' y='462.825' width='45.9' height='45.9'/%3E%3Crect x='393.497' y='462.825' width='45.9' height='45.9'/%3E%3Crect x='364.81' y='146.306' width='45.9' height='45.9'/%3E%3Crect x='118.097' y='462.825' width='45.9' height='45.9'/%3E%3Crect y='380.108' width='45.9' height='45.9'/%3E%3Crect y='196.509' width='45.9' height='45.9'/%3E%3Cpath d='M330.385,143.437c-2.391-1.434-3.825-2.391-4.304-2.869l-28.209-29.166c-1.913-1.913-4.303-3.825-6.694-5.737 l-27.253,36.815c0.478,0.478,0.956,0.956,0.956,0.956s37.772,34.425,44.465,41.119L330.385,143.437z'/%3E%3Crect x='554.625' y='239.541' width='45.9' height='45.9'/%3E%3Crect x='301.697' y='462.825' width='45.899' height='45.9'/%3E%3Cpath d='M559.885,146.306h-10.997v47.812h5.737h45.9v-7.172C600.525,164.475,582.356,146.306,559.885,146.306z'/%3E%3Crect x='187.425' y='91.8' width='45.9' height='45.9'/%3E%3Crect x='554.625' y='331.341' width='45.9' height='45.9'/%3E%3Crect x='95.625' y='91.8' width='45.9' height='45.9'/%3E%3Crect x='209.897' y='462.825' width='45.9' height='45.9'/%3E%3Cpath d='M49.247,456.132l-36.337,27.73c11.953,15.777,30.122,24.863,49.725,24.863h9.562v-45.9h-9.562 C57.375,462.825,52.594,460.435,49.247,456.132z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+
+                <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg
+                    fill="var(--text-color)"
+                    width="200px"
+                    viewBox="0 0 600.525 600.525"
                 >
-                    <mat-checkbox
-                        #checkbox
-                        *ngIf="config.mode == 'focusFiles' && item.kind == 'file'"
-                        [checked]="item['_value']"
-                        (change)="onToggle(item, $event)"
-                    />
-                    <div
-                        style="display: contents"
-                        (click)="onSelect(item, $event)"
-                        (dblclick)="onItemClick(item)"
-                        (dragstart)="onDragStart($event, item)"
-                    >
-                        <img [src]="item['_icon'].path"/>
-                        <p>{{item['vanityName'] || item.name}}</p>
-                    </div>
-                </div>
+                    <path d="M57.375,138.656L43.031,95.146c-23.428,8.128-40.162,29.166-42.553,54.028l45.9,3.825C46.856,146.306,51.16,140.568,57.375,138.656z" />
+                    <rect y="288.309" width="45.9" height="45.901" />
+                    <path d="M554.625,446.091c0,3.346-0.956,6.215-2.868,9.084l38.25,25.34c6.693-10.039,10.04-21.992,10.04-34.424V423.14h-45.899v22.951H554.625z" />
+                    <rect x="456.609" y="146.306" width="45.9" height="45.9" />
+                    <rect x="485.297" y="462.825" width="45.9" height="45.9" />
+                    <rect x="393.497" y="462.825" width="45.9" height="45.9" />
+                    <rect x="364.81" y="146.306" width="45.9" height="45.9" />
+                    <rect x="118.097" y="462.825" width="45.9" height="45.9" />
+                    <rect y="380.108" width="45.9" height="45.9" />
+                    <rect y="196.509" width="45.9" height="45.9" />
+                    <path d="M330.385,143.437c-2.391-1.434-3.825-2.391-4.304-2.869l-28.209-29.166c-1.913-1.913-4.303-3.825-6.694-5.737l-27.253,36.815c0.478,0.478,0.956,0.956,0.956,0.956s37.772,34.425,44.465,41.119L330.385,143.437z" />
+                    <rect x="554.625" y="239.541" width="45.9" height="45.9" />
+                    <rect x="301.697" y="462.825" width="45.899" height="45.9" />
+                    <path d="M559.885,146.306h-10.997v47.812h5.737h45.9v-7.172C600.525,164.475,582.356,146.306,559.885,146.306z" />
+                    <rect x="187.425" y="91.8" width="45.9" height="45.9" />
+                    <rect x="554.625" y="331.341" width="45.9" height="45.9" />
+                    <rect x="95.625" y="91.8" width="45.9" height="45.9" />
+                    <rect x="209.897" y="462.825" width="45.9" height="45.9" />
+                    <path d="M49.247,456.132l-36.337,27.73c11.953,15.777,30.122,24.863,49.725,24.863h9.562v-45.9h-9.562C57.375,462.825,52.594,460.435,49.247,456.132z" />
+                </svg>
+
+                <h3>Sorry about that.</h3>
+                <p>
+                    Our servers aren't doing their thing right now.
+                    You can try again later or contact an administrator about this.
+                </p>
+                <hr style="width: 100%; opacity: .5;"/>
+                <p>
+                    Error:
+                    <span style="color: var(--mat-tab-header-active-focus-label-text-color)">{{error.status}}</span>
+
+                    @if (error.error?.message) {
+                        Message: {{error.error?.message}}
+                    }
+                    @if (error.error?.message) {
+                        Message: {{error.error?.message}}
+                    }
+                    @if (error.error?.message) {
+                        Message: {{error.error?.message}}
+                    }
+                </p>
             </div>
-        </cdk-virtual-scroll-viewport>
-    </ng-scrollbar>
+        </div>
+    }
+    @else {
+        <!-- <ng-container *ngIf="draggingOver"></ng-container> -->
+        <!-- Grid mode -->
+        @if (viewMode == 'grid') {
+            <ng-scrollbar
+                class="grid content-area {{gridSize}} {{config.imageSize || 'normal'}}"
+                [class.selectionMode]="config.mode == 'focusFiles'"
+                [class.showDropArea]="draggingOver"
+                style="height: 100%; width: 100%"
+                track="vertical"
+                pointerEventsMethod="scrollbar"
+                [ngx-contextmenu]="folderContextMenu"
+            >
+                <div class="resize-observer" #fileViewport></div>
+                <cdk-virtual-scroll-viewport
+                    itemSize="134"
+                    scrollViewport
+                    (click)="selection = []; selectionText = ''"
+                >
+                    <div class="row" *cdkVirtualFor="let row of sortedFolders">
+                        @for (item of row; track item) {
+                            <div class="file"
+                                [class.selected]="selection.includes(item)"
+                                [class.generic]="item['_icon'].needsBackdrop"
+                                [ngx-contextmenu]="fileContextMenu"
+                                [ngx-menu-context]="item"
+                            >
+                                @if (config.mode == 'focusFiles' && item.kind == 'file') {
+                                    <mat-checkbox
+                                        #checkbox
+                                        [checked]="item['_value']"
+                                        (change)="onToggle(item, $event)"
+                                    />
+                                }
+                                <div
+                                    style="display: contents"
+                                    (click)="onSelect(item, $event)"
+                                    (dblclick)="onItemClick(item)"
+                                    (dragstart)="onDragStart($event, item)"
+                                >
+                                    <img [src]="item['_icon'].path"/>
+                                    <p>{{item['vanityName'] || item.name}}</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </ng-scrollbar>
+        }
 
-    <!-- List mode -->
-    <div
-        *ngIf="viewMode == 'list'"
-        style="width: 100%; height: 100%"
-        [class.showDropArea]="draggingOver"
-        [ngx-contextmenu]="folderContextMenu"
-    >
-        <app-tabulator
-            [dataSource]="directoryContents"
-            [columns]="[
-                { field: 'name', title: 'Name', formatter: nameCellFormatter },
-                { field: '_size', title: 'Size' },
-                { field: '_ctime', title: 'Created' },
-                { field: '_mtime', title: 'Modified' },
-            ]"
-            [options]="{
-                rowHeight: 32
-            }"
-            (rowClick)="onRowClick($event)"
-            (rowDblClick)="onItemClick($event.data)"
-            (rowContext)="onRowCtx($event)"
-        />
+        <!-- List mode -->
+        @if (viewMode == 'list') {
+            <div
+                class="content-area"
+                style="width: 100%; height: 100%"
+                [class.showDropArea]="draggingOver"
+                [ngx-contextmenu]="folderContextMenu"
+            >
+                <app-tabulator
+                    [dataSource]="directoryContents"
+                    [columns]="[
+                        { field: 'name', title: 'Name', formatter: nameCellFormatter },
+                        { field: '_size', title: 'Size' },
+                        { field: '_ctime', title: 'Created' },
+                        { field: '_mtime', title: 'Modified' },
+                    ]"
+                    [options]="{
+                        rowHeight: 32
+                    }"
+                    (rowClick)="onRowClick($event)"
+                    (rowDblClick)="onItemClick($event.data)"
+                    (rowContext)="onRowCtx($event)"
+                />
+            </div>
+        }
+    }
+</div>
+
+@if (selectionText?.trim()?.length > 0) {
+    <div class="select-hint">
+        {{selectionText}}
     </div>
-</div>
-
-<div class="select-hint" *ngIf="selectionText">
-    {{selectionText}}
-</div>
+}
 
 <div class="controls">
     <button
