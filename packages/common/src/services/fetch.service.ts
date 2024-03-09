@@ -58,6 +58,8 @@ export class Fetch {
         options.responseType = options.responseType || "json";
         options.withCredentials = true;
 
+
+        let abort = false;
         const p = new Promise((resolve, reject) => {
             const o = this.http.request(method, url, options)
                 .pipe(retry({
@@ -70,6 +72,9 @@ export class Fetch {
                         if (error.status == 504 && isDevMode())
                             alert("It looks like you can't reach your development backend anymore");
 
+                        abort = true;
+
+                        reject(error);
                         throw error;
                     },
                     count: retryCount

@@ -440,7 +440,7 @@ export class FileGridComponent implements OnInit {
             ? this.config.apiSettings.listEntriesUrlTemplate(this.path)
             : this.config.apiSettings.listEntriesUrl
 
-        this.fetch.post(url, { path: this.path, showHidden: this.showHiddenFiles })
+        this.fetch.post(url, { path: this.path, showHidden: this.showHiddenFiles }, {}, true)
             .then((data: any) => {
                 const files: FileDescriptor[] = data?.files || [];
                 const dirs: DirectoryDescriptor[] = data?.dirs || [];
