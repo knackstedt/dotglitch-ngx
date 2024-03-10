@@ -247,7 +247,7 @@ export class MenuComponent {
         if (!item.childTemplate && !item.children) {
             if (typeof item.action == "function") {
                 const res = await item.action(this.data, context)
-                this.close(res);
+                this.close(res === undefined ? true : res);
                 return res;
             }
 
