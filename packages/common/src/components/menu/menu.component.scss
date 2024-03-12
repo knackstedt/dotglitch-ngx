@@ -33,7 +33,7 @@ table {
 
 tr {
     color: var(--ngx-menu-text-color, #ccc);
-    font-size: 14px;
+    font-size: var(--ngx-menu-font-size, 14px);
     cursor: pointer;
     transition: background-color 75ms ease,
                 color 75ms ease;
