@@ -1,10 +1,11 @@
-<button
-    *ngIf="fileManager.sidebarOverlay && !drawerMode"
-    mat-icon-button
-    (click)="toggleDrawer()"
->
-    <mat-icon>list</mat-icon>
-</button>
+@if (fileManager.sidebarOverlay && !drawerMode) {
+    <button
+        mat-icon-button
+        (click)="toggleDrawer()"
+    >
+        <mat-icon>list</mat-icon>
+    </button>
+}
 
 @if (!showBareMinimum) {
     <div class="buttongroup">
@@ -29,14 +30,14 @@
     />
 }
 
-
-<app-breadcrumb
-    *ngIf="currentTab"
-    style="flex: 1"
-    [crumbs]="currentTab.breadcrumb"
-    (crumbClick)="onBreadcrumbClick.next($event)"
-    [config]="config"
-/>
+@if (currentTab) {
+    <app-breadcrumb
+        style="flex: 1"
+        [crumbs]="currentTab.breadcrumb"
+        (crumbClick)="onBreadcrumbClick.next($event)"
+        [config]="config"
+    />
+}
 
 @if (!drawerMode) {
     <!-- <div style="flex: 1"></div> -->
