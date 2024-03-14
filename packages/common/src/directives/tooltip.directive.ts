@@ -3,8 +3,10 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { getPosition } from './utils';
 import { TooltipComponent, calcTooltipBounds } from '../components/tooltip/tooltip.component';
 import { TooltipOptions } from '../types/tooltip';
+import { MenuItem, MenuOptions } from '../types/menu';
 import { ulid } from 'ulidx';
 import { firstValueFrom } from 'rxjs';
+import { MenuComponent } from '../components/menu/menu.component';
 
 @Directive({
     selector: '[ngx-tooltip]',
@@ -17,7 +19,7 @@ export class TooltipDirective {
 
     /**
      */
-    @Input("ngx-tooltip") template: TemplateRef<any> | Type<any>;
+    @Input("ngx-tooltip") template: TemplateRef<any> | Type<any> | MenuItem[];
 
     /**
      * Configuration for opening the app menu
@@ -90,7 +92,7 @@ export class TooltipDirective {
 // Helper to open the context menu without using the directive.
 export const openTooltip = async (
     dialog: MatDialog,
-    template: TemplateRef<any> | Type<any>,
+    template: TemplateRef<any> | Type<any> | MenuItem[],
     data: any,
     el: HTMLElement,
     config?: TooltipOptions,
@@ -98,7 +100,8 @@ export const openTooltip = async (
     matPopupOptions?: MatDialogConfig<any>
 ) => {
 
-    const rect = await calcTooltipBounds(template, data, matPopupOptions);
+    const component = Array.isArray(template) ? MenuComponent : template;
+    const rect = await calcTooltipBounds(component, data, matPopupOptions);
     const ownerCords = el.getBoundingClientRect();
     const cords = getPosition(el, config, rect);
     const specificId = ulid();
@@ -125,3 +128,32 @@ export const openTooltip = async (
         .afterClosed()
     );
 };
+
+@Directive({
+    selector: '[ngx-dropdown],[ngx-dropdown-config]',
+    providers: [
+        MatDialog
+    ],
+    standalone: true
+})
+export class DropdownDirective extends TooltipDirective {
+    /**
+     * The items that will be bound to the menu that pops
+     * up when the user clicks the element.
+     */
+    @Input("ngx-dropdown") override template: TemplateRef<any> | Type<any> | MenuItem[];
+
+    /**
+     * Configuration for opening the app menu
+     */
+    @Input("ngx-dropdown-config") _config: TooltipOptions = {};
+
+    ngOnInit() {
+        // Set default values
+        this._config.position = this._config.position ?? "bottom";
+        this._config.alignment = this._config.alignment ?? "start";
+        this._config.stayOpen = this._config.stayOpen ?? true;
+
+        this.config = this._config;
+    }
+}
