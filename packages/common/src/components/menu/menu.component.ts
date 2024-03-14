@@ -36,6 +36,7 @@ const calcComponentBounds = async (component: Type<any>, data: any) => {
             });
 
             const del = document.createElement("div");
+            del.classList.add("ngx-menu");
             del.style.position = "absolute";
             del.style.left = '-1000vw';
             document.body.append(del);
@@ -70,7 +71,13 @@ const $hover = Symbol("hover");
         MatProgressSpinnerModule,
         TooltipDirective
     ],
-    standalone: true
+    standalone: true,
+    host: {
+        "[attr.tx]": "targetBounds?.x",
+        "[attr.ty]": "targetBounds?.y",
+        "[attr.th]": "targetBounds?.height",
+        "[attr.tw]": "targetBounds?.width",
+    }
 })
 export class MenuComponent {
 
@@ -81,6 +88,7 @@ export class MenuComponent {
     @Input() public overlayOverlap = 32;
     @Input() public hoverDelay = 400;
     @Input() public showDebugOverlay = false;
+    @Input() public targetBounds: DOMRect;
 
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
@@ -129,6 +137,7 @@ export class MenuComponent {
         this.parentContext = this._data?.parentContext;
         this.isLockedOpen = this.isLockedOpen || this._data?.config?.['_isLockedOpen'];
         this.parentIsNgxMenu = this._data?.parentIsNgxMenu;
+        this.targetBounds = this._data?.targetBounds;
 
         this.template = _data.template;
 
@@ -266,9 +275,10 @@ export class MenuComponent {
         };
 
         // Set position coordinates
-        const { width, height } = await (item.childTemplate
+        const targetBounds = await (item.childTemplate
             ? calcComponentBounds(MenuComponent, { template: item.childTemplate })
             : calcMenuItemBounds(item['_children'], this.data));
+        const { width, height } = targetBounds;
 
         if (bounds.y + height > window.innerHeight)
             cords.bottom = "0px";
@@ -301,7 +311,8 @@ export class MenuComponent {
                 items: item['_children'],
                 template: item.childTemplate,
                 config: config,
-                parentIsNgxMenu: true
+                parentIsNgxMenu: true,
+                targetBounds
             }
         });
 
@@ -365,7 +376,6 @@ export class MenuComponent {
     }
 
     startHoverTimer(item, row) {
-        this.childDialogs.forEach(cd => cd.close());
 
         // Invert check to make the logic simpler
         // TL;DR: if (any) of these are true, we will do the hover action
@@ -381,6 +391,7 @@ export class MenuComponent {
             delete item[$hover];
 
             if (!this.pointerIsOnVoid) {
+                this.childDialogs.forEach(cd => cd.close());
                 row['_open'] = true;
                 this.onMenuItemClick(item, row);
             }
@@ -390,6 +401,16 @@ export class MenuComponent {
     stopHoverTimer(item) {
         item[$hover] && clearTimeout(item[$hover]);
         delete item[$hover];
+    }
+
+    private closeTimer: number;
+    startCloseTimer() {
+        this.closeTimer = setTimeout(() => {
+            this.closeOnVoid();
+        }, 500) as any;
+    }
+    stopCloseTimer() {
+        clearTimeout(this.closeTimer);
     }
 
     /**

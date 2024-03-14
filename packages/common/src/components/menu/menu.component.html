@@ -8,7 +8,8 @@
         [style.width]="coverRectCords.width + 'px'"
         [style.background]="showDebugOverlay ? '#f004' : '#0000'"
         style="z-index: -1"
-        (pointerenter)="pointerHasBeenOverMask=true"
+        (pointerenter)="pointerHasBeenOverMask=true;startCloseTimer()"
+        (pointerleave)="stopCloseTimer()"
         (pointermove)="pointerHasBeenOverMask=true"
         (click)="isLockedOpen = true"
     ></div>
@@ -17,17 +18,17 @@
 @if (!parentIsNgxMenu) {
     <div class="void"
         [style.background]="showDebugOverlay ? '#00f4' : '#0000'"
-        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && closeOnVoid()"
+        (pointerenter)="pointerIsOnVoid = true; hasBootstrapped && !isLockedOpen && startCloseTimer()"
         (pointerleave)="pointerIsOnVoid = false"
         (pointerdown)="hasBootstrapped && closeOnVoid(true)"
-        (pointermove)="hasBootstrapped && !isLockedOpen && closeOnVoid()"
+        (pointermove)="hasBootstrapped && !isLockedOpen && startCloseTimer()"
         (click)="closeOnVoid(true)"
         (wheel)="onWheel($event)"
     ></div>
 }
 
 @if (!template) {
-    <table>
+    <table (pointerenter)="stopCloseTimer()">
         <tbody>
             @for (item of items; track item) {
                 <!-- A row with a click action -->
@@ -154,22 +155,26 @@
 }
 @else {
     @if (templateType == 'template') {
-        <ng-container
-            [ngTemplateOutlet]="template"
-            [ngTemplateOutletContext]="{
-                '$implicit': data,
-                'dialog': dialogRef,
-                'context': parentContext,
-                'item': parentItem,
-                'element': this.viewContainer?.element?.nativeElement,
-                'menu': this
-            }"
-        />
+        <div style="display: contents;" (pointerenter)="stopCloseTimer()">
+            <ng-container
+                [ngTemplateOutlet]="template"
+                [ngTemplateOutletContext]="{
+                    '$implicit': data,
+                    'dialog': dialogRef,
+                    'context': parentContext,
+                    'item': parentItem,
+                    'element': this.viewContainer?.element?.nativeElement,
+                    'menu': this
+                }"
+            />
+        </div>
     }
     @else {
-        <ng-container
-            [cdkPortalOutlet]="componentPortal"
-        />
+        <div style="display: contents;" (pointerenter)="stopCloseTimer()">
+            <ng-container
+                [cdkPortalOutlet]="componentPortal"
+            />
+        </div>
     }
 }
 
