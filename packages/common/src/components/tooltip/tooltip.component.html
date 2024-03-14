@@ -57,7 +57,17 @@
     #container
     class="container"
 >
-    @if (isTemplate) {
+    @if (isMenu) {
+        <ngx-menu
+            [config]="config"
+            [data]="data"
+            [ownerCords]="ownerCords"
+            [selfCords]="selfCords"
+            [items]="$any(template)"
+            [isLockedOpen]="config.stayOpen"
+        />
+    }
+    @else if (isTemplate) {
         <ng-container
             [ngTemplateOutlet]="$any(template)"
             [ngTemplateOutletContext]="{

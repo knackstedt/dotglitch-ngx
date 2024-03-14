@@ -5,6 +5,8 @@ import { Optional } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import { TooltipOptions } from '../../types/tooltip';
+import { MenuItem } from '../../types/menu';
+import { MenuComponent } from '../menu/menu.component';
 
 declare const Zone;
 const zone = new Zone(Zone.current, { name: "@dotglitch_menu", properties: {} });
@@ -68,7 +70,8 @@ export const calcTooltipBounds = async (template: TemplateRef<any> | Type<any>, 
     styleUrls: ['./tooltip.component.scss'],
     imports: [
         NgTemplateOutlet,
-        NgComponentOutlet
+        NgComponentOutlet,
+        MenuComponent
     ],
     standalone: true
 })
@@ -77,9 +80,10 @@ export class TooltipComponent {
     @Input() config: TooltipOptions;
     @Input() ownerCords: DOMRect;
     @Input() selfCords;
-    @Input() template: TemplateRef<any> | Type<any>;
+    @Input() template: TemplateRef<any> | Type<any> | MenuItem[];
 
-    public isTemplate: boolean;
+    public isTemplate = false;
+    public isMenu = false;
     public hasBootstrapped = false;
     public pointerIsOnVoid = false;
     public isLockedOpen = false;
@@ -122,7 +126,9 @@ export class TooltipComponent {
             width: this.ownerCords.width + 32
         }
 
-        if (this.template instanceof TemplateRef)
+        if (Array.isArray(this.template))
+            this.isMenu =  true;
+        else if (this.template instanceof TemplateRef)
             this.isTemplate = true;
         else if (typeof this.template == "function")
             this.isTemplate = false;
@@ -155,7 +161,7 @@ export class TooltipComponent {
 
     @HostListener("window:keydown", ['$event'])
     onKeyDown(evt: KeyboardEvent) {
-        if (this.config.freezeOnKeyCode) {
+        if (this.config?.freezeOnKeyCode) {
             if (evt.code == this.config.freezeOnKeyCode)
                 this.isLockedOpen = true;
         }
