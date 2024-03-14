@@ -124,7 +124,8 @@ export const openMenu = async (
     if (!config.alignment)
         config.alignment = "start";
 
-    const cords = getPosition(el || evt, config, await calcMenuItemBounds(menuItems, data));
+    const initialBounds = await calcMenuItemBounds(menuItems, data);
+    const cords = getPosition(el || evt, config, initialBounds);
     const specificId = ulid();
 
     return firstValueFrom(
@@ -136,7 +137,8 @@ export const openMenu = async (
                 selfCords: cords,
                 items: menuItems,
                 config: config,
-                id: specificId
+                id: specificId,
+                targetBounds: initialBounds
             },
             panelClass: ["ngx-menu", 'ngx-' + specificId].concat(config?.customClass || []),
             position: cords,
