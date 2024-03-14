@@ -8,6 +8,11 @@ export type MenuOptions = Partial<PopupOptions & {
      * Which event should trigger the app menu.
      */
     trigger: MenuTrigger | MenuTrigger[];
+
+    /**
+     * Set to `true` to keep the menu open.
+     */
+    stayOpen: boolean,
 }>;
 
 export type BaseMenuItem<T = any, Q = object | number | string | boolean | bigint | symbol | undefined> = {

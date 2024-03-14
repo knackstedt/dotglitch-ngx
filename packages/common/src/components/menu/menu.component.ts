@@ -201,6 +201,9 @@ export class MenuComponent {
             }
         }
 
+        if (this.config?.stayOpen)
+            this.isLockedOpen = true;
+
         setTimeout(() => {
             this.hasBootstrapped = true;
         }, 200);
