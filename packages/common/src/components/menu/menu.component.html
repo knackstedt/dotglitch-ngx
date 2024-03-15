@@ -8,7 +8,7 @@
         [style.width]="coverRectCords.width + 'px'"
         [style.background]="showDebugOverlay ? '#f004' : '#0000'"
         style="z-index: -1"
-        (pointerenter)="pointerHasBeenOverMask=true;startCloseTimer()"
+        (pointerenter)="pointerHasBeenOverMask=true"
         (pointerleave)="stopCloseTimer()"
         (pointermove)="pointerHasBeenOverMask=true"
         (click)="isLockedOpen = true"
