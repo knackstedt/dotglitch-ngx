@@ -139,7 +139,7 @@ export class MenuComponent {
         this.parentIsNgxMenu = this._data?.parentIsNgxMenu;
         this.targetBounds = this._data?.targetBounds;
 
-        this.template = _data.template;
+        this.template = this._data?.template;
 
         this.templateType = this.template instanceof TemplateRef ? "template" : "component";
 
