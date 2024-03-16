@@ -39,7 +39,8 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         appRef: Omit<ApplicationRef, '_runningTick'>,
         injector: Injector,
         _inputs: { [key: string]: any } = {},
-        _outputs: { [key: string]: Function } = {}
+        _outputs: { [key: string]: Function } = {},
+        additionalChildren: React.ReactNode[] = []
     ) => React.memo((args) => {
 
         const id = ulid();
@@ -97,7 +98,11 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             component.changeDetectorRef.detectChanges();
         }, []);
 
-        return React.createElement("div", { id });
+        return React.createElement('div',
+            {},
+            React.createElement("div", { id }),
+            ...additionalChildren
+        );
     });
 
     /**
