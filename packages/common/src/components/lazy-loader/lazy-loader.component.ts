@@ -1,5 +1,5 @@
 import { Input, ViewContainerRef, isDevMode, ComponentRef, EventEmitter, Optional, ViewChild, Component, Inject, Output, NgModule, AfterViewInit, OnInit } from '@angular/core';
-import { NgComponentOutlet, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { BehaviorSubject, debounceTime, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { CompiledBundle, NgxLazyLoaderConfig } from './types';
     selector: 'ngx-lazy-loader',
     templateUrl: './lazy-loader.component.html',
     styleUrls: [ './lazy-loader.component.scss' ],
-    imports: [ NgIf, NgComponentOutlet, NgTemplateOutlet ],
+    imports: [ NgComponentOutlet, NgTemplateOutlet ],
     standalone: true
 })
 export class LazyLoaderComponent implements AfterViewInit {
