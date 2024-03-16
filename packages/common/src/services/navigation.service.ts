@@ -28,9 +28,10 @@ export class NavigationService {
 
     private loadRootPageFromUrl() {
         const hash = location.hash.split("?")[0];
+        const root = hash.replace(/^\/?#\//, '');
 
         // If the URL is imprecisely set, we restore it to the landing page
-        if (!this.lazyLoader.isComponentRegistered(hash))
+        if (!this.lazyLoader.isComponentRegistered(root))
             return this.loadRootPage("#/Landing");
 
         this.loadRootPage(location.hash);
@@ -53,9 +54,9 @@ export class NavigationService {
 
 
         log(`Root page navigate to '${hash}'`, { params, chunks });
-
+        const root = hash.replace(/^\/?#\//, '');
         this.virtualPath$.next({
-            root: chunks[0],
+            root: root, //chunks[0],
             chunks: chunks as any,
             args: params
         });
