@@ -98,6 +98,10 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             component.changeDetectorRef.detectChanges();
         }, []);
 
+        // Create a container for the wrapped element and
+        // all of the siblings we will inject into it's container.
+        // The double wrapper is necessary for React's mechanisms to properly
+        // associate things together.
         return React.createElement('div',
             {},
             React.createElement("div", { id }),
