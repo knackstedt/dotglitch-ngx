@@ -173,7 +173,7 @@ export const stringToSlug = (text: string) =>
         .trim()
         .toLowerCase()
         .replace(/[\-_+ ]/g, '-')
-        .replace(/[^a-z0-9\-\/]/g, '');
+        .replace(/[^a-z0-9\-]/g, '');
 
 
 /**
