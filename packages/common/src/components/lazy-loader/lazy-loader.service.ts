@@ -150,12 +150,12 @@ export class LazyLoaderService {
 
             // Matcher is regex
             if (t.matcher instanceof RegExp)
-                return t.matcher.test(_id) || t.matcher.test(value);
+                return t.matcher.test(value) || t.matcher.test(_id);
 
             // Matcher is string => regex
             if (typeof t.matcher == 'string') {
                 const rx = new RegExp(t.matcher, 'ui');
-                return rx.test(_id) || rx.test(value);
+                return rx.test(value) || rx.test(_id);
             }
 
             // Matcher is array
@@ -180,7 +180,7 @@ export class LazyLoaderService {
         const out = items[0];
 
         if (out.matcher instanceof RegExp) {
-            const result = _id.match(out.matcher) || value.match(out.matcher);
+            const result = value.match(out.matcher) || _id.match(out.matcher);
 
             return {
                 entry: out,

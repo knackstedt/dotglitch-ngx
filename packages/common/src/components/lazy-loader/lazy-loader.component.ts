@@ -31,10 +31,12 @@ export class LazyLoaderComponent implements AfterViewInit {
      */
 
     private _id: string;
+    private originalId: string;
     /**
      * The id of the component that will be lazy loaded
      */
     @Input("component") set id(data: string) {
+        this.originalId = data;
         const id = stringToSlug(data);
 
         // Check if there is a change to the loaded component's id
@@ -48,9 +50,10 @@ export class LazyLoaderComponent implements AfterViewInit {
         }
     };
 
-
     private _group = "default";
+    private originalGroup: string;
     @Input("group") set group(data: string) {
+        this.originalGroup = data;
         const group = stringToSlug(data);
 
         if (typeof group != "string" || !group) return;
@@ -255,7 +258,7 @@ export class LazyLoaderComponent implements AfterViewInit {
         }
 
         try {
-            const _entry = this.service.resolveRegistrationEntry(this._id, this._group);
+            const _entry = this.service.resolveRegistrationEntry(this.originalId, this.originalGroup);
             if (!_entry || !_entry.entry) {
                 this.err(`Failed to find Component '${this._id}' in group '${this._group}' in registry!`);
                 return this.loadDefault();
@@ -303,6 +306,15 @@ export class LazyLoaderComponent implements AfterViewInit {
                 return this.loadError();
             }
 
+
+            // const componentRef = this.targetComponentContainerRef = createComponent(component as any, {
+            //     environmentInjector: this.appRef.injector,
+            //     elementInjector: this.injector,
+            //     hostElement: this.viewContainerRef.element.nativeElement,
+            //     // projectableNodes:
+            // });
+            // // this.targetRef = this.targetContainer.insert(this.targetComponentContainerRef.hostView);
+            // this.appRef.attachView(componentRef.hostView);
 
             // Bootstrap the component into the container
             const componentRef = this.targetComponentContainerRef = this.targetContainer.createComponent(component as any);
