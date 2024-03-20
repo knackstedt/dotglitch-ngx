@@ -41,8 +41,9 @@ export class TabulatorComponent<T = any> {
                 })
             })()
         }
-        else
+        else {
             this.table?.setData(this.dataSource);
+        }
     };
     get dataSource() { return this._dataSource };
 
@@ -85,7 +86,7 @@ export class TabulatorComponent<T = any> {
         table.on("rowContext", (e, row) => this.rowContext.next({ event: e, row, data: row.getData() }));
         table.on("rowDblClick", (e, row) => this.rowDblClick.next({ event: e, row, data: row.getData() }));
 
-        table.on("renderComplete", () => {
+        table.on("tableBuilt", () => {
             table.redraw()
         })
     }
