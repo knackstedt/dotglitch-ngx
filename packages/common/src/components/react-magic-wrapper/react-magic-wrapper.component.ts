@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, EnvironmentInjector, EventEmitter, Injector, OnChanges, OnDestroy, SimpleChanges, Type, ViewContainerRef, ViewRef, createComponent } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, ComponentFactoryResolver, EnvironmentInjector, EventEmitter, Injector, NgZone, OnChanges, OnDestroy, SimpleChanges, Type, ViewContainerRef, ViewRef, createComponent } from '@angular/core';
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
@@ -125,8 +125,9 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     ];
 
     constructor(
-        private ngContainer: ViewContainerRef,
-        private ngTheme: ThemeService
+        private readonly ngContainer: ViewContainerRef,
+        private readonly ngTheme: ThemeService,
+        private readonly ngZone: NgZone
     ) {
     }
 
@@ -150,27 +151,30 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
 
     private _render() {
         if (!this.ngReactComponent) return;
-        if (!this._root) {
-            this._root = createRoot(this.ngContainer.element.nativeElement);
-        }
 
-        // List all keys that do not start with `_` nor `ng`
-        const keys = Object.keys(this).filter(k => !/^(?:_|ng)/.test(k));
+        this.ngZone.runOutsideAngular(() => {
+            if (!this._root) {
+                this._root = createRoot(this.ngContainer.element.nativeElement);
+            }
 
-        // Get all property keys from the class
-        const propKeys = keys.filter(k => !k.startsWith("on"));
-        // Get all event handler keys from the class
-        const evtKeys = keys.filter(k => k.startsWith("on"));
+            // List all keys that do not start with `_` nor `ng`
+            const keys = Object.keys(this).filter(k => !/^(?:_|ng)/.test(k));
 
-        const props = {};
-        // Project all key properties onto `props`
-        propKeys.forEach(k => props[k] = this[k]);
+            // Get all property keys from the class
+            const propKeys = keys.filter(k => !k.startsWith("on"));
+            // Get all event handler keys from the class
+            const evtKeys = keys.filter(k => k.startsWith("on"));
 
-        // Bind all event handlers.
-        // ! important Angular uses EventEmitter, React uses
-        // a different method of event binding
-        evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
+            const props = {};
+            // Project all key properties onto `props`
+            propKeys.forEach(k => props[k] = this[k]);
 
-        this._root.render(React.createElement(this.ngReactComponent, { props: props as any }));
+            // Bind all event handlers.
+            // ! important Angular uses EventEmitter, React uses
+            // a different method of event binding
+            evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
+
+            this._root.render(React.createElement(this.ngReactComponent, { props: props as any }));
+        })
     }
 }
