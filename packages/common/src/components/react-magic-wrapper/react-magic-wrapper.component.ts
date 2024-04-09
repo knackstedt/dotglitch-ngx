@@ -169,10 +169,13 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             // Project all key properties onto `props`
             propKeys.forEach(k => props[k] = this[k]);
 
-            // Bind all event handlers.
-            // ! important Angular uses EventEmitter, React uses
-            // a different method of event binding
-            evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
+            // Attempt to ensure no zone is lost during the event emitter fires
+            this.ngZone.run(() => {
+                // Bind all event handlers.
+                // ! important Angular uses EventEmitter, React uses
+                // a different method of event binding
+                evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
+            })
 
             this._root.render(React.createElement(this.ngReactComponent, { props: props as any }));
         })
