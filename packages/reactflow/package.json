@@ -1,6 +1,6 @@
 {
   "name": "ngx-reactflow",
-  "version": "1.0.23",
+  "version": "1.1.0",
   "repository": {
     "url": "https://github.com/knackstedt/dotglitch-ngx/tree/main/packages/reactflow"
   },
@@ -20,6 +20,7 @@
     "angular-service"
   ],
   "peerDependencies": {
+    "@dotglitch/ngx-common": ">=1.1.40",
     "@angular/common": ">=15.0.0",
     "@angular/core": ">=15.0.0",
     "react": ">=18.0.0",
