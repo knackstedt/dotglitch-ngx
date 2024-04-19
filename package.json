@@ -5,19 +5,12 @@
     "url": "https://github.com/knackstedt/dotglitch/ngx"
   },
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
     "build:common": "ng build common",
     "build:reactflow": "ng build reactflow",
-    "build:monaco-editor": "ng build tabulator",
-    "build:tabulator": "ng build monaco-editor",
     "dev": "ng build common --watch --configuration development",
     "dev:common": "ng build common --watch --configuration development",
-    "dev:reactflow": "ng build reactflow --watch --configuration development",
-    "dev:monaco-editor": "ng build monaco-editor --watch --configuration development",
-    "dev:tabulator": "ng build tabulator --watch --configuration development",
-    "test": "ng test"
+    "dev:reactflow": "ng build reactflow --watch --configuration development"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +23,9 @@
     "@angular/material": "^17.1.2",
     "@angular/platform-browser": "^17.1.2",
     "@angular/platform-browser-dynamic": "^17.1.2",
-    "angular-split": "^17.1.1",
+    "@dotglitch/ngx-common": "^1.1.45",
+    "angular-split": "^17.2.0",
+    "gsap": "^3.12.5",
     "localforage": "^1.10.0",
     "material-icon-theme": "4.32.0",
     "monaco-editor": "^0.45.0",
@@ -40,15 +35,16 @@
     "react-dom": "^18.2.0",
     "reactflow": "^11.10.2",
     "rxjs": "~7.8.1",
-    "tabulator-tables": "^5.5.3",
+    "tabulator-tables": "^5.5.0",
     "tslib": "^2.6.2",
-    "ulidx": "^2.2.1",
+    "ulidx": "^2.3.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.1.2",
     "@angular/cli": "~17.1.2",
     "@angular/compiler-cli": "^17.1.2",
+    "@types/gsap": "^3.0.0",
     "@types/localforage": "^0.0.34",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
