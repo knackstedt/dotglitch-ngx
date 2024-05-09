@@ -146,7 +146,7 @@ export class LazyLoaderService {
 
             // No matcher, check id
             if (!t.matcher)
-                return t[$id] == _id;
+                return t.id == value || t[$id] == _id;
 
             // Matcher is regex
             if (t.matcher instanceof RegExp)
