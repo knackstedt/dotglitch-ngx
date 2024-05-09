@@ -29,6 +29,7 @@ table {
     border-spacing: 0;
     border-radius: 5px;
     padding: 4px 0;
+    overflow: hidden;
 }
 
 tr {
@@ -67,6 +68,10 @@ tr {
         justify-content: space-between;
         height: 100%;
         width: 100%;
+        position: relative;
+        left: -16px;
+        width: calc(100% + 32px);
+        padding: 0 16px;
     }
 
     .label {
