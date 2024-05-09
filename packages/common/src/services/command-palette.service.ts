@@ -263,7 +263,7 @@ export class CommandPaletteService {
             warn(`Inserting duplicate action on element`, { element, action });
         }
         else {
-            log(LogIcon.circle_blue, `Inserted action`, action)
+            // log(LogIcon.circle_blue, `Inserted action`, action)
         }
 
         // Make the shortcut keys lowercase so case sensitivity doesn't scalp someone
