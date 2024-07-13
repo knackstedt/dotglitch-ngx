@@ -34,79 +34,83 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
      * @param _outputs
      * @returns
      */
-    static WrapAngularComponent = (
-        componentClass: Type<any>,
+    static WrapAngularComponent = ({ component, appRef, injector, ngZone, staticInputs, staticOutputs, additionalChildren}: {
+        component: Type<any>,
         appRef: Omit<ApplicationRef, '_runningTick'>,
         injector: Injector,
-        _inputs: { [key: string]: any } = {},
-        _outputs: { [key: string]: Function } = {},
-        additionalChildren: React.ReactNode[] = []
-    ) => React.memo((args) => {
+        ngZone: NgZone,
+        staticInputs?: { [key: string]: any },
+        staticOutputs?: { [key: string]: Function },
+        additionalChildren?: React.ReactNode[]
+    }) => React.memo((args) => {
 
         const id = ulid();
         React.useEffect(() => {
-            const component = createComponent(componentClass, {
-                environmentInjector: appRef.injector,
-                elementInjector: injector,
-                hostElement: document.getElementById(id)
-            });
+            try {
 
-            appRef.attachView(component.hostView);
-            // @ts-ignore
-            // component.hostView = hostView;
+                const componentInstance = createComponent(component, {
+                    environmentInjector: appRef.injector,
+                    elementInjector: injector,
+                    hostElement: document.getElementById(id)
+                });
 
-            Object.assign(_inputs, args);
+                appRef.attachView(componentInstance.hostView);
+                // @ts-ignore
+                // component.hostView = hostView;
 
-            const { inputs, outputs } = componentClass['ɵcmp'];
+                Object.assign(staticInputs, args);
 
-            // Returns a list of entries that need to be set
-            // This makes it so that unnecessary setters are not invoked.
-            const updated = Object.entries(inputs).filter(([parentKey, childKey]: [string, string]) => {
-                return component.instance[childKey] != _inputs[parentKey];
-            });
+                const { inputs, outputs } = component['ɵcmp'];
 
-            updated.forEach(([parentKey, childKey]: [string, string]) => {
-                if (_inputs.hasOwnProperty(parentKey))
-                    component.instance[childKey] = _inputs[parentKey];
-            });
+                // Returns a list of entries that need to be set
+                // This makes it so that unnecessary setters are not invoked.
+                const updated = Object.entries(inputs).filter(([parentKey, childKey]: [string, string]) => {
+                    return componentInstance.instance[childKey] != staticInputs[parentKey];
+                });
 
-            const outputSubscriptions: { [key: string]: Subscription } = {};
-            // Get a list of unregistered outputs
-            const newOutputs = Object.entries(outputs).filter(([parentKey, childKey]: [string, string]) => {
-                return !outputSubscriptions[parentKey];
-            });
+                updated.forEach(([parentKey, childKey]: [string, string]) => {
+                    if (staticInputs.hasOwnProperty(parentKey))
+                        componentInstance.instance[childKey] = staticInputs[parentKey];
+                });
 
-            // Reverse bind via subscription
-            newOutputs.forEach(([parentKey, childKey]: [string, string]) => {
-                if (_outputs.hasOwnProperty(parentKey)) {
-                    const target: EventEmitter<unknown> = component.instance[childKey];
-                    const outputs = _outputs;
+                const outputSubscriptions: { [key: string]: Subscription } = {};
+                // Get a list of unregistered outputs
+                const newOutputs = Object.entries(outputs).filter(([parentKey, childKey]: [string, string]) => {
+                    return !outputSubscriptions[parentKey];
+                });
 
-                    const sub = target.subscribe(outputs[parentKey]); // Subscription
+                // Reverse bind via subscription
+                newOutputs.forEach(([parentKey, childKey]: [string, string]) => {
+                    if (!staticOutputs.hasOwnProperty(parentKey)) return;
+
+                    const target: EventEmitter<unknown> = componentInstance.instance[childKey];
+                    const outputs = staticOutputs;
+
+                    const sub = target.subscribe((...args) => {
+                        // Run the callback in the provided zone
+                        ngZone.run(() => {
+                            outputs[parentKey](...args);
+                        })
+                    }); // Subscription
 
                     outputSubscriptions[parentKey] = sub;
+                });
+
+                // Wrap the destroy method to safely release the subscriptions
+                const originalDestroy = componentInstance.onDestroy?.bind(componentInstance);
+                componentInstance.onDestroy = (cb) => {
+                    Object.values(outputSubscriptions).forEach(s => s.unsubscribe());
+                    originalDestroy?.(cb);
                 }
-            });
 
-            // Wrap the destroy method to safely release the subscriptions
-            const originalDestroy = component.onDestroy?.bind(component);
-            component.onDestroy = (cb) => {
-                Object.values(outputSubscriptions).forEach(s => s.unsubscribe());
-                originalDestroy?.(cb);
+                componentInstance.changeDetectorRef.detectChanges();
             }
-
-            component.changeDetectorRef.detectChanges();
+            catch(err) {
+                console.error(err)
+            }
         }, []);
 
-        // Create a container for the wrapped element and
-        // all of the siblings we will inject into it's container.
-        // The double wrapper is necessary for React's mechanisms to properly
-        // associate things together.
-        return React.createElement('div',
-            {},
-            React.createElement("div", { id }),
-            ...additionalChildren
-        );
+        return React.createElement("div", { id });
     });
 
     /**
@@ -132,52 +136,71 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     }
 
     ngOnInit() {
-        if (!this.ngReactComponent)
+        console.log("init the fucking thing")
+
+        if (!this.ngReactComponent) {
+            console.error("NO")
             throw new Error("ReactMagicWrapperComponent cannot start without a provided ngReactComponent!");
+        }
     }
 
     ngOnChanges(changes?: SimpleChanges): void {
+        console.log("change the fucking thing")
         this._render();
     }
 
     ngAfterViewInit() {
+        console.log("after init the fucking thing")
+
         this._render();
     }
 
     ngOnDestroy() {
+        console.log("destroy the fucking thing")
+
         this._root.unmount();
         this.ngSubscriptions.forEach(s => s.unsubscribe());
     }
 
     private _render() {
-        if (!this.ngReactComponent) return;
+        console.log("Render the fucking thing")
+        if (!this.ngReactComponent) {
+            console.log("Render no component. May be context issue")
+            return
+        };
 
         this.ngZone.runOutsideAngular(() => {
-            if (!this._root) {
-                this._root = createRoot(this.ngContainer.element.nativeElement);
+            try {
+
+                if (!this._root) {
+                    this._root = createRoot(this.ngContainer.element.nativeElement);
+                }
+
+                // List all keys that do not start with `_` nor `ng`
+                const keys = Object.keys(this).filter(k => !/^(?:_|ng)/.test(k));
+
+                // Get all property keys from the class
+                const propKeys = keys.filter(k => !k.startsWith("on"));
+                // Get all event handler keys from the class
+                const evtKeys = keys.filter(k => k.startsWith("on"));
+
+                const props = {};
+                // Project all key properties onto `props`
+                propKeys.forEach(k => props[k] = this[k]);
+
+                // Attempt to ensure no zone is lost during the event emitter fires
+                this.ngZone.runGuarded(() => {
+                    // Bind all event handlers.
+                    // ! important Angular uses EventEmitter, React uses
+                    // a different method of event binding
+                    evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
+                })
+
+                this._root.render(React.createElement(this.ngReactComponent, { props: props as any }));
             }
-
-            // List all keys that do not start with `_` nor `ng`
-            const keys = Object.keys(this).filter(k => !/^(?:_|ng)/.test(k));
-
-            // Get all property keys from the class
-            const propKeys = keys.filter(k => !k.startsWith("on"));
-            // Get all event handler keys from the class
-            const evtKeys = keys.filter(k => k.startsWith("on"));
-
-            const props = {};
-            // Project all key properties onto `props`
-            propKeys.forEach(k => props[k] = this[k]);
-
-            // Attempt to ensure no zone is lost during the event emitter fires
-            this.ngZone.run(() => {
-                // Bind all event handlers.
-                // ! important Angular uses EventEmitter, React uses
-                // a different method of event binding
-                evtKeys.forEach(k => props[k] = (...args) => this[k].next(args));
-            })
-
-            this._root.render(React.createElement(this.ngReactComponent, { props: props as any }));
+            catch(err) {
+                console.error(err)
+            }
         })
     }
 }
