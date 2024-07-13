@@ -34,7 +34,7 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
      * @param _outputs
      * @returns
      */
-    static WrapAngularComponent = ({ component, appRef, injector, ngZone, staticInputs, staticOutputs, additionalChildren}: {
+    static WrapAngularComponent = ({ component, appRef, injector, ngZone, staticInputs, staticOutputs, additionalChildren: siblings}: {
         component: Type<any>,
         appRef: Omit<ApplicationRef, '_runningTick'>,
         injector: Injector,
@@ -110,7 +110,10 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             }
         }, []);
 
-        return React.createElement("div", { id });
+        return React.createElement("div", { },
+            React.createElement("div", { id }),
+            ...siblings
+        )
     });
 
     /**
