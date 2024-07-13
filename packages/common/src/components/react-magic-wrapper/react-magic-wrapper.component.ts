@@ -139,7 +139,6 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     }
 
     ngOnInit() {
-        console.log("init the fucking thing")
 
         if (!this.ngReactComponent) {
             console.error("NO")
@@ -148,25 +147,19 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     }
 
     ngOnChanges(changes?: SimpleChanges): void {
-        console.log("change the fucking thing")
         this._render();
     }
 
     ngAfterViewInit() {
-        console.log("after init the fucking thing")
-
         this._render();
     }
 
     ngOnDestroy() {
-        console.log("destroy the fucking thing")
-
         this._root.unmount();
         this.ngSubscriptions.forEach(s => s.unsubscribe());
     }
 
     private _render() {
-        console.log("Render the fucking thing")
         if (!this.ngReactComponent) {
             console.log("Render no component. May be context issue")
             return
