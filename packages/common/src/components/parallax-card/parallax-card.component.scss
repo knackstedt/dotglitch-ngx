@@ -25,6 +25,7 @@
     border-radius: var(--border-radius);
     transition: transform var(--flip-animation-duration) var(--easing-function), box-shadow 2s var(--easing-function);
     transform-style: preserve-3d;
+    will-change: transform;
 
     &:hover {
         .card-content {

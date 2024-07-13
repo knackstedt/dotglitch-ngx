@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, NgZone, Output, TemplateRef } from '@angular/core';
 
 type CSSUnitString = 'px' | '%' | 'em' | 'in' | '';
 type CSSUnit = `${number}${CSSUnitString}` | `var(--${string})`;
@@ -54,9 +54,9 @@ export class ParallaxCardComponent {
     @Input() bgInset:  number = 80;
     /**
      * Duration for the flip animation in ms
-     * @default 80
+     * @default 1200
      */
-    @Input() flipAnimationDuration:  number = 1600;
+    @Input() flipAnimationDuration:  number = 1200;
 
     renderCardFront = true;
     renderCardBack = true;
@@ -73,16 +73,19 @@ export class ParallaxCardComponent {
     private pointerLeave = 0;
 
     constructor(
-        private readonly element: ElementRef
+        private readonly element: ElementRef,
+        private readonly ngZone: NgZone
     ) { }
 
     ngAfterViewInit() {
         const el = this.wrapper;
 
-        // Directly attach events to the wrapper
-        el.onpointermove = (e) => this.onPointerMove(e);
-        el.onpointerenter = () => this.onPointerEnter();
-        el.onpointerleave = () => this.onPointerLeave();
+        this.ngZone.runOutsideAngular(() => {
+            // Directly attach events to the wrapper
+            el.onpointermove = (e) => this.onPointerMove(e);
+            el.onpointerenter = () => this.onPointerEnter();
+            el.onpointerleave = () => this.onPointerLeave();
+        })
         el.onclick = () => this.onClick();
 
         this.loaded.emit();
