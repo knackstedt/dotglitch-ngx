@@ -1,4 +1,4 @@
-import { Directive, Input, ViewContainerRef, SecurityContext } from '@angular/core';
+import { Directive, HostListener, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { getPosition } from './utils';
 import { MenuItem, MenuOptions } from '../types/menu';
@@ -36,45 +36,57 @@ export class MenuDirective {
      */
     @Input("ngx-menu-config") config: MenuOptions = {};
 
+    private triggers: string[] = [];
+
     constructor(
         private dialog: MatDialog,
         private viewContainer: ViewContainerRef
     ) { }
 
+    ngOnInit() {
+        this.ngOnChanges();
+    }
+
+    ngOnChanges() {
+
+        if (this.config.trigger) {
+            this.triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
+        }
+    }
+
     ngAfterViewInit() {
-        const el = this.viewContainer.element.nativeElement as HTMLElement;
+        // const el = this.viewContainer.element.nativeElement as HTMLElement;
 
-        // Automatically attach context menu items to
-        // the contextmenu event
-        if (this.ctxMenuItems) {
-            el.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                this.openMenu(e as any, this.ctxMenuItems, true);
-            });
-        }
+        // // Automatically attach context menu items to
+        // // the contextmenu event
+        // if (this.ctxMenuItems) {
+        //     el.addEventListener('contextmenu', (e) => {
+        //         e.preventDefault();
+        //         this.openMenu(e as any, this.ctxMenuItems, true);
+        //     });
+        // }
 
-        if (this.menuItems?.length > 0) {
-            if (!this.config?.trigger) {
-                el.addEventListener('click', (e) => {
-                    this.openMenu(e as any, this.menuItems, true);
-                });
-            }
-            else {
-                const triggers = Array.isArray(this.config.trigger) ? this.config.trigger : [this.config.trigger];
+        // if (this.menuItems?.length > 0) {
+        //     if (!this.config?.trigger) {
+        //         el.addEventListener('click', (e) => {
+        //             this.openMenu(e as any, this.menuItems, true);
+        //         });
+        //     }
+        //     else {
 
-                triggers.forEach(t => {
-                    if (["contextmenu", "click"].includes(t)) {
-                        el.addEventListener(t, (e) => {
-                            e.preventDefault();
-                            this.openMenu(e as any, this.ctxMenuItems, true);
-                        });
-                    }
-                    else {
-                        el.addEventListener(t, this.openMenu.bind(this));
-                    }
-                });
-            }
-        }
+        //         triggers.forEach(t => {
+        //             if (["contextmenu", "click"].includes(t)) {
+        //                 el.addEventListener(t, (e) => {
+        //                     e.preventDefault();
+        //                     this.openMenu(e as any, this.ctxMenuItems, true);
+        //                 });
+        //             }
+        //             else {
+        //                 el.addEventListener(t, this.openMenu.bind(this));
+        //             }
+        //         });
+        //     }
+        // }
     }
 
     async openMenu(evt: PointerEvent, items = this.menuItems, keepOpen = false) {
@@ -103,6 +115,39 @@ export class MenuDirective {
                 el.classList.remove("ngx-menu-open");
                 throw ex;
             });
+    }
+
+    @HostListener("contextmenu", ['$event'])
+    onCtxMenu(e) {
+        if (this.ctxMenuItems || this.triggers.includes("contextmenu")) {
+            e.preventDefault();
+            this.openMenu(e as any, this.ctxMenuItems, true);
+        }
+    }
+
+    @HostListener("click", ['$event'])
+    onClick(e) {
+        if (
+            this.menuItems &&
+            (
+                this.triggers.length == 0 ||
+                this.triggers.includes("click")
+            )
+        ) {
+            e.preventDefault();
+            this.openMenu(e as any, this.menuItems, true);
+        }
+    }
+
+    @HostListener("dblclick", ['$event'])
+    onDblClick(e) {
+        if (
+            this.menuItems && this.triggers.length == 0 ||
+            this.menuItems && this.triggers.includes("dblclick")
+        ) {
+            e.preventDefault();
+            this.openMenu(e as any, this.menuItems, true);
+        }
     }
 }
 
