@@ -34,14 +34,26 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
      * @param _outputs
      * @returns
      */
-    static WrapAngularComponent = ({ component, appRef, injector, ngZone, staticInputs, staticOutputs, additionalChildren: siblings}: {
+    static WrapAngularComponent = ({
+        component,
+        appRef,
+        injector,
+        ngZone,
+        staticInputs,
+        staticOutputs,
+        additionalChildren: siblings,
+        rootElementName,
+        containerElementName
+    }: {
         component: Type<any>,
         appRef: Omit<ApplicationRef, '_runningTick'>,
         injector: Injector,
         ngZone: NgZone,
         staticInputs?: { [key: string]: any },
         staticOutputs?: { [key: string]: Function },
-        additionalChildren?: React.ReactNode[]
+        additionalChildren?: React.ReactNode[],
+        rootElementName?: string,
+        containerElementName?: string
     }) => React.memo((args) => {
 
         const id = ulid();
@@ -110,9 +122,9 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             }
         }, []);
 
-        return React.createElement("div", { },
-            React.createElement("div", { id }),
-            ...siblings
+        return React.createElement(rootElementName || "div", { },
+            React.createElement(containerElementName || "div", { id }),
+            ...(siblings || [])
         )
     });
 
@@ -139,9 +151,7 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     }
 
     ngOnInit() {
-
         if (!this.ngReactComponent) {
-            console.error("NO")
             throw new Error("ReactMagicWrapperComponent cannot start without a provided ngReactComponent!");
         }
     }
@@ -155,7 +165,7 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
     }
 
     ngOnDestroy() {
-        this._root.unmount();
+        this._root?.unmount();
         this.ngSubscriptions.forEach(s => s.unsubscribe());
     }
 
@@ -167,10 +177,7 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
 
         this.ngZone.runOutsideAngular(() => {
             try {
-
-                if (!this._root) {
-                    this._root = createRoot(this.ngContainer.element.nativeElement);
-                }
+                this._root ??= createRoot(this.ngContainer.element.nativeElement);
 
                 // List all keys that do not start with `_` nor `ng`
                 const keys = Object.keys(this).filter(k => !/^(?:_|ng)/.test(k));
