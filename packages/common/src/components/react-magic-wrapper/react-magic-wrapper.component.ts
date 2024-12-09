@@ -126,12 +126,14 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
             }
         }, []);
 
-        return React.createElement(rootElementName || "div", { },
+        const elements = [
             ...(preSiblings || []),
             React.createElement(containerElementName || "div", { id }),
             ...(postSiblings || []),
             ...(additionalChildren || [])
-        )
+        ].filter(e => e);
+
+        return React.createElement(rootElementName || "div", { }, ...elements);
     });
 
     /**
