@@ -41,7 +41,9 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         ngZone,
         staticInputs,
         staticOutputs,
-        additionalChildren: siblings,
+        preSiblings,
+        postSiblings,
+        additionalChildren,
         rootElementName,
         containerElementName
     }: {
@@ -51,6 +53,8 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         ngZone: NgZone,
         staticInputs?: { [key: string]: any },
         staticOutputs?: { [key: string]: Function },
+        preSiblings?: React.ReactNode[],
+        postSiblings?: React.ReactNode[],
         additionalChildren?: React.ReactNode[],
         rootElementName?: string,
         containerElementName?: string
@@ -123,8 +127,10 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         }, []);
 
         return React.createElement(rootElementName || "div", { },
+            ...(preSiblings || []),
             React.createElement(containerElementName || "div", { id }),
-            ...(siblings || [])
+            ...(postSiblings || []),
+            ...(additionalChildren || [])
         )
     });
 
