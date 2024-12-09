@@ -56,7 +56,7 @@ export class ReactMagicWrapperComponent implements OnChanges, OnDestroy, AfterVi
         preSiblings?: React.ReactNode[],
         postSiblings?: React.ReactNode[],
         additionalChildren?: React.ReactNode[],
-        rootElementName?: string,
+        rootElementName?: Parameters<typeof React.createElement>[0],
         containerElementName?: string
     }) => React.memo((args) => {
 
