@@ -1,3 +1,4 @@
+> :warning: This library has been moved to [ngx-xyflow](https://www.npmjs.com/package/ngx-xyflow)!
 
 # Reactflow wrapper for Angular
 
@@ -10,9 +11,6 @@
 This is a [Reactflow](https://github.com/wbkd/react-flow) wrapper library for Angular.
 
 
-| :warning:        This library is still in alpha stages, some things may not work correctly.   |
-|-----------------------------------------|
-| If you find any bugs, please open a [PR](https://github.com/knackstedt/dotglitch-ngx/issues). |
 
 ## Installation
 You can install the library with [npm](https://npmjs.com).
