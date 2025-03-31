@@ -22,6 +22,7 @@ export class NavigationService {
     constructor(
         private readonly lazyLoader: LazyLoaderService
     ) {
+        // @ts-ignore
         window.onhashchange = () => this.loadRootPageFromUrl();
         this.loadRootPageFromUrl();
     }
@@ -31,7 +32,7 @@ export class NavigationService {
         const root = hash.replace(/^\/?#\//, '');
 
         // If the URL is imprecisely set, we restore it to the landing page
-        if (!this.lazyLoader.isComponentRegistered(root))
+        if (!root || !root.trim())
             return this.loadRootPage("#/Landing");
 
         this.loadRootPage(location.hash);
@@ -56,7 +57,7 @@ export class NavigationService {
         log(`Root page navigate to '${hash}'`, { params, chunks });
         const root = hash.replace(/^\/?#\//, '');
         this.virtualPath$.next({
-            root: root, //chunks[0],
+            root: hash,
             chunks: chunks as any,
             args: params
         });

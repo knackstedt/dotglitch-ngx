@@ -130,6 +130,12 @@ export type BaseMenuItem<T = any, Q = object | number | string | boolean | bigin
      * Can be used with label to make a label separator.
      */
     separator?: boolean;
+
+    /**
+     * What user events trigger the opening of any children / child template
+     * @default [`hover`]
+     */
+    trigger?: ("click" | "hover")[]
 };
 
 export type MenuItem<T = any, Q = any> =

@@ -26,5 +26,10 @@ export type TooltipOptions = Partial<PopupOptions & {
      * Set to `true` to keep the tooltip open when hovered over.
      * Primarily used for popping up interactive components
      */
-    stayOpen: boolean
+    stayOpen: boolean,
+
+    /**
+     * Configurable border radius
+     */
+    borderRadius: number,
 }>;

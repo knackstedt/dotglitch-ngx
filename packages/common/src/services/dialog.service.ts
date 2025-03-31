@@ -51,7 +51,7 @@ export class DialogService {
                 return reject(new Error("Cannot open dialog for " + name + ". Could not find in registry."));
 
 
-            const args = {
+            const args: MatDialogConfig = {
                 closeOnNavigation: true,
                 restoreFocus: true,
                 width: registration['width'],
@@ -65,7 +65,7 @@ export class DialogService {
                 },
                 panelClass: [
                     "dialog-" + name,
-                    ...(Array.isArray(opts.panelClass) ? opts.panelClass : [opts.panelClass] || [])
+                    ...(Array.isArray(opts.panelClass) ? opts.panelClass : [opts.panelClass])
                 ]
             };
 

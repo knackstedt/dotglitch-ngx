@@ -414,9 +414,16 @@ export class LazyLoaderComponent implements AfterViewInit {
             return this.targetComponentInstance[childKey] != this._inputs[parentKey];
         });
 
-        updated.forEach(([parentKey, childKey]: [string, string]) => {
-            if (this._inputs.hasOwnProperty(parentKey))
-                this.targetComponentInstance[childKey] = this._inputs[parentKey];
+        updated.forEach(([parentKey, childKey]: [string, string | [string, number, unknown]]) => {
+            if (this._inputs.hasOwnProperty(parentKey)) {
+                // Angular 19.2+
+                if (Array.isArray(childKey)) {
+                    this.targetComponentInstance[childKey[0]] = this._inputs[parentKey];
+                }
+                else {
+                    this.targetComponentInstance[childKey] = this._inputs[parentKey];
+                }
+            }
         });
     }
 

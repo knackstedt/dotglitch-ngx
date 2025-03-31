@@ -24,5 +24,5 @@ export type PopupOptions = Partial<{
      */
     edgePadding: number,
 
-    customClass: string[];
+    customClass: string[]
 }>;
